@@ -30,11 +30,6 @@ app.use(cors())
 app.use(function(req, res, next) {
   next(createError(404));
 });
-app.use(function(req, res, next) {
-  response.header("Access-Control-Allow-Origin", "*");
-  response.header("Access-Control-Allow-Headers", "*");
-  next();
-});
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -45,10 +40,6 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-});
-
-app.listen(3000, () => {
-  console.log("Listening on port 3000...");
 });
 
 module.exports = app;
