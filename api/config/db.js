@@ -23,11 +23,9 @@ const User = sequelize.define('User', {
 
 User. removeAttribute('id')
 
-
-let data = async () =>  User.findAll()
+let data=[];
 User.findAll()
-.then(data => console.log(data))
+.then(datas =>{data.push(datas)})
 .catch( err => console.log(err))
 
 module.exports = data;
-// console.log(data);
