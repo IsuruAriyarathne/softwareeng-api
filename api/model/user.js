@@ -1,0 +1,2 @@
+user = {}
+module.exports =  user;
