@@ -10,9 +10,13 @@ router.get('/', (req,res) => {
 } )
 
 router.put('/:stationId', (req,res) => {
+<<<<<<< HEAD
     user.update()
     .then(data => res.send(data))
     .catch(err => console.log(err))
+=======
+    
+>>>>>>> 1fcd2cdb30d0968d5de33860d1dd7670cfb09df8
 } )
 
 router.post('/', (req,res) => {
