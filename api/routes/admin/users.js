@@ -11,8 +11,9 @@ router.get('/', (req,res) => {
 
 router.put('/:userId', (req,res) => {
     console.log(req.body);
+    console.log("uP");
     console.log(req.params.userId);
-    user.update({officerId:req.params.userId, ...req.body})
+    user.update({officerID:req.params.userId, ...req.body})
     .then(data => res.send(data))
     .catch(err => console.log(err))
 } )

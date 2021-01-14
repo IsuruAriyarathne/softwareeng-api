@@ -17,9 +17,11 @@ exports.findOne = async (id) => {
 };
 
 exports.update = async (data) => {
-    const user = await User.update({data},{
-		where: { officerId: data.officerId },
+	console.log(data);
+    const user = await User.update({...data},{
+		where: { officerID: data.officerID },
 	});
+	console.log(user);
 	return user;
 };
 

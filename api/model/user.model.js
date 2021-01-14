@@ -3,7 +3,7 @@ const sequelize = require('../config/db');
 
 
 const User = sequelize.define('User', {
-    officerId: Sequelize.STRING,
+    officerID: Sequelize.STRING,
     name: Sequelize.TEXT,
     location: Sequelize.TEXT,
     password: Sequelize.TEXT,
