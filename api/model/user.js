@@ -1,2 +1,0 @@
-user = {}
-module.exports =  user;

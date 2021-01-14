@@ -1,10 +1,12 @@
 const express = require("express");
-const data = require('../../config/db');
+const user = require('../../controlller/user.controller');
 
 const router = express.Router();
 
 router.get('/', (req,res) => {
-    res.send(data)
+    user.findAll()
+    .then(data => res.send(data))
+    .catch(err => console.log(err))
 } )
 
 router.put('/:userId', (req,res) => {

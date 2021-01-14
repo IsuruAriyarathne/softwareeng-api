@@ -7,25 +7,6 @@ sequelize.authenticate().then(() => {
   console.log('Connection established successfully.');
 }).catch(err => {
   console.error('Unable to connect to the database:', err);
-}).finally(() => {
-  sequelize.close();
-});
+})
 
-
-const User = sequelize.define('User', {
-  officerId: Sequelize.STRING,
-  name: Sequelize.TEXT,
-  location: Sequelize.TEXT,
-  password: Sequelize.TEXT,
-  role: Sequelize.TEXT,
-  stationID: Sequelize.TEXT,
-}, {freezeTableName: true,timestamps:false})
-
-User. removeAttribute('id')
-
-let data=[];
-User.findAll()
-.then(datas =>{data.push(datas)})
-.catch( err => console.log(err))
-
-module.exports = data;
+module.exports = sequelize;
