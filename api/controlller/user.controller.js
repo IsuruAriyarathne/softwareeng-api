@@ -11,8 +11,8 @@ exports.create = async (data) => {
 	return users;
 };
 
-exports.findOne = async (id) => {
-	const user = await User.findByPk(id);
+exports.findOne = async (where) => {
+	const user = await User.findAll({where:{...where}})
 	return user;
 };
 
