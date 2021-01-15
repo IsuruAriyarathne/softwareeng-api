@@ -2,12 +2,16 @@ const {DataTypes} = require('sequelize');
 const sequelize = require('../config/db');
 
 
-const AmmunitionStation = sequelize.define('AmmunitionStation', {
-    ammoModelID: DataTypes.INTEGER,
+const AmmunitionType = sequelize.define('AmmunitionStation', {
+    ammoModelID: {
+      type:DataTypes.INTEGER,
+      primaryKey:true,
+    
+    },
     name: DataTypes.STRING(100),
     description: DataTypes.STRING(100),
   }, {freezeTableName: true,timestamps:false})
   
-  AmmunitionStation.removeAttribute('id')
+  AmmunitionType.removeAttribute('id')
 
-module.exports = AmmunitionStation;
+module.exports = AmmunitionType;

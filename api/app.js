@@ -26,9 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(passport.initialize());
 app.use('/', indexRouter);
+app.use('/users', require('./routes/admin/users'));
 
 app.use(authenticate.verifyUser);
-app.use('/users', usersRouter);
 app.use('/testapi',testAPIRouter)
 
 // Define all routes

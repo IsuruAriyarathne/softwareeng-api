@@ -18,7 +18,7 @@ router.post('/', async (req, res, next) => {
 			var token = authenticate.getToken({ username: req.body.officerID });
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'application/json');
-			return res.json({ success: true, token: token, status: 'You are successfully logged in!' });
+			return res.json({type:user.role, success: true, token: token, status: 'You are successfully logged in!' });
 		} catch (error) {
 			return next(error);
 		}
