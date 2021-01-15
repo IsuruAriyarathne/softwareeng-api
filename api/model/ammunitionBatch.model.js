@@ -29,6 +29,6 @@ const AmmunitionBatch = sequelize.define(
 
 AmmunitionBatch.removeAttribute('id');
 
-AmmunitionBatch.hasOne(Order);
+// AmmunitionBatch.hasOne(Order);
 
 module.exports = AmmunitionBatch;

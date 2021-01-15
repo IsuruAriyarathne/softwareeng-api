@@ -16,5 +16,5 @@ const Order = sequelize.define(
 );
 
 Order.removeAttribute('id');
-Order.hasOne(Supplier)
+// Order.hasOne(Supplier)
 module.exports = Order;

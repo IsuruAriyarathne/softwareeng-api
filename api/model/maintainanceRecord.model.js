@@ -20,5 +20,5 @@ const MaintainanceRecord = sequelize.define(
 	{ freezeTableName: true, timestamps: false }
 );
 
-MaintainanceRecord.hasOne(Weapon);
+// MaintainanceRecord.hasOne(Weapon);
 module.exports = MaintainanceRecord;

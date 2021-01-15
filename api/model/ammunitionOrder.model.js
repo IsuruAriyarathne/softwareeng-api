@@ -31,5 +31,5 @@ const AmmunitionOrder = sequelize.define(
 );
 
 AmmunitionOrder.removeAttribute('id');
-AmmunitionOrder.hasOne(Order);
+// AmmunitionOrder.hasOne(Order);
 module.exports = AmmunitionOrder;

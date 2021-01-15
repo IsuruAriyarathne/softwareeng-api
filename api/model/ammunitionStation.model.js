@@ -34,7 +34,7 @@ const AmmunitionStation = sequelize.define('AmmunitionStation', {
   }, {freezeTableName: true,timestamps:false})
   
   AmmunitionStation.removeAttribute('id')
-  AmmunitionStation.hasOne(AmmunitionType)
-  AmmunitionStation.hasOne(Order)
-  AmmunitionStation.hasMany(Station)
+  // AmmunitionStation.hasOne(AmmunitionType)
+  // AmmunitionStation.hasOne(Order)
+  // AmmunitionStation.hasMany(Station)
 module.exports = AmmunitionStation;

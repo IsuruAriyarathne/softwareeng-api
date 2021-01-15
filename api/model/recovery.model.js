@@ -21,6 +21,6 @@ const Recovery = sequelize.define('Recovery', {
   }, {freezeTableName: true,timestamps:false})
   
   Recovery.removeAttribute('id')
-  Recovery.hasMany(RecoveredWeapon)
-  Recovery.hasMany(RecoveredAmmunition)
+  // Recovery.hasMany(RecoveredWeapon)
+  // Recovery.hasMany(RecoveredAmmunition)
 module.exports = Recovery;

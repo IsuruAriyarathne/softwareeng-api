@@ -23,8 +23,8 @@ const RecoveredWeapon = sequelize.define('RecoveredWeapon', {
   }, {freezeTableName: true,timestamps:false})
   
   RecoveredWeapon.removeAttribute('id')
-  RecoveredWeapon.hasOne(Recovery);
-  RecoveredWeapon.hasOne(WeaponModel);
+  // RecoveredWeapon.hasOne(Recovery);
+  // RecoveredWeapon.hasOne(WeaponModel);
 
 
 module.exports = RecoveredWeapon;
