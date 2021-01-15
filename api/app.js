@@ -4,6 +4,9 @@ var cors = require('cors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var passport = require('passport');
+var authenticate = require('./middleware/authenticate');
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -21,8 +24,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use(passport.initialize());
+app.use('/',cors(), indexRouter);
+
+app.use(authenticate.verifyUser);
 app.use('/testapi',testAPIRouter)
 
 // Define all routes
