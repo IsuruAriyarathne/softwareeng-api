@@ -1,5 +1,5 @@
 const express = require("express");
-const user = require('../../controlller/criminalammunition.controller');
+// const user = require('../../controlller/criminalammunition.controller');
 const router = express.Router();
 
 router.get('/', (req,res) => {

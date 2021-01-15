@@ -1,5 +1,5 @@
 const express = require("express");
-const user = require('../../controlller/ammunition.controller');
+// const user = require('../../controlller/ammunition.controller');
 
 const router = express.Router();
 

@@ -1,28 +1,28 @@
 const express = require("express");
-const user = require('../../controlller/station.controller'); 
+const station = require('../../controlller/station.controller'); 
 
 const router = express.Router();
 
 router.get('/', (req,res) => {
-    user.findAll()
+    station.findAll()
     .then(data => res.send(data))
     .catch(err => console.log(err))
 } )
 
 router.put('/:stationId', (req,res) => {
-    user.update()
+    station.update()
     .then(data => res.send(data))
     .catch(err => console.log(err))
 } )
 
 router.post('/', (req,res) => {
-    user.create()
+    station.create()
     .then(data => res.send(data))
     .catch(err => console.log(err))
 } )
 
 router.delete('/:stationId', (req,res) => {
-    user.destroy()
+    station.destroy()
     .then(data => res.send(data))
     .catch(err => console.log(err))
 } )
