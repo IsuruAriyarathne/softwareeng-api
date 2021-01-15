@@ -1,30 +1,49 @@
 const express = require("express");
-// const user = require('../../controlller/ammunition.controller');
+const Ammunition = require('../../model/user.model');
+const Controller = require('../../controlller/controller');
+const DbObject = require('../../controlller/dbObject'); 
 
 const router = express.Router();
 
 router.get('/', (req,res) => {
-    user.findAll()
-    .then(data => res.send(data))
-    .catch(err => console.log(err))
+	let findAll = Controller.findAll(Ammunition);
+	findAll({})
+		.then((data) => res.send(data))
+		.catch((err) => console.log(err));
 } )
 
+router.get('/:ammoId', (req, res) => {
+	let findAll = Controller.findAll(Ammunition);
+	let obj = DbObject.getWhereObject('ammoModelID', req.params.userId);
+	findAll(obj)
+		.then((data) => res.send(data))
+		.catch((err) => console.log(err));
+});
+
 router.put('/:ammoId', (req,res) => {
-    user.update()
-    .then(data => res.send(data))
-    .catch(err => console.log(err))
+	let update = Controller.update(Ammunition);
+	let condition = DbObject.getWhereObject('ammoModelID', req.params.userId);
+	update(condition, req.body)
+		.then((data) => res.send(data))
+		.catch((err) => console.log(err));
 } )
 
 router.post('/', (req,res) => {
-    user.create()
-    .then(data => res.send(data))
-    .catch(err => console.log(err))
+	let create = Controller.create(Ammunition);
+	create(req.body)
+		.then((data) => res.send(data))
+		.catch((err) => console.log(err));
 } )
 
 router.delete('/:ammoId', (req,res) => {
-    user.destroy()
-    .then(data => res.send(data))
-    .catch(err => console.log(err))
+    let deleteEntry = Controller.delete(Ammunition);
+    let obj = DbObject.getDeleteObject('ammoModelID',req.params.userId)
+	deleteEntry(obj)
+		.then((result) => {
+            if (result) res.send('Success');
+            // res.send('Couldnt delete')
+		})
+		.catch((err) => res.send(err));
 } )
 
 module.exports = router;

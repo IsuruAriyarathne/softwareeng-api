@@ -1,30 +1,49 @@
 const express = require("express");
-// const user = require('../../controlller/criminalweapon.controller');
+const Criminalweapon = require('../../model/user.model');
+const Controller = require('../../controlller/controller');
+const DbObject = require('../../controlller/dbObject');
 
 const router = express.Router();
 
 router.get('/', (req,res) => {
-    user.findAll()
-    .then(data => res.send(data))
-    .catch(err => console.log(err))
+	let findAll = Controller.findAll(Criminalweapon);
+	findAll({})
+		.then((data) => res.send(data))
+		.catch((err) => console.log(err));
 } )
 
+router.get('/:weaponId', (req, res) => {
+	let findAll = Controller.findAll(Criminalweapon);
+	let obj = DbObject.getWhereObject('recoveryID', req.params.userId);
+	findAll(obj)
+		.then((data) => res.send(data))
+		.catch((err) => console.log(err));
+});
+
 router.put('/::weaponId', (req,res) => {
-    user.update()
-    .then(data => res.send(data))
-    .catch(err => console.log(err))
+	let update = Controller.update(Criminalweapon);
+	let condition = DbObject.getWhereObject('recoveryID', req.params.userId);
+	update(condition, req.body)
+		.then((data) => res.send(data))
+		.catch((err) => console.log(err));
 } )
 
 router.post('/', (req,res) => {
-    user.create()
-    .then(data => res.send(data))
-    .catch(err => console.log(err))
+	let create = Controller.create(Criminalweapon);
+	create(req.body)
+		.then((data) => res.send(data))
+		.catch((err) => console.log(err));
 } )
 
 router.delete('/:weaponId', (req,res) => {
-    user.destroy()
-    .then(data => res.send(data))
-    .catch(err => console.log(err))
+    let deleteEntry = Controller.delete(Criminalweapon);
+    let obj = DbObject.getDeleteObject('recoveryID',req.params.userId)
+	deleteEntry(obj)
+		.then((result) => {
+            if (result) res.send('Success');
+            // res.send('Couldnt delete')
+		})
+		.catch((err) => res.send(err));
 } )
 
 module.exports = router;
