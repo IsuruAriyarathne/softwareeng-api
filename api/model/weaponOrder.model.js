@@ -1,10 +1,11 @@
 const {DataTypes} = require('sequelize');
 const sequelize = require('../config/db');
+const Order = require('../config/db');
 
 
 const WeaponOrder = sequelize.define('WeaponOrder', {
-    weaponModelID: DataTypes.INTEGER,
-    orderID: DataTypes.INTEGER,
+    weaponModelID: {type:DataTypes.INTEGER,primaryKey:true},
+    orderID:{ type:DataTypes.INTEGER,primaryKey:true,references: { Model: Order, key: 'orderID' }},
     count: DataTypes.INTEGER,
     cost: DataTypes.FLOAT,
     state: DataTypes.STRING(20),
