@@ -29,13 +29,10 @@ router.put('/:userId', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-	console.log(req.body);
-
-	user.create(req.body)
-
+	let create = Controller.create(User);
+	create(req.body)
 		.then((data) => res.send(data))
-		.catch((err) => res.send(err));
-	// res.send("Success")
+		.catch((err) => console.log(err));
 });
 
 router.delete('/:userId', (req, res) => {
