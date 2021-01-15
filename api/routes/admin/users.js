@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
 	let findAll = Controller.findAll(User);
-	findAll()
+	findAll({},['password'])
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 });
@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
 router.get('/:userId', (req, res) => {
 	let findAll = Controller.findAll(User);
 	let obj = DbObject.getWhereObject('officerID', req.params.userId);
-	findAll(obj)
+	findAll(obj,['password'])
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 });
