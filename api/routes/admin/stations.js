@@ -1,5 +1,5 @@
 const express = require("express");
-const Station = require('../../model/user.model');
+const Station = require('../../model/station.model');
 const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject'); 
 

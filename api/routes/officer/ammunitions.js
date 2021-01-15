@@ -1,5 +1,5 @@
 const express = require("express");
-const Ammunition = require('../../model/user.model');
+const Ammunition = require('../../model/ammunitionBatch.model');
 const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject'); 
 

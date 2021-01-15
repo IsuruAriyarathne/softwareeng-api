@@ -1,5 +1,5 @@
 const express = require("express");
-const Company = require('../../model/user.model');
+const Company = require('../../model/supplier.model');
 const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject'); 
 
@@ -12,7 +12,7 @@ router.get('/', (req,res) => {
 		.catch((err) => console.log(err));
 } )
 
-router.get('/:companyId', (req,res) => {
+router.get('/:supplierID', (req,res) => {
 	let findAll = Controller.findAll(Company);
 	let obj = DbObject.getWhereObject('supplierID', req.params.userId);
 	findAll(obj)
@@ -20,7 +20,7 @@ router.get('/:companyId', (req,res) => {
 		.catch((err) => console.log(err));
 } )
 
-router.put('/:companyId', (req,res) => {
+router.put('/:supplierID', (req,res) => {
 	let update = Controller.update(Company);
 	let condition = DbObject.getWhereObject('supplierID', req.params.userId);
 	update(condition, req.body)
@@ -35,7 +35,7 @@ router.post('/', (req,res) => {
 		.catch((err) => console.log(err));
 } )
 
-router.delete('/:companyId', (req,res) => {
+router.delete('/:supplierID', (req,res) => {
     let deleteEntry = Controller.delete(Station);
     let obj = DbObject.getDeleteObject('supplierID',req.params.userId)
 	deleteEntry(obj)
