@@ -89,7 +89,7 @@ cron.schedule('* * * * *', () => {           // This is currently set to functio
 
     const reportSubject = `Monthly Report: ${monthNames[new Date().getMonth()]} ${new Date().getFullYear()}`
 
-    sendMail(reportSubject, Buffer.from(reportBody));
+    sendMail(reportSubject, reportBody);
 });   
 
 
