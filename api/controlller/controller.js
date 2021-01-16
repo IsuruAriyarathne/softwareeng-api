@@ -27,6 +27,14 @@ exports.create = (Model) => {
 	};
 };
 
+exports.bulkCreate = (Model) => {
+	return async (payload) => {
+		console.log(payload); 
+		const results = await Model.bulkCreate(payload);
+		return results;
+	};
+};
+
 exports.update = (Model) => {
 	return async (condition, payload) => {
 		const result = await Model.update(
