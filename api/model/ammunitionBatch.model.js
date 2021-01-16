@@ -2,6 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 const Order = require('./order.model');
 const AmmunitionType = require('./ammunitionType.model');
+const AmmunitionStation = require('./ammunitionStation.model');
 
 const AmmunitionBatch = sequelize.define(
 	'AmmunitionBatch',
@@ -21,6 +22,7 @@ const AmmunitionBatch = sequelize.define(
 
 AmmunitionBatch.removeAttribute('id');
 AmmunitionBatch.belongsTo(Order,{foreignKey:'orderID'});
+// AmmunitionBatch.hasMany(AmmunitionStation,{foreignKey:['ammoModelID','orderID']})
 AmmunitionBatch.belongsTo(AmmunitionType,{foreignKey:'ammoModelID'});
 
 module.exports = AmmunitionBatch;

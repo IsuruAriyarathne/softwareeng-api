@@ -1,46 +1,46 @@
 const express = require("express");
-const Criminalammunition = require('../../model/recoveredAmmo.model');
+const Station = require('../../model/station.model');
 const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject'); 
 
 const router = express.Router();
 
 router.get('/', (req,res) => {
-	let findAll = Controller.findAll(Criminalammunition);
+	let findAll = Controller.findAll(Station);
 	findAll({})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )
 
-router.get('/:ammoId', (req, res) => {
-	let findAll = Controller.findAll(Criminalammunition);
-	let obj = DbObject.getWhereObject('recoveryID', req.params.userId);
+router.get('/:stationId', (req, res) => {
+	let findAll = Controller.findAll(Station);
+	let obj = DbObject.getWhereObject('stationID', req.params.stationId);
 	findAll(obj)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 });
 
-router.put('/:ammoId', (req,res) => {
-	let update = Controller.update(Criminalammunition);
-	let condition = DbObject.getWhereObject('recoveryID', req.params.userId);
+router.put('/:stationId', (req,res) => {
+	let update = Controller.update(Station);
+	let condition = DbObject.getWhereObject('stationID', req.params.stationId);
 	update(condition, req.body)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )
 
 router.post('/', (req,res) => {
-	let create = Controller.create(Criminalammunition);
+	let create = Controller.create(Station);
 	create(req.body)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )
 
-router.delete('/:ammoId', (req,res) => {
-    let deleteEntry = Controller.delete(Criminalammunition);
-    let obj = DbObject.getDeleteObject('recoveryID',req.params.userId)
+router.delete('/:stationId', (req,res) => {
+    let deleteEntry = Controller.delete(Station);
+    let obj = DbObject.getDeleteObject('stationID',req.params.stationId)
 	deleteEntry(obj)
 		.then((result) => {
-            if (result) res.send('Success');
+            res.send('Success');
             // res.send('Couldnt delete')
 		})
 		.catch((err) => res.send(err));
