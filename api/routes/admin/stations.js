@@ -28,7 +28,24 @@ router.put('/:stationId', (req,res) => {
 		.catch((err) => console.log(err));
 } )
 
-router.post('/', (req,res) => {
+router.post('/', async(req,res) => {   
+	//validate the station
+	const {error} = validate(req.body);
+	if(error) return res.status(400).send(error.details[0].message);
+
+	let station = await Station.findOne({ stationID: req.body.stationID});
+	if(station) return res.status(400).send("Station already registered.");
+
+	station = new Station({
+		stationID: req.body.stationID,
+		name: req.body.name,
+		location: req.body.location,
+		type: req.body.type,
+		
+	});
+
+	await station.save();
+
 	let create = Controller.create(Station);
 	create(req.body)
 		.then((data) => res.send(data))

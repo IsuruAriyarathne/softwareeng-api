@@ -10,10 +10,9 @@ const router = express.Router();
 
 router.get('/', (req,res) => {
     let findAll = Controller.findAll(Recovery);
-    let where = DbObject.getWhereObject('stationID',req.body.stationID)
     let include = DbObject.getIncludeObject([RecoveredAmmunition,RecoveredWeapon])
     console.log(include);
-	findAll(where,[],include)
+	findAll({},[],include)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )
@@ -37,9 +36,6 @@ router.put('/:recoveryID', (req,res) => {
 router.post('/', (req,res) => {
     let returnObj = {}
     let error = false
-    console.log(req.body.recovery);
-    console.log(req.body.recoveryAmmunition);
-    console.log(req.body.recoveryWeapon);
 	let createRecovery = Controller.create(Recovery);
 	let createWeaponRecovery = Controller.create(RecoveredWeapon);
 	let createAmmunitionRecovery = Controller.create(RecoveredAmmunition);

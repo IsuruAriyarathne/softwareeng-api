@@ -28,7 +28,25 @@ router.put('/:userId', (req, res) => {
 		.catch((err) => console.log(err));
 });
 
-router.post('/', (req, res) => {
+router.post('/',async(req, res) => {
+	//validate the user
+	const {error} = validate(req.body);
+	if(error) return res.status(400).send(error.detaails[0].message);
+
+	let user = await User.findOne({ officerID: req.body.officerID});
+	if(user) return res.status(400).send("User already registered.");
+
+	user = new User({
+		officerID: req.body.officerID,
+		name: req.body.name,
+		location: req.body.location,
+		password: req.body.password,
+		role: req.body.role,
+		stationID: req.body.stationID
+	});
+
+	await user.save();
+
 	let create = Controller.create(User);
 	create(req.body)
 		.then((data) => res.send(data))

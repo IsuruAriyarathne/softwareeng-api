@@ -116,10 +116,12 @@ app.use("/admin/stations", require("./routes/admin/stations"));
 app.use("/admin/users",cors(), require("./routes/admin/users"));
 app.use("/officer/recovery", require("./routes/officer/recovery"));
 app.use("/officer/ammunitions", require("./routes/officer/ammunitions"));
-app.use("/officer/criminalammunitions", require("./routes/officer/criminalammunitions"));
-app.use("/officer/criminalweapons", require("./routes/officer/criminalweapons"));
 app.use("/officer/weapons", require("./routes/officer/weapons"));
 app.use("/centralizedOfficer/companies", require("./routes/centralizedOfficer/companies"));
+app.use("/centralizedOfficer/ammunitions", require("./routes/centralizedOfficer/ammunitions"));
+app.use("/centralizedOfficer/weapons", require("./routes/centralizedOfficer/weapons"));
+app.use("/centralizedOfficer/weaponModels", require("./routes/centralizedOfficer/weaponModel"));
+app.use("/centralizedOfficer/ammoModels", require("./routes/centralizedOfficer/ammoModel"));
 app.use(cors())
 
 // catch 404 and forward to error handler

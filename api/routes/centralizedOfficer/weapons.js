@@ -8,10 +8,9 @@ const WeaponModel = require("../../model/weaponModel.model");
 const router = express.Router();
 
 router.get('/', (req,res) => {
-	let findAll = Controller.findAll(WeaponStation);
-	let include = DbObject.getIncludeObject([[Weapon,WeaponModel]])
-	let where = DbObject.getWhereObject('stationID',req.body.stationID)
-	findAll(where,[],include)
+	let findAll = Controller.findAll(Weapon);
+	let include = DbObject.getIncludeObject([WeaponModel])
+	findAll({},[],include)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )
