@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const express = require('express');
 const User = require('../../model/user.model');
 const Controller = require('../../controlller/controller');
@@ -28,13 +29,16 @@ router.put('/:userId', (req, res) => {
 		.catch((err) => console.log(err));
 });
 
-router.post('/', (req, res) => {
+router.post('/', async(req, res) => {
 	//validate the user
 	const {error} = validate(req.body);
 	if(error) return res.status(400).send(error.detaails[0].message);
 
 	let user = await User.findOne({ officerID: req.body.officerID});
 	if(user) return res.status(400).send("User already registered.");
+
+	const salt = await bcrypt.genSalt(10);
+	user.password = await bcrypt.hash(user.password,salt);
 
 	user = new User({
 		officerID: req.body.officerID,
