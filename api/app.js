@@ -6,11 +6,92 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var passport = require('passport');
 var authenticate = require('./middleware/authenticate');
+const fs = require('fs')
 
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var testAPIRouter = require('./routes/testapi');
+
+const {sendMail} = require('./middleware/reportSender');
+var cron = require('node-cron');
+
+cron.schedule('* * * * *', () => {           // This is currently set to function every minute, change that to ever 30th day of the month
+    /* 
+
+    # ┌────────────── second (optional)
+    # │ ┌──────────── minute
+    # │ │ ┌────────── hour
+    # │ │ │ ┌──────── day of month
+    # │ │ │ │ ┌────── month
+    # │ │ │ │ │ ┌──── day of week
+    # │ │ │ │ │ │
+    # │ │ │ │ │ │
+    # * * * * * *
+
+    */
+
+    let reportBody = ''
+
+    const stations = [{stationID: 1, stationName: 'Saliyapura'}, {stationID: 2, stationName: 'Boosa'}] // should be generated using the database
+
+    stations.forEach((station) => {
+
+      const weapons = [{weaponID: 1, weaponModel: 'T-56'}, {weaponID: 2, weaponModel: 'Sniper'}]  // should be generated using the database
+      const ammunition = [{ammoModelID: 1, ammoModel: '7.6mm'}, {ammoModelID: 2, ammoModel: '.300 Magnum Ammo'}]  // should be generated using the database
+      const recoveredWeapons = [{weaponID: 1, weaponModel: 'T-56'}, {weaponID: 2, weaponModel: 'Sniper'}]  // should be generated using the database
+      const recoverdAammunition = [{ammoModelID: 1, ammoModel: '7.6mm'}, {ammoModelID: 2, ammoModel: '.300 Magnum Ammo'}]  // should be generated using the database
+
+      reportBody += (`Station :${station.stationName}\\n`)
+      
+      reportBody += 'Weapons\n'
+      weapons.forEach((weapon) => {
+        const count= 5  // should be generated using the database
+        reportBody += (`${weapon.weaponModel} - ${count} units\n`)
+      })
+
+      reportBody += 'Ammunition\n'
+      ammunition.forEach((ammo) => {
+        const count= 40000  // should be generated using the database
+        reportBody += (`${ammo.ammoModel} - ${count} bullets\n`)
+      })
+
+      reportBody += 'Recovered Weapons\n'
+      recoveredWeapons.forEach((weapon) => {
+        const count= 5  // should be generated using the database
+        reportBody += (`${weapon.weaponModel} - ${count} units\n`)
+      })
+
+      reportBody += 'Recovered Ammunition\n'
+      recoverdAammunition.forEach((ammo) => {
+        const count= 40000  // should be generated using the database
+        reportBody += (`${ammo.ammoModel} - ${count} bullets\n`)
+      })
+
+      reportBody += '\n'
+    })
+
+    const stockWeapons = [{weaponID: 1, weaponModel: 'T-56', count: 500}, {weaponID: 2, weaponModel: 'Sniper', count:20}]  // should be generated using the database
+    const stockammunition = [{ammoModelID: 1, ammoModel: '7.6mm', count: 250000}, {ammoModelID: 2, ammoModel: '.300 Magnum Ammo', count: 1000}]  // should be generated using the database
+
+    reportBody += 'Stock Weapons\n'
+    stockWeapons.forEach((weapon) => {
+      reportBody += `${weapon.weaponModel} - ${weapon.count}\n`
+    })
+
+    reportBody += 'Stock Ammunition\n'
+    stockammunition.forEach((ammo) => {
+      reportBody += `${ammo.ammoModel} - ${ammo.count}`
+    })
+
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+    const reportSubject = `Monthly Report: ${monthNames[new Date().getMonth()]} ${new Date().getFullYear()}`
+
+    sendMail(reportSubject, Buffer.from(reportBody));
+});   
+
 
 var app = express();
 
