@@ -37,8 +37,8 @@ router.post('/', (req,res) => {
     let returnObj = {}
     let error = false
 	let createRecovery = Controller.create(Recovery);
-	let createWeaponRecovery = Controller.create(RecoveredWeapon);
-	let createAmmunitionRecovery = Controller.create(RecoveredAmmunition);
+	let createWeaponRecovery = Controller.bulkCreate(RecoveredWeapon);
+	let createAmmunitionRecovery = Controller.bulkCreate(RecoveredAmmunition);
 	createRecovery(req.body.recovery)
 		.then((data) => {
             returnObj['recovery'] = data
