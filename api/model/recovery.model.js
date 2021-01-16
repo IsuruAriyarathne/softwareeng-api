@@ -20,8 +20,6 @@ const Recovery = sequelize.define(
 	{ freezeTableName: true, timestamps: false }
 );
 
-console.log(RecoveredWeapon);
-console.log(RecoveredAmmunition);
 Recovery.removeAttribute('id');
 Recovery.hasMany(RecoveredWeapon,{foreignKey:'recoveryID'})
 Recovery.hasMany(RecoveredAmmunition,{foreignKey:'recoveryID'})

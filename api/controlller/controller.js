@@ -20,7 +20,8 @@ exports.findAll = (Model) => {
 //Insert
 //Expects data with the matching field names
 exports.create = (Model) => {
-	return async (payload) => { 
+	return async (payload) => {
+		console.log(payload); 
 		const results = await Model.create({ ...payload });
 		return results;
 	};

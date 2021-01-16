@@ -14,7 +14,7 @@ router.get('/', (req,res) => {
 
 router.get('/:stationId', (req, res) => {
 	let findAll = Controller.findAll(Station);
-	let obj = DbObject.getWhereObject('stationID', req.params.userId);
+	let obj = DbObject.getWhereObject('stationID', req.params.stationId);
 	findAll(obj)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
@@ -22,7 +22,7 @@ router.get('/:stationId', (req, res) => {
 
 router.put('/:stationId', (req,res) => {
 	let update = Controller.update(Station);
-	let condition = DbObject.getWhereObject('stationID', req.params.userId);
+	let condition = DbObject.getWhereObject('stationID', req.params.stationId);
 	update(condition, req.body)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
@@ -37,10 +37,10 @@ router.post('/', (req,res) => {
 
 router.delete('/:stationId', (req,res) => {
     let deleteEntry = Controller.delete(Station);
-    let obj = DbObject.getDeleteObject('stationID',req.params.userId)
+    let obj = DbObject.getDeleteObject('stationID',req.params.stationId)
 	deleteEntry(obj)
 		.then((result) => {
-            if (result) res.send('Success');
+            res.send('Success');
             // res.send('Couldnt delete')
 		})
 		.catch((err) => res.send(err));

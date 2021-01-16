@@ -40,7 +40,7 @@ router.post('/', (req,res) => {
 
 router.delete('/:weaponId', (req,res) => {
     let deleteEntry = Controller.delete(Weapon);
-    let obj = DbObject.getDeleteObject('weaponID',req.params.userId)
+    let obj = DbObject.getDeleteObject('weaponID',req.params.weaponId)
 	deleteEntry(obj)
 		.then((result) => {
             if (result) res.send('Success');

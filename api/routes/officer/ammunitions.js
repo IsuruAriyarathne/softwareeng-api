@@ -14,7 +14,7 @@ router.get('/', (req,res) => {
 
 router.get('/:ammoId', (req, res) => {
 	let findAll = Controller.findAll(Ammunition);
-	let obj = DbObject.getWhereObject('ammoModelID', req.params.userId);
+	let obj = DbObject.getWhereObject('ammoModelID', req.params.ammoId);
 	findAll(obj)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
@@ -22,7 +22,7 @@ router.get('/:ammoId', (req, res) => {
 
 router.put('/:ammoId', (req,res) => {
 	let update = Controller.update(Ammunition);
-	let condition = DbObject.getWhereObject('ammoModelID', req.params.userId);
+	let condition = DbObject.getWhereObject('ammoModelID', req.params.ammoId);
 	update(condition, req.body)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
@@ -37,7 +37,7 @@ router.post('/', (req,res) => {
 
 router.delete('/:ammoId', (req,res) => {
     let deleteEntry = Controller.delete(Ammunition);
-    let obj = DbObject.getDeleteObject('ammoModelID',req.params.userId)
+    let obj = DbObject.getDeleteObject('ammoModelID',req.params.ammoId)
 	deleteEntry(obj)
 		.then((result) => {
             if (result) res.send('Success');
