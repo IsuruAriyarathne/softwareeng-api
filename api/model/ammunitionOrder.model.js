@@ -8,19 +8,13 @@ const AmmunitionOrder = sequelize.define(
 	{
 		ammoModelID: {
 			type: DataTypes.INTEGER,
-			references: {
-				model: AmmunitionType,
-				key: 'ammoModelID',
-      },
-      primaryKey:true,
+
+			primaryKey: true,
 		},
 		orderID: {
 			type: DataTypes.INTEGER,
-			references: {
-				model: Order,
-				key: 'orderID',
-      },
-      primaryKey:true,
+
+			primaryKey: true,
 		},
 		count: DataTypes.INTEGER,
 		cost: DataTypes.FLOAT,
@@ -31,5 +25,8 @@ const AmmunitionOrder = sequelize.define(
 );
 
 AmmunitionOrder.removeAttribute('id');
+// AmmunitionOrder.belongsTo(Order, { foreignKey: 'orderID' });
+AmmunitionOrder.belongsTo(AmmunitionType, { foreignKey: 'ammoModelID' });
+
 // AmmunitionOrder.hasOne(Order);
 module.exports = AmmunitionOrder;

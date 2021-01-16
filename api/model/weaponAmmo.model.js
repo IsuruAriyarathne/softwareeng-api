@@ -1,15 +1,14 @@
 const {DataTypes} = require('sequelize');
 const sequelize = require('../config/db');
-const WeaponModel = require('./weaponModel.model');
 const AmmunitionType = require('./ammunitionType.model');
 
 
 const WeaponAmmunition = sequelize.define('WeaponAmmunition', {
-    weaponModelID: {type:DataTypes.INTEGER,primaryKey:true, references: { Model: WeaponModel, key: 'weaponModelID' }},
-    ammoModelID: {type:DataTypes.INTEGER,primaryKey:true, references: { Model: AmmunitionType, key: 'ammoModelID' }},
+    weaponModelID: {type:DataTypes.INTEGER,primaryKey:true},
+    ammoModelID: {type:DataTypes.INTEGER,primaryKey:true},
     
   }, {freezeTableName: true,timestamps:false})
   
   WeaponAmmunition.removeAttribute('id')
-
+WeaponAmmunition.belongsTo(AmmunitionType,{foreignKey:'ammoModelID'})
 module.exports = WeaponAmmunition;

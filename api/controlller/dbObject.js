@@ -25,11 +25,22 @@ exports.getSearchObject = (col, order) => {
 
 exports.getIncludeObject = (models) => {
 	// console.log(arguments);
-    arr = [];
+	arr = [];
 	for (let i = 0; i < models.length; i++) {
 		let obj = {};
+		let arr1 = [];
 		obj['model'] = models[i];
+		if (Array.isArray(models[i])) {
+			let obj1 = {};
+			obj['model'] = models[i][0];
+			obj1['model'] = models[i][1];
+			// obj1['required'] = true;
+			arr1[0] = obj1;
+		}
 		obj['required'] = true;
+		if (arr1.length > 0) {
+			obj['include'] = arr1;
+		}
 		arr[i] = obj;
 	}
 

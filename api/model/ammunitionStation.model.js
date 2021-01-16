@@ -1,40 +1,33 @@
-const {DataTypes} = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const Station = require('./station.model')
-const Order = require('./order.model')
-const AmmunitionType = require('./ammunitionType.model')
+const Station = require('./station.model');
+const Order = require('./order.model');
+const AmmunitionType = require('./ammunitionType.model');
 
-const AmmunitionStation = sequelize.define('AmmunitionStation', {
-    ammoModelID: {
+const AmmunitionStation = sequelize.define(
+	'AmmunitionStation',
+	{
+		ammoModelID: {
 			type: DataTypes.INTEGER,
-			references: {
-				model: AmmunitionType,
-				key: 'ammoModelID',
-      },
-      primaryKey:true,
+			primaryKey: true,
 		},
-    count: DataTypes.INTEGER,
-    orderID: {
+		count: DataTypes.INTEGER,
+		orderID: {
 			type: DataTypes.INTEGER,
-			references: {
-				model: Order,
-				key: 'orderID',
-      },
-      primaryKey:true,
+			primaryKey: true,
 		},
-    stationID: {
+		stationID: {
 			type: DataTypes.INTEGER,
-			references: {
-				model: Station,
-				key: 'stationID',
-      },
-      primaryKey:true,
+			primaryKey: true,
 		},
-    allocatedDate: DataTypes.DATEONLY,
-  }, {freezeTableName: true,timestamps:false})
-  
-  AmmunitionStation.removeAttribute('id')
-  // AmmunitionStation.hasOne(AmmunitionType)
-  // AmmunitionStation.hasOne(Order)
-  // AmmunitionStation.hasMany(Station)
+		allocatedDate: DataTypes.DATEONLY,
+	},
+	{ freezeTableName: true, timestamps: false }
+);
+
+AmmunitionStation.removeAttribute('id');
+AmmunitionStation.belongsTo(AmmunitionType, { foreignKey: 'ammoModelID' });
+AmmunitionStation.belongsTo(Order, { foreignKey: 'orderID' });
+AmmunitionStation.belongsTo(Station, { foreignKey: 'stationID' });
+
 module.exports = AmmunitionStation;

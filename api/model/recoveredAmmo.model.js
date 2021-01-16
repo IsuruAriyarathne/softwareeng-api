@@ -20,6 +20,4 @@ const RecoveredAmmunition = sequelize.define(
 );
 
 RecoveredAmmunition.removeAttribute('id');
-// RecoveredAmmunition.hasOne(AmmunitionType)
-// RecoveredAmmunition.hasOne(Recovery)
 module.exports = RecoveredAmmunition;

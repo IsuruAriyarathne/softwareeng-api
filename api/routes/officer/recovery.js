@@ -10,9 +10,10 @@ const router = express.Router();
 
 router.get('/', (req,res) => {
     let findAll = Controller.findAll(Recovery);
-    let obj = DbObject.getIncludeObject([Station, RecoveredAmmunition,RecoveredWeapon])
-    console.log(obj);
-	findAll({},[],obj)
+    let where = DbObject.getWhereObject('stationID',req.body.stationID)
+    let include = DbObject.getIncludeObject([Station, RecoveredAmmunition,RecoveredWeapon])
+    console.log(include);
+	findAll(where,[],include)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )

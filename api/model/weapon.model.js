@@ -1,6 +1,8 @@
 const {DataTypes} = require('sequelize');
 const sequelize = require('../config/db');
 const Order = require('./order.model');
+const WeaponModel = require('./weaponModel.model');
+const WeaponAmmunition = require('./weaponAmmo.model');
 
 
 const Weapon = sequelize.define('Weapon', {
@@ -13,4 +15,7 @@ const Weapon = sequelize.define('Weapon', {
   
   Weapon.removeAttribute('id')
 Weapon.belongsTo(Order,{foreignKey:'orderID'})
+Weapon.belongsTo(WeaponModel,{foreignKey:'weaponModelID'})
+// Weapon.hasMany(WeaponAmmunition,{foreignKey:'weaponModelID'})
+
 module.exports = Weapon;

@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
+const SupplyAmmunition = require('./supplyAmmo.model');
+const SupplyWeapon = require('./supplyWeapon.model');
 
 const Supplier = sequelize.define(
 	'Supplier',
@@ -12,6 +14,9 @@ const Supplier = sequelize.define(
 	},
 	{ freezeTableName: true, timestamps: false }
 );
+
+Supplier.hasMany(SupplyAmmunition, { foreignKey: 'supplierID' });
+Supplier.hasMany(SupplyWeapon, { foreignKey: 'supplierID' });
 
 Supplier.removeAttribute('id');
 

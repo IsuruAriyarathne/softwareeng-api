@@ -8,10 +8,6 @@ const MaintainanceRecord = sequelize.define(
 		id: { type: DataTypes.INTEGER, primaryKey: true },
 		weaponID: {
 			type: DataTypes.INTEGER,
-			references: {
-				Model: Weapon,
-				key: 'weaponID',
-			},
 		},
 		description: DataTypes.STRING(200),
 		date: DataTypes.DATEONLY,
@@ -20,5 +16,6 @@ const MaintainanceRecord = sequelize.define(
 	{ freezeTableName: true, timestamps: false }
 );
 
-// MaintainanceRecord.hasOne(Weapon);
+MaintainanceRecord.belongsTo(Weapon, { foreignKey: 'weaponID' });
+
 module.exports = MaintainanceRecord;

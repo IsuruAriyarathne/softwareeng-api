@@ -9,13 +9,13 @@ const SupplyAmmunition = sequelize.define(
 		ammoModelID: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
-			references: { Model: AmmunitionType, key: 'ammoModelID' },
 		},
-		supplierID: { type: DataTypes.INTEGER, primaryKey: true, references: { Model: Supplier, key: 'supplierID' } },
+		supplierID: { type: DataTypes.INTEGER, primaryKey: true },
 	},
 	{ freezeTableName: true, timestamps: false }
 );
 
+SupplyAmmunition.belongsTo(AmmunitionType, { foreignKey: 'ammoModelID' });
 SupplyAmmunition.removeAttribute('id');
 
 module.exports = SupplyAmmunition;
