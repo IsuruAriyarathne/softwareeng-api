@@ -28,7 +28,7 @@ router.put('/:userId', (req, res) => {
 		.catch((err) => console.log(err));
 });
 
-router.post('/', (req, res) => {
+router.post('/',async(req, res) => {
 	//validate the user
 	const {error} = validate(req.body);
 	if(error) return res.status(400).send(error.detaails[0].message);
