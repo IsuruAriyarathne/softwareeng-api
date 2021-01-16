@@ -33,6 +33,7 @@ app.use('/testapi',testAPIRouter)
 // Define all routes
 app.use("/admin/stations", require("./routes/admin/stations"));
 app.use("/admin/users",cors(), require("./routes/admin/users"));
+app.use("/officer/recovery", require("./routes/officer/recovery"));
 app.use("/officer/ammunitions", require("./routes/officer/ammunitions"));
 app.use("/officer/criminalammunitions", require("./routes/officer/criminalammunitions"));
 app.use("/officer/criminalweapons", require("./routes/officer/criminalweapons"));

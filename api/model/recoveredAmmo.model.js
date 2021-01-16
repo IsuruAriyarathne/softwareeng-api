@@ -1,28 +1,25 @@
-const {DataTypes} = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const AmmunitionType = require('./ammunitionType.model')
-const Recovery = require('./recovery.model')
+const AmmunitionType = require('./ammunitionType.model');
 
-const RecoveredAmmunition = sequelize.define('RecoveredAmmunition', {
-    recoveryID: {
+const RecoveredAmmunition = sequelize.define(
+	'RecoveredAmmunition',
+	{
+		recoveryID: {
 			type: DataTypes.INTEGER,
-			references: {
-				model: Recovery,
-				key: 'recoveryID',
-      },
-      primaryKey: true,
+
+			primaryKey: true,
 		},
-    ammoModelID:{
+		ammoModelID: {
 			type: DataTypes.INTEGER,
-			references: {
-				model: AmmunitionType,
-				key: 'ammoModelID',
-      },
-      primaryKey:true,
+
+			primaryKey: true,
 		},
-  }, {freezeTableName: true,timestamps:false})
-  
-  RecoveredAmmunition.removeAttribute('id')
+	},
+	{ freezeTableName: true, timestamps: false }
+);
+
+RecoveredAmmunition.removeAttribute('id');
 // RecoveredAmmunition.hasOne(AmmunitionType)
 // RecoveredAmmunition.hasOne(Recovery)
-module.exports = RecoveredAmmunition;   
+module.exports = RecoveredAmmunition;

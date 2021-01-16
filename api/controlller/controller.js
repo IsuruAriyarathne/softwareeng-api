@@ -5,7 +5,7 @@ exports.findAll = (Model) => {
 	return async (where={}, attributes = [], include = null, orderBy = []) => {
 		let results = await Model.findAll({
 			attributes:{exclude:attributes},
-			include: include == null ? null: {...include},
+			include: include == null ? null: include,
 			where: { ...where },
 			order: [...orderBy],
 			//Get provided amount of results only

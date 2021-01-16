@@ -1,5 +1,6 @@
 const express = require("express");
 const Weapon = require('../../model/weapon.model');
+const Order = require('../../model/order.model');
 const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject'); 
 
@@ -7,14 +8,15 @@ const router = express.Router();
 
 router.get('/', (req,res) => {
 	let findAll = Controller.findAll(Weapon);
-	findAll({})
+	let obj = DbObject.getIncludeObject([Order])
+	findAll({},[],obj)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )
 
 router.get('/:weaponId', (req, res) => {
 	let findAll = Controller.findAll(Weapon);
-	let obj = DbObject.getWhereObject('weaponID', req.params.userId);
+	let obj = DbObject.getWhereObject('weaponID', req.params.weaponId);
 	findAll(obj)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
@@ -22,7 +24,8 @@ router.get('/:weaponId', (req, res) => {
 
 router.put('/::weaponId', (req,res) => {
 	let update = Controller.update(Weapon);
-	let condition = DbObject.getWhereObject('weaponID', req.params.userId);
+	console.log(here);
+	let condition = DbObject.getWhereObject('weaponID', req.params.weaponId);
 	update(condition, req.body)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));

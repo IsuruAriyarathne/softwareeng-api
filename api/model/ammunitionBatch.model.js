@@ -8,18 +8,10 @@ const AmmunitionBatch = sequelize.define(
 	{
 		ammoModelID: {
 			type: DataTypes.INTEGER,
-			references: {
-				model: AmmunitionType,
-				key: 'ammoModelID',
-			},
 			primaryKey: true,
 		},
 		orderID: {
 			type: DataTypes.INTEGER,
-			references: {
-				model: Order,
-				key: 'orderID',
-			},
 			primaryKey: true,
 		},
 		count: DataTypes.INTEGER,
@@ -28,7 +20,7 @@ const AmmunitionBatch = sequelize.define(
 );
 
 AmmunitionBatch.removeAttribute('id');
-
-// AmmunitionBatch.hasOne(Order);
+AmmunitionBatch.belongsTo(Order,{foreignKey:'orderID'});
+AmmunitionBatch.belongsTo(AmmunitionType,{foreignKey:'ammoModelID'});
 
 module.exports = AmmunitionBatch;

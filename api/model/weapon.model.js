@@ -1,5 +1,6 @@
 const {DataTypes} = require('sequelize');
 const sequelize = require('../config/db');
+const Order = require('./order.model');
 
 
 const Weapon = sequelize.define('Weapon', {
@@ -11,5 +12,5 @@ const Weapon = sequelize.define('Weapon', {
   }, {freezeTableName: true,timestamps:false})
   
   Weapon.removeAttribute('id')
-
+Weapon.belongsTo(Order,{foreignKey:'orderID'})
 module.exports = Weapon;
