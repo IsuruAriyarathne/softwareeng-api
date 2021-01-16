@@ -2,7 +2,7 @@ const {DataTypes} = require('sequelize');
 const sequelize = require('../config/db');
 
 
-const AmmunitionType = sequelize.define('AmmunitionStation', {
+const AmmunitionType = sequelize.define('AmmunitionType', {
     ammoModelID: {
       type:DataTypes.INTEGER,
       primaryKey:true,
@@ -14,4 +14,5 @@ const AmmunitionType = sequelize.define('AmmunitionStation', {
   
   AmmunitionType.removeAttribute('id')
 
+  
 module.exports = AmmunitionType;

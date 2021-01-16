@@ -1,17 +1,13 @@
 const express = require("express");
-const AmmunitionBatch = require('../../model/ammunitionBatch.model');
 const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject'); 
-const AmmunitionStation = require("../../model/ammunitionStation.model");
 const AmmunitionType = require("../../model/ammunitionType.model");
 
 const router = express.Router();
 
 router.get('/', (req,res) => {
-	let findAll = Controller.findAll(AmmunitionStation);
-	let include = DbObject.getIncludeObject([AmmunitionType])
-	let where = DbObject.getWhereObject('stationID',req.body.stationID)
-	findAll(where,[],include)
+	let findAll = Controller.findAll(AmmunitionType);
+	findAll()
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )
@@ -21,7 +17,7 @@ router.get('/:ammoId', (req, res) => {
 });
 
 router.put('/:ammoId', (req,res) => {
-	let update = Controller.update(Ammunition);
+	let update = Controller.update(AmmunitionType);
 	let condition = DbObject.getWhereObject('ammoModelID', req.params.ammoId);
 	update(condition, req.body)
 		.then((data) => res.send(data))
@@ -29,8 +25,10 @@ router.put('/:ammoId', (req,res) => {
 } )
 
 router.post('/', (req,res) => {
-	res.send('Unauthorized');
-} )
+	let create = Controller.create(AmmunitionType);
+	create(req.body)
+		.then((data) => res.send(data))
+		.catch((err) => console.log(err));} )
 
 router.delete('/', (req,res) => {
 	res.send('Unauthorized');
