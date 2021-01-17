@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const express = require('express');
-const {User,validate} = require('../../model/user.model');
+const User = require('../../model/user.model');
 const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject');
 

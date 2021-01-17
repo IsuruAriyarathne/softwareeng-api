@@ -108,7 +108,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use('/',cors(), indexRouter);
 
-app.use(authenticate.verifyUser);
+// app.use(authenticate.verifyUser);
 app.use('/testapi',testAPIRouter)
 
 // Define all routes

@@ -7,18 +7,18 @@ const WeaponModel = require("../../model/weaponModel.model");
 
 const router = express.Router();
 
-router.get('/', (req,res) => {
+router.get('/:stationID', (req,res) => {
 	let findAll = Controller.findAll(WeaponStation);
 	let include = DbObject.getIncludeObject([[Weapon,WeaponModel]])
-	let where = DbObject.getWhereObject('stationID',req.body.stationID)
+	let where = DbObject.getWhereObject('stationID',req.params.stationID)
 	findAll(where,[],include)
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )
 
-router.get('/:weaponId', (req, res) => {
-	res.send('Unauthorized')
-});
+// router.get('/:weaponId', (req, res) => {
+// 	res.send('Unauthorized')
+// });
 
 router.put('/:weaponId', (req,res) => {
 	let update = Controller.update(Weapon);
