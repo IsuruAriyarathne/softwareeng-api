@@ -8,24 +8,23 @@ const { converter } = require('../../services/objectConverter');
 const { object } = require('joi');
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/:stationID', (req,res) => {
 	let findAll = Controller.findAll(WeaponStation);
-	let include = DbObject.getIncludeObject([[Weapon, WeaponModel]]);
-	let where = DbObject.getWhereObject('stationID', req.body.stationID);
+	let include = DbObject.getIncludeObject([[Weapon,WeaponModel]])
+	let where = DbObject.getWhereObject('stationID',req.params.stationID)
 	findAll({ where: where, include: include })
-		.then((data) => {
-			// console.log(data);
+	.then((data) => {
+		// console.log(data);
 
-			data = data.map((item) => converter(item.dataValues));
-			console.log(data);
-			res.send(data);
-		})
-		.catch((err) => console.log(err));
+		data = data.map((item) => converter(item.dataValues));
+		console.log(data);
+		res.send(data);
+	})
 });
 
-router.get('/:weaponId', (req, res) => {
-	res.send('Unauthorized');
-});
+// router.get('/:weaponId', (req, res) => {
+// 	res.send('Unauthorized')
+// });
 
 router.put('/:weaponId', (req, res) => {
 	let update = Controller.update(Weapon);
