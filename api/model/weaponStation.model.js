@@ -12,6 +12,6 @@ const WeaponStation = sequelize.define('WeaponStation', {
   }, {freezeTableName: true,timestamps:false})
   
   WeaponStation.removeAttribute('id')
-  WeaponStation.hasMany(Weapon, { foreignKey: 'weaponID' });
+  WeaponStation.hasOne(Weapon, { foreignKey: 'weaponID' });
 
 module.exports = WeaponStation;

@@ -7,7 +7,7 @@ const User = sequelize.define(
 	{
 		officerID: { type: Sequelize.STRING, primaryKey: true },
 		name: Sequelize.TEXT,
-		location: Sequelize.TEXT,
+		email: Sequelize.TEXT,
 		password: Sequelize.TEXT,
 		role: Sequelize.TEXT,
 		stationID: Sequelize.TEXT,

@@ -13,15 +13,15 @@ router.get('/', (req,res) => {
     let where = DbObject.getWhereObject('stationID',req.body.stationID)
     let include = DbObject.getIncludeObject([RecoveredAmmunition,RecoveredWeapon])
     console.log(include);
-	findAll(where,[],include)
+	findAll({where: where,include:include})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )
 
 router.get('/:recoveryID', (req, res) => {
 	let findAll = Controller.findAll(Recovery);
-	let obj = DbObject.getWhereObject('recoveryID', req.params.recoveryID);
-	findAll(obj)
+	let where = DbObject.getWhereObject('recoveryID', req.params.recoveryID);
+	findAll({where:where})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 });

@@ -8,7 +8,7 @@ const WeaponAmmunition = require('./weaponAmmo.model');
 const Weapon = sequelize.define('Weapon', {
     weaponID: DataTypes.INTEGER,
     weaponModelID: DataTypes.INTEGER,
-    orderId: DataTypes.INTEGER,
+    orderID: DataTypes.INTEGER,
     state: DataTypes.STRING(20),
     
   }, {freezeTableName: true,timestamps:false})

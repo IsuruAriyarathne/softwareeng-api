@@ -1,12 +1,14 @@
 const express = require("express");
-const {Station,validate} = require('../../model/station.model');
+const Station = require('../../model/station.model');
 const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject'); 
+const validator = require('../../validator/station.validator'); 
 
 const router = express.Router();
 
 router.get('/', (req,res) => {
 	let findAll = Controller.findAll(Station);
+	console.log("In");
 	findAll({})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
@@ -14,8 +16,8 @@ router.get('/', (req,res) => {
 
 router.get('/:stationId', (req, res) => {
 	let findAll = Controller.findAll(Station);
-	let obj = DbObject.getWhereObject('stationID', req.params.stationId);
-	findAll(obj)
+	let where = DbObject.getWhereObject('stationID', req.params.stationId);
+	findAll({where:where})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 });
@@ -30,7 +32,7 @@ router.put('/:stationId', (req,res) => {
 
 router.post('/', async(req,res) => {   
 	//validate the station
-	const {error} = validate(req.body);
+	const {error} = validator(req.body);
 	if(error) return res.status(400).send(error.details[0].message);
 
 	let station = await Station.findOne({ stationID: req.body.stationID});

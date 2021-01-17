@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', (req,res) => {
 	let findAll = Controller.findAll(WeaponModel);
-	findAll()
+	findAll({})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )

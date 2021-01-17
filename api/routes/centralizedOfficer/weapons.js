@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/', (req,res) => {
 	let findAll = Controller.findAll(Weapon);
 	let include = DbObject.getIncludeObject([WeaponModel])
-	findAll({},[],include)
+	findAll({include: include})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )

@@ -11,7 +11,7 @@ router.get('/', (req,res) => {
 	let findAll = Controller.findAll(AmmunitionStation);
 	let include = DbObject.getIncludeObject([AmmunitionType])
 	let where = DbObject.getWhereObject('stationID',req.body.stationID)
-	findAll(where,[],include)
+	findAll({where:where,include:include})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )

@@ -23,7 +23,7 @@ exports.getSearchObject = (col, order) => {
 	return obj;
 };
 
-exports.getIncludeObject = (models) => {
+exports.getIncludeObject = (models,required = true) => {
 	// console.log(arguments);
 	arr = [];
 	for (let i = 0; i < models.length; i++) {
@@ -37,7 +37,7 @@ exports.getIncludeObject = (models) => {
 			// obj1['required'] = true;
 			arr1[0] = obj1;
 		}
-		obj['required'] = true;
+		obj['required'] = required;
 		if (arr1.length > 0) {
 			obj['include'] = arr1;
 		}

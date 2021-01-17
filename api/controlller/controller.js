@@ -2,10 +2,12 @@ const Op = require('sequelize');
 
 //select Queries
 exports.findAll = (Model) => {
-	return async (where={}, attributes = [], include = null, orderBy = []) => {
+	return async ({ where = {}, attributes = [], include = null, orderBy = [] }) => {
+		console.log("here too");
+		console.log(where);
 		let results = await Model.findAll({
-			attributes:{exclude:attributes},
-			include: include == null ? null: include,
+			attributes: attributes.length > 0 && attributes[0] != 'exclude'? attributes:{ exclude: attributes.slice(1) },
+			include: include == null ? null : include,
 			where: { ...where },
 			order: [...orderBy],
 			//Get provided amount of results only
@@ -21,7 +23,7 @@ exports.findAll = (Model) => {
 //Expects data with the matching field names
 exports.create = (Model) => {
 	return async (payload) => {
-		console.log(payload); 
+		console.log(payload);
 		const results = await Model.create({ ...payload });
 		return results;
 	};
@@ -29,7 +31,7 @@ exports.create = (Model) => {
 
 exports.bulkCreate = (Model) => {
 	return async (payload) => {
-		console.log(payload); 
+		console.log(payload);
 		const results = await Model.bulkCreate(payload);
 		return results;
 	};

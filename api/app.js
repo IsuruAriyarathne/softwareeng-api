@@ -117,6 +117,8 @@ app.use("/admin/users",cors(), require("./routes/admin/users"));
 app.use("/officer/recovery", require("./routes/officer/recovery"));
 app.use("/officer/ammunitions", require("./routes/officer/ammunitions"));
 app.use("/officer/weapons", require("./routes/officer/weapons"));
+app.use("/officer/weaponsModels", require("./routes/officer/weaponModel"));
+app.use("/officer/ammoModels", require("./routes/officer/ammoModel"));
 app.use("/centralizedOfficer/companies", require("./routes/centralizedOfficer/companies"));
 app.use("/centralizedOfficer/ammunitions", require("./routes/centralizedOfficer/ammunitions"));
 app.use("/centralizedOfficer/weapons", require("./routes/centralizedOfficer/weapons"));

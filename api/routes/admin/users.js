@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const express = require('express');
-const {User,validate} = require('../../model/user.model');
+const User = require('../../model/user.model');
 const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject');
 
@@ -8,15 +8,15 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
 	let findAll = Controller.findAll(User);
-	findAll({},['password'])
+	findAll({attributes:['exclude','password']})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 });
 
 router.get('/:userId', (req, res) => {
 	let findAll = Controller.findAll(User);
-	let obj = DbObject.getWhereObject('officerID', req.params.userId);
-	findAll(obj,['password'])
+	let where = DbObject.getWhereObject('officerID', req.params.userId);
+	findAll({where:where,attributes:['exclude','password']})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 });
@@ -35,7 +35,7 @@ router.post('/',async(req, res) => {
 	if(error) return res.status(400).send(error.detaails[0].message);
 
 	let user = await User.findOne({ officerID: req.body.officerID});
-	if(user) return res.status(400).send("User already registered.");
+	if(!user) return res.status(400).send("User already registered.");
 
 	const salt = await bcrypt.genSalt(10);
 	user.password = await bcrypt.hash(user.password,salt);

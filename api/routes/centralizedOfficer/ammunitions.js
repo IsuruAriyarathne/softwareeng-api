@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/', (req,res) => {
 	let findAll = Controller.findAll(AmmunitionBatch);
 	let include = DbObject.getIncludeObject([AmmunitionType])
-	findAll({},[],include)
+	findAll({include: include})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 } )

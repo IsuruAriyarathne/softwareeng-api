@@ -21,6 +21,7 @@ const AmmunitionStation = sequelize.define(
 			primaryKey: true,
 		},
 		allocatedDate: DataTypes.DATEONLY,
+		state: DataTypes.STRING(10),
 	},
 	{ freezeTableName: true, timestamps: false }
 );

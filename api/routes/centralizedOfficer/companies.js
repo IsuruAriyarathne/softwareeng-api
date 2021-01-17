@@ -14,8 +14,8 @@ router.get('/', (req, res) => {
 
 router.get('/:supplierID', (req, res) => {
 	let findAll = Controller.findAll(Company);
-	let obj = DbObject.getWhereObject('supplierID', req.params.supplierID);
-	findAll(obj)
+	let where = DbObject.getWhereObject('supplierID', req.params.supplierID);
+	findAll({where:where})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 });

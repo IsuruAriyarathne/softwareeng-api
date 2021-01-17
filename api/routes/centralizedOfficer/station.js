@@ -14,8 +14,8 @@ router.get('/', (req,res) => {
 
 router.get('/:stationId', (req, res) => {
 	let findAll = Controller.findAll(Station);
-	let obj = DbObject.getWhereObject('stationID', req.params.stationId);
-	findAll(obj)
+	let where = DbObject.getWhereObject('stationID', req.params.stationId);
+	findAll({where:where})
 		.then((data) => res.send(data))
 		.catch((err) => console.log(err));
 });
