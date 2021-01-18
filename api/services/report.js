@@ -37,7 +37,6 @@ cron.schedule('* * * * *', () => {
 	let stockWeapons = []; //array of objects each object is of form {"weaponID","count","weaponModel"}
 	let stockammunition = []; //array of objects each object is of form {"ammoModelID","count","ammoModel"}
 
-
 	// const weapons = [
 	// 	{ weaponID: 1, weaponModel: 'T-56' },
 	// 	{ weaponID: 2, weaponModel: 'Sniper' },
@@ -47,14 +46,14 @@ cron.schedule('* * * * *', () => {
 	// 	{ ammoModelID: 2, ammoModel: '.300 Magnum Ammo' },
 	// ]; // should be generated using the database
 
-	// const recoveredWeapons = [
-	// 	{ weaponID: 1, weaponModel: 'T-56' },
-	// 	{ weaponID: 2, weaponModel: 'Sniper' },
-	// ]; // should be generated using the database
-	// const recoverdAammunition = [
-	// 	{ ammoModelID: 1, ammoModel: '7.6mm' },
-	// 	{ ammoModelID: 2, ammoModel: '.300 Magnum Ammo' },
-	// ]; // should be generated using the database
+	const recoveredWeapons = [
+		{ weaponID: 1, weaponModel: 'T-56' },
+		{ weaponID: 2, weaponModel: 'Sniper' },
+	]; // should be generated using the database
+	const recoverdAammunition = [
+		{ ammoModelID: 1, ammoModel: '7.6mm' },
+		{ ammoModelID: 2, ammoModel: '.300 Magnum Ammo' },
+	]; // should be generated using the database
 
 	Station.findAll({ attributes: ['stationID', 'name'] })
 		.then((data) => {
