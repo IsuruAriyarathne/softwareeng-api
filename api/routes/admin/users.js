@@ -3,7 +3,7 @@ const express = require('express');
 const User = require('../../model/user.model');
 const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject');
-
+var generator = require('generate-password');
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -37,23 +37,21 @@ router.post('/',async(req, res) => {
 	let user = await User.findOne({ officerID: req.body.officerID});
 	if(!user) return res.status(400).send("User already registered.");
 
+	user = req.body
+	user.password = generator.generate({
+		length: 10,
+		numbers: true
+	});
+
 	const salt = await bcrypt.genSalt(10);
 	user.password = await bcrypt.hash(user.password,salt);
 
-	user = new User({
-		officerID: req.body.officerID,
-		name: req.body.name,
-		location: req.body.location,
-		password: req.body.password,
-		role: req.body.role,
-		stationID: req.body.stationID
-	});
-
-	await user.save();
-
 	let create = Controller.create(User);
 	create(req.body)
-		.then((data) => res.send(data))
+		.then((data) => {
+			res.send(data)
+			
+		})
 		.catch((err) => console.log(err));
 });
 

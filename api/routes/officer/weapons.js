@@ -11,6 +11,7 @@ const router = express.Router();
 router.get('/:stationID', (req,res) => {
 	let findAll = Controller.findAll(WeaponStation);
 	let include = DbObject.getIncludeObject([[Weapon,WeaponModel]])
+	console.log(include);
 	let where = DbObject.getWhereObject('stationID',req.params.stationID)
 	findAll({ where: where, include: include })
 	.then((data) => {

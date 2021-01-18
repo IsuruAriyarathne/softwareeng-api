@@ -124,6 +124,7 @@ app.use("/centralizedOfficer/ammunitions", require("./routes/centralizedOfficer/
 app.use("/centralizedOfficer/weapons", require("./routes/centralizedOfficer/weapons"));
 app.use("/centralizedOfficer/weaponModels", require("./routes/centralizedOfficer/weaponModel"));
 app.use("/centralizedOfficer/ammoModels", require("./routes/centralizedOfficer/ammoModel"));
+app.use("/centralizedOfficer/reports", require("./routes/centralizedOfficer/report"));
 app.use(cors())
 
 // catch 404 and forward to error handler

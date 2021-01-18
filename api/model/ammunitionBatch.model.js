@@ -16,6 +16,7 @@ const AmmunitionBatch = sequelize.define(
 			primaryKey: true,
 		},
 		count: DataTypes.INTEGER,
+		remain: DataTypes.INTEGER,
 	},
 	{ freezeTableName: true, timestamps: false }
 );

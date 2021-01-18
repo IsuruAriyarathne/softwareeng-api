@@ -7,13 +7,13 @@ var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config/config');
 
 exports.local = passport.use(new LocalStrategy( {usernameField:"officerID", passwordField:"password" },(officerID,password, done) => {
-    User.findOne({officerID:officerID})
+    User.findOne({where:{officerID:officerID}})
         .then(user => {
             if(!user){
                 return done(null,false)
             }
-            else if(user[0].password == password){
-                return done(null,user[0].dataValues);
+            else if(user.password == password){
+                return done(null,user.dataValues);
             }
             else{
                 return done(null,false)

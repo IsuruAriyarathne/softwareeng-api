@@ -2,7 +2,8 @@ const {DataTypes} = require('sequelize');
 const sequelize = require('../config/db');
 const Order = require('./order.model');
 const WeaponModel = require('./weaponModel.model');
-const WeaponAmmunition = require('./weaponAmmo.model');
+// const WeaponAmmunition = require('./weaponAmmo.model');
+// const WeaponStation = require('./weaponStation.model');
 
 
 const Weapon = sequelize.define('Weapon', {

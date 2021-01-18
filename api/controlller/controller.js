@@ -3,8 +3,6 @@ const Op = require('sequelize');
 //select Queries
 exports.findAll = (Model) => {
 	return async ({ where = {}, attributes = [], include = null, orderBy = [] }) => {
-		console.log("here too");
-		console.log(where);
 		let results = await Model.findAll({
 			attributes: attributes.length > 0 && attributes[0] != 'exclude'? attributes:{ exclude: attributes.slice(1) },
 			include: include == null ? null : include,
