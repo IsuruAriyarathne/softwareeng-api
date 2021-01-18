@@ -32,3 +32,18 @@ exports.groupByWeapon = (items, arr) =>{
     ;
     return uniqueItems;
 }
+
+
+exports.groupRecovery = (ammunition,weapon) =>{
+    let result = ammunition
+    weapon.forEach(obj =>{
+        let index = result.findIndex(item => item.recoveryID == obj.recoveryID)
+        if(index >= 0){
+            result[index]["RecoveredWeapons"] = obj.RecoveredWeapons
+        }
+        else{
+            result.push(obj)
+        }
+    })
+    return result;
+}

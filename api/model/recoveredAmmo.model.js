@@ -20,4 +20,5 @@ const RecoveredAmmunition = sequelize.define(
 );
 
 RecoveredAmmunition.removeAttribute('id');
+RecoveredAmmunition.belongsTo(AmmunitionType,{foreignKey:'ammoModelID'})
 module.exports = RecoveredAmmunition;

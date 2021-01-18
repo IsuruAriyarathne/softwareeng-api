@@ -1,0 +1,239 @@
+{
+    "stations": [{
+            "stationID": 1,
+            "name": "Matara"
+        },
+        {
+            "stationID": 2,
+            "name": "Saliyapura"
+        },
+        {
+            "stationID": 3,
+            "name": "Mirihana"
+        },
+        {
+            "stationID": 4,
+            "name": "Boosa"
+        },
+        {
+            "stationID": 5,
+            "name": "3rd Gemunu Regiment Army Camp"
+        },
+        {
+            "stationID": 6,
+            "name": "Hambantota"
+        }
+    ],
+    "weapons": [{
+            "stationID": 1,
+            "weapons": [{
+                "weaponID": 1,
+                "stationID": 1,
+                "assigned": 1,
+                "assignedDate": "2020-10-10",
+                "weaponModelID": 1,
+                "orderID": 1,
+                "state": "Available",
+                "name": "Shot gun",
+                "description": "Used to shoot"
+            }]
+        },
+        {
+            "stationID": 2,
+            "weapons": []
+        },
+        {
+            "stationID": 3,
+            "weapons": []
+        },
+        {
+            "stationID": 4,
+            "weapons": []
+        },
+        {
+            "stationID": 5,
+            "weapons": []
+        },
+        {
+            "stationID": 6,
+            "weapons": []
+        }
+    ],
+    "ammunitions": [{
+            "stationID": 1,
+            "ammunitions": [{
+                "ammoModelID": 1,
+                "count": 10,
+                "orderID": 1,
+                "stationID": 1,
+                "allocatedDate": "2021-01-08",
+                "remaining": 10,
+                "name": "Bullet",
+                "description": "For all type of guns"
+            }]
+        },
+        {
+            "stationID": 2,
+            "ammunitions": []
+        },
+        {
+            "stationID": 3,
+            "ammunitions": []
+        },
+        {
+            "stationID": 4,
+            "ammunitions": []
+        },
+        {
+            "stationID": 5,
+            "ammunitions": []
+        },
+        {
+            "stationID": 6,
+            "ammunitions": []
+        }
+    ],
+    "ammunitionsStock": [{
+        "ammoModelID": 1,
+        "remain": 0,
+        "ammoModel": "Bullet",
+        "count": null
+    }],
+    "weaponStock": [{
+        "weaponID": 1,
+        "count": 3,
+        "weaponModel": "Shot gun"
+    }],
+    "recovery": [{
+            "recoveryID": 1,
+            "recoveryDate": "2020-10-10",
+            "description": "From thieves",
+            "stationID": 1,
+            "RecoveredAmmunitions": [{
+                "recoveryID": 1,
+                "ammoModelID": 1,
+                "name": "Bullet",
+                "description": "For all type of guns"
+            }],
+            "RecoveredWeapons": []
+        },
+        {
+            "recoveryID": 2,
+            "recoveryDate": "2020-10-12",
+            "description": "Done",
+            "stationID": 1,
+            "RecoveredAmmunitions": [{
+                "recoveryID": 2,
+                "ammoModelID": 1,
+                "name": "Bullet",
+                "description": "For all type of guns"
+            }],
+            "RecoveredWeapons": [{
+                "recoveryID": 2,
+                "weaponModelID": 1,
+                "name": "Shot gun",
+                "description": "Used to shoot"
+            }]
+        },
+        {
+            "recoveryID": 3,
+            "recoveryDate": "2020-11-12",
+            "description": "Done Now",
+            "stationID": 1,
+            "RecoveredAmmunitions": [{
+                "recoveryID": 3,
+                "ammoModelID": 1,
+                "name": "Bullet",
+                "description": "For all type of guns"
+            }],
+            "RecoveredWeapons": [{
+                "recoveryID": 3,
+                "weaponModelID": 1,
+                "name": "Shot gun",
+                "description": "Used to shoot"
+            }]
+        }
+    ],
+    "recoveredAmmunition": [{
+            "recoveryID": 1,
+            "recoveryDate": "2020-10-10",
+            "description": "From thieves",
+            "stationID": 1,
+            "RecoveredAmmunitions": [{
+                "recoveryID": 1,
+                "ammoModelID": 1,
+                "name": "Bullet",
+                "description": "For all type of guns"
+            }],
+            "RecoveredWeapons": []
+        },
+        {
+            "recoveryID": 2,
+            "recoveryDate": "2020-10-12",
+            "description": "Done",
+            "stationID": 1,
+            "RecoveredAmmunitions": [{
+                "recoveryID": 2,
+                "ammoModelID": 1,
+                "name": "Bullet",
+                "description": "For all type of guns"
+            }],
+            "RecoveredWeapons": [{
+                "recoveryID": 2,
+                "weaponModelID": 1,
+                "name": "Shot gun",
+                "description": "Used to shoot"
+            }]
+        },
+        {
+            "recoveryID": 3,
+            "recoveryDate": "2020-11-12",
+            "description": "Done Now",
+            "stationID": 1,
+            "RecoveredAmmunitions": [{
+                "recoveryID": 3,
+                "ammoModelID": 1,
+                "name": "Bullet",
+                "description": "For all type of guns"
+            }],
+            "RecoveredWeapons": [{
+                "recoveryID": 3,
+                "weaponModelID": 1,
+                "name": "Shot gun",
+                "description": "Used to shoot"
+            }]
+        }
+    ],
+    "recoveredWeapons": [{
+            "recoveryID": 2,
+            "recoveryDate": "2020-10-12",
+            "description": "Done",
+            "stationID": 1,
+            "RecoveredWeapons": [{
+                "recoveryID": 2,
+                "weaponModelID": 1,
+                "name": "Shot gun",
+                "description": "Used to shoot"
+            }]
+        },
+        {
+            "recoveryID": 3,
+            "recoveryDate": "2020-11-12",
+            "description": "Done Now",
+            "stationID": 1,
+            "RecoveredWeapons": [{
+                "recoveryID": 3,
+                "weaponModelID": 1,
+                "name": "Shot gun",
+                "description": "Used to shoot"
+            }]
+        },
+        {
+            "recoveryID": 1,
+            "recoveryDate": "2020-10-10",
+            "description": "From thieves",
+            "stationID": 1,
+            "RecoveredWeapons": []
+        }
+    ]
+}

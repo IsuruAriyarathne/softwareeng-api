@@ -18,5 +18,5 @@ const RecoveredWeapon = sequelize.define(
 );
 
 RecoveredWeapon.removeAttribute('id');
-
+RecoveredWeapon.belongsTo(WeaponModel,{foreignKey:'weaponModelID'})
 module.exports = RecoveredWeapon;
