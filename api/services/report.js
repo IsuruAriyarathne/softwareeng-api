@@ -1,4 +1,4 @@
-// const { sendMail } = require('./middleware/reportSender');
+const { sendMail } = require('../middleware/reportSender');
 var cron = require('node-cron');
 const Station = require('../model/station.model');
 const Weapon = require('../model/weapon.model');
@@ -15,21 +15,8 @@ const RecoveredAmmunition = require('../model/recoveredAmmo.model');
 const RecoveredWeapon = require('../model/recoveredWeapon.model');
 
 cron.schedule('* * * * *', () => {
-	// This is currently set to function every minute, change that to ever 30th day of the month
 	// cron.schedule('55 23 30 * *', () => {     // This is set to function on every 30th day of the month at 11.55 pm
-	/* 
-  
-      # ┌────────────── second (optional)
-      # │ ┌──────────── minute
-      # │ │ ┌────────── hour
-      # │ │ │ ┌──────── day of month
-      # │ │ │ │ ┌────── month
-      # │ │ │ │ │ ┌──── day of week
-      # │ │ │ │ │ │
-      # │ │ │ │ │ │
-      # * * * * * *
-  
-      */
+
 	let reportBody = '';
 	var date = new Date();
 	var startDate = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -39,28 +26,12 @@ cron.schedule('* * * * *', () => {
 	let ammunitionModels = [];
 	let weapons = []; //array of objects. each object of form {'stationID': , "weapons":[{"weaponID","name","description",stationID","assigned",assignedDate, weaponModelID, orderID, state}, {}, {}]}
 	let ammunitions = []; //array of objects. each object of form {'stationID': , "ammunitions":[{"ammoModelID",name, description,"stationID","count",allocatedDate, remaining, orderID,}, {}, {}]}
-	let stockWeapons = []; //array of objects each object is of form {"weaponID","count","weaponModel"}
-	let stockammunition = []; //array of objects each object is of form {"ammoModelID","count","ammoModel"}
+	let weaponStock = []; //array of objects each object is of form {"weaponID","count","weaponModel"}
+	let ammunitionsStock = []; //array of objects each object is of form {"ammoModelID","count","ammoModel"}
 	let recovery = []; // array of objects each object is of form {"recoveryID","recoveryDate","description","stationID","RecoveredAmmunition":[array with objects]}
 	let recoveredWeapons = [];
 	let recoveredAmmunition = [];
-	// const weapons = [
-	// 	{ weaponID: 1, weaponModel: 'T-56' },
-	// 	{ weaponID: 2, weaponModel: 'Sniper' },
-	// ]; // should be generated using the database
-	// const ammunition = [
-	// 	{ ammoModelID: 1, ammoModel: '7.6mm' },
-	// 	{ ammoModelID: 2, ammoModel: '.300 Magnum Ammo' },
-	// ]; // should be generated using the database
 
-	const recoveredWeapons = [
-		{ weaponID: 1, weaponModel: 'T-56' },
-		{ weaponID: 2, weaponModel: 'Sniper' },
-	]; // should be generated using the database
-	const recoverdAammunition = [
-		{ ammoModelID: 1, ammoModel: '7.6mm' },
-		{ ammoModelID: 2, ammoModel: '.300 Magnum Ammo' },
-	]; // should be generated using the database
 
 	Station.findAll({ attributes: ['stationID', 'name'] })
 		.then((data) => {
@@ -189,6 +160,128 @@ cron.schedule('* * * * *', () => {
 			});
 			recoveredWeapons = result;
 			recovery = groupRecovery(recoveredAmmunition, recoveredWeapons);
+
+			let stationtArr =[]
+
+			stations.forEach((station) => {
+				let dataObject = {}
+		
+				dataObject.stationID = station.stationID
+				dataObject.stationName = station.name
+				stationtArr.push(dataObject)
+			})                                                       // stationArr is created with each element in the format { stationID: 1, stationName: 'Matara' }
+
+			let weaponArr = []
+
+			weapons.forEach((weapon) => {
+				let dataObject = {}
+				let weapArr = []
+
+				dataObject.stationID = weapon.stationID
+				dataObject.weapons = weapArr
+				weapon.weapons.forEach((weap) => {
+					weapObject = {}
+					weapObject.name = weap.name
+					weapObject.count = 1
+					if(!dataObject.weapons.includes(weapObject)) {
+						weapObject.count ++
+					}
+					dataObject.weapons.push(weapObject)
+				})
+
+				weaponArr.push(dataObject)
+			})                                                        // weaponArr is created with each element in the format [ { name: 'Shot gun', count: 2 } ]                                           
+
+			let ammunitionArr = []
+
+			ammunitions.forEach((ammunition) => {
+				let dataObject = {}
+				let ammoArr = []
+
+				dataObject.stationID = ammunition.stationID
+				dataObject.ammunitions = ammoArr
+				ammunition.ammunitions.forEach((ammo) => {
+					ammoObject = {}
+					ammoObject.name = ammo.name
+					ammoObject.count = ammo.count
+					if(ammoArr.length>0) {
+						ammoArr.forEach((o) => {
+						if(o.name===ammo.name){
+							o.count += ammo.count
+						} else {
+							ammoArr.push(ammoObject)
+						}
+						})
+					}
+					ammoArr.push(ammoObject)
+				})
+
+				ammunitionArr.push(dataObject)
+			 })                                                         // ammunitionArr is created with each element in the format[ { name: 'Bullet', count: 10 } ]
+
+
+			for (i=0; i<stationtArr.length; i++){
+				reportBody += '<h2>Station : ' + stationtArr[i].stationName + '</h2>'
+				reportBody += '<h3>Weapons</h3>'
+				weaponArr[i].weapons.forEach((weapon) => {
+					reportBody += '<p>'+weapon.name + ' : ' + weapon.count + '</p>'
+				})
+				reportBody += '<h3>Ammunitions</h3>'
+				ammunitionArr[i].ammunitions.forEach((ammunition) => {
+					reportBody += '<p>'+ammunition.name + ' : ' + ammunition.count + '</p><br>'
+				})
+			}
+
+			reportBody += '<br><h2>' + 'Recovered' + '</h2>'
+
+			recovery.forEach((reco) => {
+				reportBody += '<h4>'+reco.recoveryDate + ' : ' + reco.description + '</h4>' 
+				const recoveredItems = []
+					if(reco.RecoveredAmmunition.length>0){
+						reco.RecoveredAmmunition.forEach((ammo) => {
+							if(! recoveredItems.includes(`${ammo.name}s`)) recoveredItems.push(`${ammo.name}s`)
+						})
+					}
+					if(reco.RecoveredWeapons.length>0){
+						reco.RecoveredWeapons.forEach((weapo) => {
+							if(! recoveredItems.includes(`${weapo.name}s`)) recoveredItems.push(`${weapo.name}s`)
+						})
+					}
+					if(recoveredItems.length>0){
+						recoveredItems.forEach((item) => {
+							reportBody += '<p>' + item + '</p>'
+						})
+					}		
+			})
+
+			reportBody += '<br><h2>' + 'Stocks' + '</h2>'
+			reportBody += '<h3>Weapons</h3>'
+			weaponStock.forEach((weapon) => {
+				reportBody += '<p>' + weapon.weaponModel +' : '+ weapon.count+'</p>'
+			})	
+			reportBody += '<h3>Ammunitions</h3>'
+			ammunitionsStock.forEach((ammo) => {
+				reportBody += '<p>' + ammo.ammoModel +' : '+ ammo.count+'</p>'
+			})	
+			const monthNames = [
+				'January',
+				'February',
+				'March',
+				'April',
+				'May',
+				'June',
+				'July',
+				'August',
+				'September',
+				'October',
+				'November',
+				'December',
+			];
+			const reportSubject = `Monthly Report: ${monthNames[new Date().getMonth()]} ${new Date().getFullYear()}`;
+		
+			sendMail(reportSubject, reportBody);
+
+			
 			res.send({
 				stations: stations,
 				weapons: weapons,
@@ -203,59 +296,4 @@ cron.schedule('* * * * *', () => {
 
 		.catch((err) => console.log(err));
 
-	reportBody += `<h2>Station :${station.stationName}</h2>`;
-
-	reportBody += '<h3>Weapons</h3>';
-	weapons.forEach((weapon) => {
-		const count = 5; // should be generated using the database
-		reportBody += `<p>${weapon.weaponModel} - ${count} units</p>`;
-	});
-
-	reportBody += '<h3>Ammunition</h3>';
-	ammunition.forEach((ammo) => {
-		const count = 40000; // should be generated using the database
-		reportBody += `<p>${ammo.ammoModel} - ${count} bullets</p>`;
-	});
-
-	reportBody += '<h3>Recovered Weapons</h3>';
-	recoveredWeapons.forEach((weapon) => {
-		const count = 5; // should be generated using the database
-		reportBody += `<p>${weapon.weaponModel} - ${count} units</p>`;
-	});
-
-	reportBody += '<h3>Recovered Ammunition</h3>';
-	recoverdAammunition.forEach((ammo) => {
-		const count = 40000; // should be generated using the database
-		reportBody += `<p>${ammo.ammoModel} - ${count} bullets</p>`;
-	});
-
-	reportBody += '<br>';
-
-	reportBody += '<h3>Stock Weapons</h3>';
-	stockWeapons.forEach((weapon) => {
-		reportBody += `<p>${weapon.weaponModel} - ${weapon.count}</p>`;
-	});
-
-	reportBody += '<h3>Stock Ammunition</h3>';
-	stockammunition.forEach((ammo) => {
-		reportBody += `<p>${ammo.ammoModel} - ${ammo.count}</p>`;
-	});
-
-	const monthNames = [
-		'January',
-		'February',
-		'March',
-		'April',
-		'May',
-		'June',
-		'July',
-		'August',
-		'September',
-		'October',
-		'November',
-		'December',
-	];
-	const reportSubject = `Monthly Report: ${monthNames[new Date().getMonth()]} ${new Date().getFullYear()}`;
-
-	sendMail(reportSubject, reportBody);
 });
