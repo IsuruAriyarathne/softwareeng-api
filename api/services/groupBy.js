@@ -12,7 +12,7 @@ exports.groupBy = (items, arr,type) =>{
 }
 exports.groupByAmmunition = (items, arr) =>{
     let uniqueItems = items.map(item => {
-        return {'ammoModelID':item['ammoModelID'],'remain':0,'ammoModel':item.name}
+        return {'ammoModelID':item['ammoModelID'],'count':0,'ammoModel':item.name}
     }) //ammoModelID
     arr.forEach(ele =>{
         let index = uniqueItems.findIndex(obj => obj.ammoModelID == ele.ammoModelID)
