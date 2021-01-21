@@ -1,42 +1,17 @@
 const express = require("express");
-const Controller = require('../../controlller/controller');
-const DbObject = require('../../controlller/dbObject'); 
-const WeaponModel = require("../../model/weaponModel.model");
-
+const WeaponModelController = require('../../controlller/weaponModel.controller');
 const router = express.Router();
 
-router.get('/', (req,res) => {
-	let findAll = Controller.findAll(WeaponModel);
-	findAll({})
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-} )
+router.get('/', WeaponModelController.getWeaponModels )
 
-router.get('/:weaponId', (req, res) => {
-	res.send('Unauthorized')
+router.get('/:weaponModelId', WeaponModelController.getWeaponModel);
+
+router.put('/:weaponModelId', WeaponModelController.updateWeaponModel)
+
+router.post('/', WeaponModelController.createWeaponModel )
+
+router.all('*', (req, res) => {
+	res.status(404).json({ status: 404, message: 'Not found' });
 });
-
-router.put('/:weaponId', (req,res) => {
-	let update = Controller.update(WeaponModel);
-	let condition = DbObject.getWhereObject('weaponID', req.params.weaponId);
-	update(condition, req.body)
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-} )
-
-router.post('/', (req,res) => {
-	let create = Controller.create(WeaponModel);
-	create(req.body)
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-
-} )
-
-router.delete('/', (req,res) => {
-    res.send('Unauthorized');
-} )
-router.delete('/:weaponId', (req,res) => {
-    res.send('Unauthorized');
-} )
 
 module.exports = router;

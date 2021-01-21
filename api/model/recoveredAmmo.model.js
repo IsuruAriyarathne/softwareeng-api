@@ -15,6 +15,9 @@ const RecoveredAmmunition = sequelize.define(
 
 			primaryKey: true,
 		},
+		amount: {
+			type: DataTypes.INTEGER,
+		},
 	},
 	{ freezeTableName: true, timestamps: false }
 );

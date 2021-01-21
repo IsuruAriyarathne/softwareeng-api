@@ -5,6 +5,7 @@ var ExtractJwt = require('passport-jwt').ExtractJwt;
 var User = require('../model/user.model')
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config/config');
+var bcrypt = require('bcrypt')
 
 exports.local = passport.use(new LocalStrategy( {usernameField:"officerID", passwordField:"password" },(officerID,password, done) => {
     User.findOne({where:{officerID:officerID}})
@@ -12,11 +13,16 @@ exports.local = passport.use(new LocalStrategy( {usernameField:"officerID", pass
             if(!user){
                 return done(null,false)
             }
-            else if(user.password == password){
-                return done(null,user.dataValues);
-            }
             else{
-                return done(null,false)
+                bcrypt.compare(password, user.password, function(err, result) {
+                    if(err){
+                        return done(err,false)
+                    }
+                    if(result){
+                        return done(null,user.dataValues);
+                    }
+                    return done(null,false);
+                });
             }
         })
         .catch(err => done(err,false))

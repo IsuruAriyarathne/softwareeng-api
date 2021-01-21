@@ -10,9 +10,7 @@ const fs = require('fs')
 
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var testAPIRouter = require('./routes/testapi');   
-
+  
 require('./services/report')   // generates and sends the monthly report
 
 var app = express();
@@ -31,7 +29,6 @@ app.use(passport.initialize());
 app.use('/',cors(), indexRouter);
 
 // app.use(authenticate.verifyUser);
-app.use('/testapi',testAPIRouter)
 
 // Define all routes
 app.use("/admin/stations", require("./routes/admin/stations"));
@@ -39,14 +36,14 @@ app.use("/admin/users",cors(), require("./routes/admin/users"));
 app.use("/officer/recovery", require("./routes/officer/recovery"));
 app.use("/officer/ammunitions", require("./routes/officer/ammunitions"));
 app.use("/officer/weapons", require("./routes/officer/weapons"));
-app.use("/officer/weaponsModels", require("./routes/officer/weaponModel"));
+app.use("/officer/weaponModels", require("./routes/officer/weaponModel"));
 app.use("/officer/ammoModels", require("./routes/officer/ammoModel"));
 app.use("/centralizedOfficer/companies", require("./routes/centralizedOfficer/companies"));
 app.use("/centralizedOfficer/ammunitions", require("./routes/centralizedOfficer/ammunitions"));
 app.use("/centralizedOfficer/weapons", require("./routes/centralizedOfficer/weapons"));
 app.use("/centralizedOfficer/weaponModels", require("./routes/centralizedOfficer/weaponModel"));
 app.use("/centralizedOfficer/ammoModels", require("./routes/centralizedOfficer/ammoModel"));
-app.use("/centralizedOfficer/reports", require("./routes/centralizedOfficer/report"));
+// app.use("/centralizedOfficer/reports", require("./routes/centralizedOfficer/report"));
 app.use(cors())
 
 // catch 404 and forward to error handler

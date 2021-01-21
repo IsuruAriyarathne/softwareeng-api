@@ -1,0 +1,65 @@
+var User = require('../model/user.model');
+const bcrypt = require('bcrypt');
+var generator = require('generate-password');
+
+exports.getUsers = async (req, res) => {
+	let users = [];
+	try {
+		users = await User.findAll({ attributes: { exclude: 'password' } });
+		return res.status(200).json({ status: 200, data: users, message: 'Succesfully users Retrieved' });
+	} catch (e) {
+		return res.status(400).json({ status: 400, message: e.message });
+	}
+};
+
+exports.getUser = async (req, res) => {
+	let user = {};
+	try {
+		user = await User.findOne({ attributes:{exclude:'password'}, where: { officerID: req.params.userId } });
+		if (user) {
+			return res.status(200).json({ status: 200, data: user, message: 'Succesfully user Retrieved' });
+		} else {
+			return res.status(404).json({ status: 404, data: user, message: 'User not found' });
+		}
+	} catch (e) {
+		return res.status(400).json({ status: 400, message: e.message });
+	}
+};
+
+exports.createUser = async (req, res) => {
+	let user = req.body;
+	try {
+		let password = generator.generate({
+			length: 10,
+			numbers: true,
+		});
+		let salt = await bcrypt.genSalt(10);
+		user.password = await bcrypt.hash(password, salt);
+		user = await User.create(req.body);
+		return res
+			.status(200)
+			.json({ status: 200, data: { ...user.dataValues, password: password }, message: 'Succesfully user created' });
+	} catch (e) {
+		return res.status(400).json({ status: 400, message: e.message });
+	}
+};
+
+exports.updateUser = async (req, res) => {
+	let user = {};
+	try {
+		user = await User.update({ ...req.body }, { where: { officerID: req.params.userId }, returning: true });
+		user = await User.findOne({ attribute:{exclude:'password'},where: { officerID: req.params.userId } });
+		return res.status(200).json({ status: 200, data: user, message: 'Succesfully user updated' });
+	} catch (e) {
+		return res.status(400).json({ status: 400, message: e.message });
+	}
+};
+
+exports.deleteUser = async (req, res) => {
+	try {
+		await User.destroy({ where: { officerID: req.params.userId } });
+		return res.status(200).json({ status: 200, message: 'Succesfully user deleted' });
+	} catch (e) {
+		return res.status(400).json({ status: 400, message: e.message });
+	}
+};

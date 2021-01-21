@@ -2,43 +2,19 @@ const express = require("express");
 const AmmunitionBatch = require('../../model/ammunitionBatch.model');
 const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject'); 
-const AmmunitionType = require("../../model/ammunitionType.model");
-
+const AmmunitionController = require('../../controlller/ammunition.controller')
 const router = express.Router();
 
-router.get('/', (req,res) => {
-	let findAll = Controller.findAll(AmmunitionBatch);
-	let include = DbObject.getIncludeObject([AmmunitionType])
-	findAll({include: include})
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-} )
+router.get('/', AmmunitionController.getAmmunitionBatches)
 
-router.get('/:ammoId', (req, res) => {
-	res.send('Unauthorized');
+router.get('/:ammoModelId/:orderID', AmmunitionController.getAmmunitionBatch );
+
+router.put('/:ammoModelId', AmmunitionController.updateAmmunitionBatch )
+
+router.post('/', AmmunitionController.createAmmunitionBatch)
+
+router.all('*', (req, res) => {
+	res.status(404).json({ status: 404, message: 'Not found' });
 });
-
-router.put('/:ammoId', (req,res) => {
-	let update = Controller.update(AmmunitionBatch);
-	let condition = DbObject.getWhereObject('ammoModelID', req.params.ammoId);
-	update(condition, req.body)
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-} )
-
-router.post('/', (req,res) => {
-	let create = Controller.create(AmmunitionBatch);
-	create(req.body)
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-} )
-
-router.delete('/', (req,res) => {
-	res.send('Unauthorized');
-} )
-
-router.delete('/:ammoId', (req,res) => {
-	res.send('Unauthorized');
-} )
 
 module.exports = router;
