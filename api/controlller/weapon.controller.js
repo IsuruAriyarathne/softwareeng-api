@@ -22,9 +22,9 @@ exports.getWeaponStation = async (req, res) => {
 			],
 		});
 		weapons = weapons.map((item) => converter(item.dataValues));
-		return res.status(200).json({ status: 200, data: weapons, message: 'Weapons succesfully retrieved' });
+		return res.status(200).send(weapons);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -47,12 +47,12 @@ exports.updateWeaponStation = async (req, res) => {
 			});
 			weapon = converter(weapon.dataValues);
 		} else {
-			return res.status(401).json({ status: 401, data: weapon, message: 'Unauthorized' });
+			return res.status(401).send( weapon);
 		}
 
-		return res.status(200).json({ status: 200, data: weapon, message: 'Weapon succesfully updated' });
+		return res.status(200).send(weapon);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -68,9 +68,9 @@ exports.getWeapons = async (req, res) => {
 				},
 			},
 		});
-		return res.status(200).json({ status: 200, data: weapons, message: 'Weapons succesfully retrieved' });
+		return res.status(200).send(weapons);
 	} catch (e) {
-		return res.status(400).json({ status: 401, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -86,9 +86,9 @@ exports.getWeapon = async (req, res) => {
 				model: Station,
 			},
 		});
-		return res.status(200).json({ status: 200, data: weapon, message: 'Ammunition Batch succesfully retrieved' });
+		return res.status(200).send( weapon);
 	} catch (e) {
-		return res.status(400).json({ status: 401, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -96,9 +96,9 @@ exports.createWeapon = async (req, res) => {
 	let weapon = req.body;
 	try {
 		weapon = await Weapon.create(req.body);
-		return res.status(200).json({ status: 200, data: weapon, message: 'Weapon succesfully created' });
+		return res.status(200).send(weapon);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -107,8 +107,8 @@ exports.updateWeapon = async (req, res) => {
 	try {
 		weapon = await Weapon.update({ ...req.body }, { where: { weaponID: req.params.weaponID }, returning: true });
 		weapon = await weapon.findOne({ where: { weaponModel: req.params.weaponModel } });
-		return res.status(200).json({ status: 200, data: weapon, message: 'Weapon succesfully updated' });
+		return res.status(200).send(weapon);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };

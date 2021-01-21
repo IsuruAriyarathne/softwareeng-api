@@ -12,33 +12,45 @@ exports.getRecoveriesStation = async (req, res) => {
 		recoveries = await Recovery.findAll({
 			where: { stationID: req.params.stationID },
         });
-		return res.status(200).json({ status: 200, data: recoveries, message: 'Recoveries successfully retrieved' });
+		return res.status(200).send(recoveries);
 	} catch (e) {
-		return res.status(400).json({ status: 401, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
 exports.getRecoveryStation = async (req, res) => {
     let recovery = {};
+    let recoveredAmmo = [];
+    let recoveredWeapons = [];
 	try {
 		recovery = await Recovery.findOne({
 			where: { stationID: req.params.stationID, recoveryID: req.params.recoveryID },
         });
         recovery = recovery.dataValues;
 
-		recovery.RecoveredAmmunition = await RecoveredAmmunition.findAll({
+		recoveredAmmo = await RecoveredAmmunition.findAll({
             where: { recoveryID: req.params.recoveryID },
-            include:{model:AmmunitionType}
+			include:{model:AmmunitionType},
         });
         
-		recovery.RecoveredWeapon = await RecoveredWeapon.findAll({
+		recoveredWeapons = await RecoveredWeapon.findAll({
             where: { recoveryID: req.params.recoveryID },
             include:{model: WeaponModel}
-        });
+		});
+		console.log(recoveredAmmo);
+		console.log(recoveredAmmo[0].dataValues);
+
+		console.log(typeof recoveredAmmo);
+        // recoveredAmmo = recoveredAmmo.dataValues;
+        // recoveredWeapons = recoveredWeapons.dataValues;
+        // recoveredAmmo =  recoveredAmmo.map(item => converter(item.dataValues ))
+        // recoveredWeapons =  recoveredWeapons.map(item => converter(item.dataValues))
         
-		return res.status(200).json({ status: 200, data: recovery, message: 'Recovery successfully retrieved' });
+        recovery.RecoveredAmmunitions = recoveredAmmo;
+        recovery.RecoveredWeapons = recoveredWeapons;
+		return res.status(200).send(recovery);
 	} catch (e) {
-		return res.status(400).json({ status: 401, message: e.message });
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -59,9 +71,9 @@ exports.updateWeaponStation = async (req, res) => {
 		weapon = await WeaponStation.findOne({
 			where: { weaponID: req.params.weaponID, stationID: req.body.stationID, assigned: 1 },
 		});
-		return res.status(200).json({ status: 200, data: weapon, message: 'Weapon succesfully updated' });
+		return res.status(200).send(weapon);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -74,9 +86,9 @@ exports.getRecoveries = async (req, res) => {
 				model: Station,
 			},
 		});
-		return res.status(200).json({ status: 200, data: recoveries, message: 'Recoveries successfully retrieved' });
+		return res.status(200).send( recoveries);
 	} catch (e) {
-		return res.status(400).json({ status: 401, message: e.message });
+		return res.status(400).send( e.message );
 	}
 };
 
@@ -92,9 +104,9 @@ exports.getRecovery = async (req, res) => {
 			where: { recoveryID: req.params.recoveryID },
 			include: { model: WeaponModel },
 		});
-		return res.status(200).json({ status: 200, data: recovery, message: 'Recovery succesfully created' });
+		return res.status(200).send( recovery);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -122,9 +134,9 @@ exports.updateRecovery = async (req, res) => {
         recovery = await Recovery.findOne({ where: { recoveryID: req.params.recoveryID } });
         recovery.RecoveredAmmunition = recoveredAmmunitions;
         recovery.RecoveredWeapons = recoveredWeapons;
-		return res.status(200).json({ status: 200, data: recovery, message: 'Succesfully recovery updated' });
+		return res.status(200).send( recovery);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -146,8 +158,8 @@ exports.createRecovery = async (req, res) => {
 		recovery = await Recovery.create(recovery);
 		recovery.RecoveredAmmunition = recoveredAmmunition;
 		recovery.RecoveredWeapons = recoveredWeapons;
-		return res.status(200).json({ status: 200, data: recovery, message: 'Recovery successfully created' });
+		return res.status(200).send( recovery);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };

@@ -23,7 +23,6 @@ const AmmunitionBatch = sequelize.define(
 
 AmmunitionBatch.removeAttribute('id');
 AmmunitionBatch.belongsTo(Order,{foreignKey:'orderID'});
-// AmmunitionBatch.hasMany(AmmunitionStation,{foreignKey:['ammoModelID','orderID']})
 AmmunitionBatch.belongsTo(AmmunitionType,{foreignKey:'ammoModelID'});
 
 module.exports = AmmunitionBatch;

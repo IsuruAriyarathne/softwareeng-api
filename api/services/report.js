@@ -282,16 +282,16 @@ cron.schedule('* * * * *', () => {
 			sendMail(reportSubject, reportBody);
 
 			
-			res.send({
-				stations: stations,
-				weapons: weapons,
-				ammunitions: ammunitions,
-				ammunitionsStock: ammunitionsStock,
-				weaponStock: weaponStock,
-				recovery: recovery,
-				recoveredAmmunition: recoveredAmmunition,
-				recoveredWeapons: recoveredWeapons,
-			});
+			// res.send({
+			// 	stations: stations,
+			// 	weapons: weapons,
+			// 	ammunitions: ammunitions,
+			// 	ammunitionsStock: ammunitionsStock,
+			// 	weaponStock: weaponStock,
+			// 	recovery: recovery,
+			// 	recoveredAmmunition: recoveredAmmunition,
+			// 	recoveredWeapons: recoveredWeapons,
+			// });
 		})
 
 		.catch((err) => console.log(err));

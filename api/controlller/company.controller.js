@@ -9,9 +9,9 @@ exports.getCompanies = async (req, res) => {
 	let suppliers = [];
 	try {
 		suppliers = await Supplier.findAll();
-		return res.status(200).json({ status: 200, data: suppliers, message: 'Companies succesfully retrieved' });
+		return res.status(200).send( suppliers);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -36,9 +36,9 @@ exports.getCompany = async (req, res) => {
 
 		return res
 			.status(200)
-			.json({ status: 200, data: models, message: 'company succesfully retrieved' });
+			.send( models);
 	} catch (e) {
-		return res.status(400).json({ status: 401, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -50,9 +50,9 @@ exports.createCompany = async (req, res) => {
 		company = await Supplier.create(req.body);
 		return res
 			.status(200)
-			.json({ status: 200, data: company, message: 'Company succesfully created' });
+			.send( company);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -71,9 +71,9 @@ exports.updateCompany = async (req, res) => {
 		company = await Supplier.findOne({
 			where: { supplierID: req.params.supplierID },
 		});
-		return res.status(200).json({ status: 200, data: company, message: 'Company succesfully updated' });
+		return res.status(200).send( company);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 

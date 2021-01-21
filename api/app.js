@@ -11,7 +11,7 @@ const fs = require('fs')
 
 var indexRouter = require('./routes/index');
   
-require('./services/report')   // generates and sends the monthly report
+// require('./services/report')   // generates and sends the monthly report
 
 var app = express();
 

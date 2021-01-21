@@ -5,11 +5,11 @@ const DbObject = require('../../controlller/dbObject');
 const AmmunitionController = require('../../controlller/ammunition.controller')
 const router = express.Router();
 
-router.get('/', AmmunitionController.getAmmunitionBatches)
+router.get('/', AmmunitionController.getAmmunitionBatches);
 
-router.get('/:ammoModelId/:orderID', AmmunitionController.getAmmunitionBatch );
+router.get('/:ammoModelID/:orderID', AmmunitionController.getAmmunitionBatch );
 
-router.put('/:ammoModelId', AmmunitionController.updateAmmunitionBatch )
+router.put('/:ammoModelID', AmmunitionController.updateAmmunitionBatch )
 
 router.post('/', AmmunitionController.createAmmunitionBatch)
 

@@ -13,9 +13,9 @@ exports.getOrders = async (req, res) => {
                 model: Supplier
             }
         });
-		return res.status(200).json({ status: 200, data: orders, message: 'Orders succesfully retrieved' });
+		return res.status(200).send( orders );
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message );
 	}
 };
 
@@ -40,9 +40,9 @@ exports.getOrder = async (req, res) => {
 
 		return res
 			.status(200)
-			.json({ status: 200, data: order, message: 'Order succesfully retrieved' });
+			.send( order);
 	} catch (e) {
-		return res.status(400).json({ status: 401, message: e.message });
+		return res.status(400).send( e.message );
 	}
 };
 
@@ -65,9 +65,9 @@ exports.createOrder = async (req, res) => {
 
 		return res
 			.status(200)
-			.json({ status: 200, data: order, message: 'Order succesfully created' });
+			.send( order);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message );
 	}
 };
 
@@ -101,9 +101,9 @@ exports.updateOrder = async (req, res) => {
         order.weaponOrder = weapons;
 
         
-		return res.status(200).json({ status: 200, data: order, message: 'Order succesfully updated' });
+		return res.status(200).send( order);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 

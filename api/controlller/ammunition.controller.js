@@ -5,6 +5,7 @@ const Order = require('../model/order.model');
 const Station = require('../model/station.model');
 var { Op } = require('sequelize');
 var { converter } = require('../services/objectConverter');
+const AmmunitionOrder = require('../model/ammunitionOrder.model');
 
 exports.getAmmunitionStation = async (req, res) => {
 	let ammunitions = [];
@@ -19,9 +20,9 @@ exports.getAmmunitionStation = async (req, res) => {
 			include: { model: AmmunitionType, required: true },
 		});
 		ammunitions = ammunitions.map((item) => converter(item.dataValues));
-		return res.status(200).json({ status: 200, data: ammunitions, message: 'Ammunitions succesfully retrieved' });
+		return res.status(200).send(ammunitions);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -50,12 +51,12 @@ exports.updateAmmunitionStation = async (req, res) => {
 			});
 			return res
 				.status(200)
-				.json({ status: 200, data: ammunition, message: 'Succesfully AmmunitionBatch updated' });
+				.send( ammunition);
 		} else {
-			return res.status(401).json({ status: 401, data: ammunition, message: 'Unauthorized' });
+			return res.status(401).send('Unauthorized');
 		}
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -64,18 +65,13 @@ exports.getAmmunitionBatches = async (req, res) => {
 	let ammunitionBatches = {};
 	try {
 		ammunitionBatches = await AmmunitionBatch.findAll({
-			include: {
-				model: AmmunitionType,
-				include: {
-					model: Order,
-				},
-			},
+			include: [AmmunitionType,Order]
 		});
 		return res
 			.status(200)
-			.json({ status: 200, data: ammunitionBatches, message: 'Ammunitions succesfully retrieved' });
+			.send(ammunitionBatches);
 	} catch (e) {
-		return res.status(400).json({ status: 401, message: e.message });
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -93,9 +89,9 @@ exports.getAmmunitionBatch = async (req, res) => {
 		});
 		return res
 			.status(200)
-			.json({ status: 200, data: ammunitionBatch, message: 'Ammunition Batch succesfully retrieved' });
+			.send(ammunitionBatch);
 	} catch (e) {
-		return res.status(400).json({ status: 401, message: e.message });
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -105,9 +101,9 @@ exports.createAmmunitionBatch = async (req, res) => {
 		ammunitionBatch = await AmmunitionBatch.create(req.body);
 		return res
 			.status(200)
-			.json({ status: 200, data: ammunitionBatch, message: 'Ammunition Batch succesfully created' });
+			.send({ status: 200, data: ammunitionBatch, message: 'Ammunition Batch succesfully created' });
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -123,8 +119,8 @@ exports.updateAmmunitionBatch = async (req, res) => {
 		});
 		return res
 			.status(200)
-			.json({ status: 200, data: ammunitionBatch, message: 'AmmunitionBatch succesfully updated' });
+			.send(ammunitionBatch);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };

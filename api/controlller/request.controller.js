@@ -7,9 +7,9 @@ exports.getRequests = async (req, res) => {
 	let requests = [];
 	try {
 		requests = await Request.findAll({ where: { state: { [Op.ne]: 'Complete' } } , include:{model:Station}});
-		return res.status(200).json({ status: 200, data: requests, message: 'Requests succesfully Retrieved' });
+		return res.status(200).send( requests);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -17,9 +17,9 @@ exports.getRequestsStation = async (req, res) => {
 	let requests = [];
 	try {
 		requests = await Request.findAll({ where: { stationID: req.params.stationID} });
-		return res.status(200).json({ status: 200, data: requests, message: 'Requests succesfully Retrieved' });
+		return res.status(200).send( requests);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -31,9 +31,9 @@ exports.getRequest = async (req, res) => {
         request = await Request.findOne({ where: { requestID: req.params.requestID} });
         request.ammoRequests = await RequestAmmunition.findAll({where:{ requestID: req.params.requestID}})
         request.weaponRequests = await RequestWeapon.findAll({where:{ requestID: req.params.requestID}})
-		return res.status(200).json({ status: 200, data: request, message: 'Request succesfully Retrieved' });
+		return res.status(200).send( request);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 exports.getRequestStation = async (req, res) => {
@@ -44,9 +44,9 @@ exports.getRequestStation = async (req, res) => {
         request = await Request.findAll({ where: { stationID: req.params.stationID, requestID: req.params.requestID} });
         request.ammoRequests = await RequestAmmunition.findAll({where:{ stationID: req.params.stationID,requestID: req.params.requestID}})
         request.weaponRequests = await RequestWeapon.findAll({where:{ stationID: req.params.stationID, requestID: req.params.requestID}})
-		return res.status(200).json({ status: 200, data: request, message: 'Requests succesfully Retrieved' });
+		return res.status(200).send( request);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -68,9 +68,9 @@ exports.createRequest = async (req, res) => {
 		request = await request.create(request);
 		request.weaponRequests = weaponRequests;
 		request.ammoRequests = ammoRequests;
-		return res.status(200).json({ status: 200, data: request, message: 'Recovery successfully created' });
+		return res.status(200).send( request);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
@@ -96,9 +96,9 @@ exports.updateRequest = async (req, res) => {
         request = await Request.findOne({ where: { requestID: req.params.requestID } });
         request.ammoRequests = ammoRequests;
         request.weaponRequests = weaponRequests;
-		return res.status(200).json({ status: 200, data: request, message: 'Succesfully recovery updated' });
+		return res.status(200).send( request);
 	} catch (e) {
-		return res.status(400).json({ status: 400, message: e.message });
+		return res.status(400).send( e.message);
 	}
 };
 
