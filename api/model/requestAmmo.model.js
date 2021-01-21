@@ -4,7 +4,7 @@ const AmmunitionType = require('./ammunitionType.model');
 const Request = require('./request.model');
 
 const RequestAmmunition = sequelize.define(
-	'Request',
+	'RequestAmmunition',
 	{
         requestID: { type: DataTypes.INTEGER, primaryKey: true },
         
@@ -14,8 +14,8 @@ const RequestAmmunition = sequelize.define(
 	{ freezeTableName: true, timestamps: false }
 );
 
-RequestAmmunition.belongsTo(Request, { foreignKey: 'requestID' })
-RequestAmmunition.belongsTo(AmmunitionType, { foreignKey: 'ammoModelID' })
+// RequestAmmunition.belongsTo(Request, { foreignKey: 'requestID' })
+// RequestAmmunition.belongsTo(AmmunitionType, { foreignKey: 'ammoModelID' })
 
 RequestAmmunition.removeAttribute('id');
 module.exports = RequestAmmunition;

@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 const Station = require('./station.model');
 const RequestWeapon = require('./requestWeapon.model');
-const RequestAmmunition = require('./requestAmmunition.model');
+const RequestAmmunition = require('./requestAmmo.model');
 
 const Request = sequelize.define(
 	'Request',
@@ -17,8 +17,8 @@ const Request = sequelize.define(
 );
 
 Request.belongsTo(Station, { foreignKey: 'stationID' })
-Request.hasMany(RequestWeapon, { foreignKey: 'recoveryID' })
-Request.belongsTo(RequestAmmunition, { foreignKey: 'recoveryID' })
+Request.hasMany(RequestWeapon, { foreignKey: 'requestID' })
+Request.belongsTo(RequestAmmunition, { foreignKey: 'requestID' })
 
 Request.removeAttribute('id');
 module.exports = Request;

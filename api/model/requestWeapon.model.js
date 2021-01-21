@@ -4,7 +4,7 @@ const Request = require('./request.model');
 const WeaponModel = require('./weaponModel.model');
 
 const RequestWeapon = sequelize.define(
-	'Request',
+	'RequestWeapon',
 	{
         requestID: { type: DataTypes.INTEGER, primaryKey: true },
 		amount: DataTypes.INTEGER,
@@ -13,8 +13,8 @@ const RequestWeapon = sequelize.define(
 	{ freezeTableName: true, timestamps: false }
 );
 
-RequestWeapon.belongsTo(Request, { foreignKey: 'requestID' })
-RequestWeapon.belongsTo(WeaponModel, { foreignKey: 'weaponModelID' })
+// RequestWeapon.belongsTo(Request, { foreignKey: 'requestID' })
+// RequestWeapon.belongsTo(WeaponModel, { foreignKey: 'weaponModelID' })
 
 RequestWeapon.removeAttribute('id');
 module.exports = RequestWeapon;

@@ -38,6 +38,7 @@ app.use("/officer/ammunitions", require("./routes/officer/ammunitions"));
 app.use("/officer/weapons", require("./routes/officer/weapons"));
 app.use("/officer/weaponModels", require("./routes/officer/weaponModel"));
 app.use("/officer/ammoModels", require("./routes/officer/ammoModel"));
+app.use("/officer/requests", require("./routes/officer/request"));
 app.use("/centralizedOfficer/companies", require("./routes/centralizedOfficer/companies"));
 app.use("/centralizedOfficer/ammunitions", require("./routes/centralizedOfficer/ammunitions"));
 app.use("/centralizedOfficer/weapons", require("./routes/centralizedOfficer/weapons"));

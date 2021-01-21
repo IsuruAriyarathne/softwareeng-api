@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/db');
 const Joi = require('joi');
+const Station = require('./station.model');
 
 const User = sequelize.define(
 	'User',
@@ -14,7 +15,7 @@ const User = sequelize.define(
 	},
 	{ freezeTableName: true, timestamps: false }
 );
-
+User.belongsTo(Station,{foreignKey:'stationID'})
 User.removeAttribute('id');
 
 

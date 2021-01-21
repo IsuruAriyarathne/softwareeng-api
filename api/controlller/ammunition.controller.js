@@ -87,6 +87,7 @@ exports.getAmmunitionBatch = async (req, res) => {
 				model: Station,
 			},
 		});
+		ammunitionBatch = ammunitionBatch.map(item => converter(item.dataValues))
 		return res
 			.status(200)
 			.send(ammunitionBatch);

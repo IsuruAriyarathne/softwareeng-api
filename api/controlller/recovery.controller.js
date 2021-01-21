@@ -37,14 +37,9 @@ exports.getRecoveryStation = async (req, res) => {
             where: { recoveryID: req.params.recoveryID },
             include:{model: WeaponModel}
 		});
-		console.log(recoveredAmmo);
-		console.log(recoveredAmmo[0].dataValues);
 
-		console.log(typeof recoveredAmmo);
-        // recoveredAmmo = recoveredAmmo.dataValues;
-        // recoveredWeapons = recoveredWeapons.dataValues;
-        // recoveredAmmo =  recoveredAmmo.map(item => converter(item.dataValues ))
-        // recoveredWeapons =  recoveredWeapons.map(item => converter(item.dataValues))
+        recoveredAmmo =  recoveredAmmo.map(item => converter(item.dataValues ))
+        recoveredWeapons =  recoveredWeapons.map(item => converter(item.dataValues))
         
         recovery.RecoveredAmmunitions = recoveredAmmo;
         recovery.RecoveredWeapons = recoveredWeapons;
@@ -117,13 +112,13 @@ exports.updateRecovery = async (req, res) => {
 	try {
 		if (recovery.hasOwnProperty('RecoveredAmmunitions')) {
 			recoveredAmmunitions = [];
-			recoveredAmmunitions = await RecoveredAmmunition.bulkCreate(order.ammoOrder, {
+			recoveredAmmunitions = await RecoveredAmmunition.bulkCreate(recovery.RecoveredAmmunitions, {
 				updateOnDuplicate: ['amount'],
 			});
 		}
 		if (recovery.hasOwnProperty('RecoveredWeapons')) {
 			recoveredWeapons = [];
-			recoveredWeapons = await RecoveredAmmunition.bulkCreate(order.ammoOrder, {
+			recoveredWeapons = await RecoveredWeapon.bulkCreate(recovery.RecoveredWeapons, {
 				updateOnDuplicate: ['amount'],
 			});
         }
@@ -132,7 +127,8 @@ exports.updateRecovery = async (req, res) => {
 			{ where: { recoveryID: req.params.recoveryID }, returning: true }
 		);
         recovery = await Recovery.findOne({ where: { recoveryID: req.params.recoveryID } });
-        recovery.RecoveredAmmunition = recoveredAmmunitions;
+		recovery = recovery.dataValues
+		recovery.RecoveredAmmunitions = recoveredAmmunitions;
         recovery.RecoveredWeapons = recoveredWeapons;
 		return res.status(200).send( recovery);
 	} catch (e) {
@@ -144,22 +140,23 @@ exports.createRecovery = async (req, res) => {
 	let recovery = req.body;
 	let recoveredAmmunition = [];
 	let recoveredWeapons = [];
-	try {
-		if (recovery.hasOwnProperty('RecoveredAmmunition')) {
-			if (recovery.RecoveredAmmunition.length > 0) {
-				recoveredAmmunition = await RecoveredAmmunition.bulkCreate(recovery.RecoveredAmmunition);
+	// try {
+		if (recovery.hasOwnProperty('RecoveredAmmunitions')) {
+			if (recovery.RecoveredAmmunitions.length > 0) {
+				recoveredAmmunition = await RecoveredAmmunition.bulkCreate(recovery.RecoveredAmmunitions);
 			}
 		}
-		if (recovery.hasOwnProperty('RecoveredWeapon')) {
+		if (recovery.hasOwnProperty('RecoveredWeapons')) {
 			if (recovery.RecoveredWeapons.length > 0) {
-				recoveredWeapons = await RecoveredWeapon.bulkCreate(recovery.RecoveredWeapon);
+				recoveredWeapons = await RecoveredWeapon.bulkCreate(recovery.RecoveredWeapons);
 			}
 		}
 		recovery = await Recovery.create(recovery);
-		recovery.RecoveredAmmunition = recoveredAmmunition;
+		recovery = recovery.dataValues;
+		recovery.RecoveredAmmunitions = recoveredAmmunition;
 		recovery.RecoveredWeapons = recoveredWeapons;
-		return res.status(200).send( recovery);
-	} catch (e) {
-		return res.status(400).send( e.message);
-	}
+		return res.status(200).send(recovery);
+	// } catch (e) {
+	// 	return res.status(400).send( e.message);
+	// }
 };
