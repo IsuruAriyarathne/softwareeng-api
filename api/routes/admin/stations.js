@@ -1,15 +1,18 @@
 const express = require("express");
 const StationController = require('../../controlller/station.controller'); 
-// const {validateStationSchema} = require('../../validator/station.validator'); 
+const validateStation = require('../../validator/station.validator'); 
+
+
+
 const router = express.Router();
 
 router.get('/', StationController.getStations)
 
 router.get('/:stationId', StationController.getStation);
 
-router.put('/:stationId', StationController.updateStation )
+router.put('/:stationId', validateStation, StationController.updateStation )
 
-router.post('/', StationController.createStation)
+router.post('/', validateStation, StationController.createStation)
 
 router.delete('/:stationId', StationController.deleteStation)
 
