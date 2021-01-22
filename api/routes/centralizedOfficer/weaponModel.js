@@ -2,13 +2,26 @@ const express = require("express");
 const WeaponModelController = require('../../controlller/weaponModel.controller');
 const router = express.Router();
 
+/**
+ * @description get the weapon models
+ */
 router.get('/', WeaponModelController.getWeaponModels )
 
+/**
+ * @description get the ammunition types for the weapon model
+ */
 router.get('/:weaponModelID', WeaponModelController.getWeaponModel);
 
+/**
+ * @description update weapon model. can add a macthing ammunition type.
+ */
 router.put('/:weaponModelID', WeaponModelController.updateWeaponModel);
 
+/**
+ * @description add new weapon model
+ */
 router.post('/', WeaponModelController.createWeaponModel );
+
 
 router.delete('/:weaponModelID/:ammoModelID', WeaponModelController.deleteAmmunitionType)
 

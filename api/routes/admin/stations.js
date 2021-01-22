@@ -32,7 +32,7 @@ const validateStation = require('../../validator/station.validator');
 // } )
 const router = express.Router();
 
-router.get('/',  StationController.getStations)
+router.get('/', StationController.getStations)
 
 router.get('/:stationId', StationController.geStation);
 

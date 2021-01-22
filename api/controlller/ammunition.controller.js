@@ -103,7 +103,7 @@ exports.createAmmunitionBatch = async (req, res) => {
 		ammunitionBatch = await AmmunitionBatch.create(req.body);
 		return res
 			.status(200)
-			.send({ status: 200, data: ammunitionBatch, message: 'Ammunition Batch succesfully created' });
+			.send(ammunitionBatch);
 	} catch (e) {
 		return res.status(400).send(e.message);
 	}
@@ -114,10 +114,10 @@ exports.updateAmmunitionBatch = async (req, res) => {
 	try {
 		ammunitionBatch = await AmmunitionBatch.update(
 			{ ...req.body },
-			{ where: { ammoModelID: req.params.ammoModelID, orderID: req.body.orderID }, returning: true }
+			{ where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID }, returning: true }
 		);
 		ammunitionBatch = await AmmunitionBatch.findOne({
-			where: { ammoModelID: req.params.ammoModelID, orderID: req.body.orderID },
+			where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID },
 		});
 		return res
 			.status(200)

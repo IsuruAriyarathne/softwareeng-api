@@ -3,6 +3,7 @@ const WeaponAmmunition = require('../model/weaponAmmo.model');
 const WeaponModel = require('../model/weaponModel.model');
 const { converter } = require('../services/objectConverter');
 
+
 exports.getAmmoModels = async (req, res) => {
 	let ammoModels = [];
 	try {
@@ -41,13 +42,19 @@ exports.createAmmoModel = async (req, res) => {
 
 exports.updateAmmoModel = async (req, res) => {
 
-	let ammoModel = {};
+	let ammoModel = req.body;
+	let weaponModels = [];
 	try {
+		if(ammoModel.hasOwnProperty('WeaponModels')){
+			weaponModels = await WeaponAmmunition.bulkCreate(ammoModel.WeaponModels,{ignoreDuplicates:true})
+		}
 		ammoModel = await AmmunitionType.update(
 			{ ...req.body },
 			{ where: { ammoModelID: req.params.ammoModelID }, returning: true }
 		);
 		ammoModel = await AmmunitionType.findOne({ where: { ammoModelID: req.params.ammoModelID } });
+		ammoModel = ammoModel.dataValues;
+		ammoModel.WeaponModels = weaponModels;
 		return res.status(200).send( ammoModel);
 	} catch (e) {
 		return res.status(400).send(e.message);
