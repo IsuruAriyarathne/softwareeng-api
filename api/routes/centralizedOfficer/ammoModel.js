@@ -5,13 +5,15 @@ const router = express.Router();
 
 router.get('/', AmmunitionTypeController.getAmmoModels )
 
-router.get('/:ammoModelId', AmmunitionTypeController.getAmmoModel);
+router.get('/:ammoModelID', AmmunitionTypeController.getAmmoModel);
 
-router.put('/:ammoModelId', AmmunitionTypeController.updateAmmoModel)
+router.put('/:ammoModelID', AmmunitionTypeController.updateAmmoModel)
 
 router.post('/', AmmunitionTypeController.createAmmoModel )
 
-router.delete('/:ammoModelId',AmmunitionTypeController.deleteAmmoModel )
+router.delete('/:ammoModelID',AmmunitionTypeController.deleteAmmoModel )
+
+router.delete('/:ammoModelID/:weaponModelID',AmmunitionTypeController.deleteAmmoModel )
 
 router.all('*', (req, res) => {
 	res.status(404).send( "Not found");

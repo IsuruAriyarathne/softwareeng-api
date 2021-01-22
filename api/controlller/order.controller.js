@@ -4,6 +4,7 @@ const Order = require("../model/order.model");
 const Supplier = require("../model/supplier.model");
 const WeaponModel = require("../model/weaponModel.model");
 const WeaponOrder = require("../model/weaponOrder.model");
+const { converter } = require("../services/objectConverter");
 
 exports.getOrders = async (req, res) => {
 	let orders = [];
@@ -13,6 +14,7 @@ exports.getOrders = async (req, res) => {
                 model: Supplier
             }
         });
+        orders = orders.map(item => converter(item.dataValues))
 		return res.status(200).send( orders );
 	} catch (e) {
 		return res.status(400).send( e.message );
@@ -21,15 +23,17 @@ exports.getOrders = async (req, res) => {
 
 exports.getOrder = async (req, res) => {
     let order = {};
+    let ammoOrder = [];
+    let weaponOrder = [];
 	try {
 
-		order.ammoOrder = await AmmunitionOrder.findAll({
+		ammoOrder = await AmmunitionOrder.findAll({
             where:{orderID:req.params.orderID},
             include:{
                 model: AmmunitionType
             }
         })
-        order.weaponorder = await WeaponOrder.findAll({
+        weaponOrder = await WeaponOrder.findAll({
             where:{
                 orderID:req.params.orderID,
             },
@@ -37,7 +41,10 @@ exports.getOrder = async (req, res) => {
                 model: WeaponModel
             }
         })
-
+        ammoOrder = ammoOrder.map((item) => converter(item.dataValues))
+        weaponOrder = weaponOrder.map((item) => converter(item.dataValues))
+        order.AmmoOrder = ammoOrder;
+        order.WeaponOrder = weaponOrder;
 		return res
 			.status(200)
 			.send( order);
@@ -107,6 +114,13 @@ exports.updateOrder = async (req, res) => {
 	}
 };
 
+exports.completeOrder = async (req,res) =>{
+    let ammunitionOrders = [];
+    let weaponOrder = [];
+    ammunitionOrders = await AmmunitionOrder.findAll({where:{orderID:req.params.orderID}})
+    weaponOrders = await WeaponOrder.findAll({where:{orderID:req.params.orderID}})
+    
+}
 //check
 
 

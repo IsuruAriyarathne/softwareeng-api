@@ -9,6 +9,7 @@ const RecoveredAmmunition = sequelize.define(
 			type: DataTypes.INTEGER,
 
 			primaryKey: true,
+			
 		},
 		ammoModelID: {
 			type: DataTypes.INTEGER,

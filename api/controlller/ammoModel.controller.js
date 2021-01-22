@@ -1,4 +1,7 @@
 var AmmunitionType = require('../model/ammunitionType.model');
+const WeaponAmmunition = require('../model/weaponAmmo.model');
+const WeaponModel = require('../model/weaponModel.model');
+const { converter } = require('../services/objectConverter');
 
 exports.getAmmoModels = async (req, res) => {
 	let ammoModels = [];
@@ -11,13 +14,14 @@ exports.getAmmoModels = async (req, res) => {
 };
 
 exports.getAmmoModel = async (req, res) => {
-    let ammoModel = {};
+    let weapons = {};
 	try {
-		ammoModel = await AmmunitionType.findOne({ where: { ammoModelID: req.params.ammoModelId } });
-		if (ammoModel) {
-			return res.status(200).send(ammoModel);
+		weapons = await WeaponAmmunition.findAll({ where: { ammoModelID: req.params.ammoModelID }, include:{model: WeaponModel} });
+		if (weapons) {
+			weapons = weapons.map(item => converter(item.dataValues))
+			return res.status(200).send(weapons);
 		} else {
-			return res.status(200).send(ammoModel);
+			return res.status(200).send(weapons);
 		}
 	} catch (e) {
 	    return res.status(400).send(e.message);
@@ -41,9 +45,9 @@ exports.updateAmmoModel = async (req, res) => {
 	try {
 		ammoModel = await AmmunitionType.update(
 			{ ...req.body },
-			{ where: { ammoModelID: req.params.ammoModelId }, returning: true }
+			{ where: { ammoModelID: req.params.ammoModelID }, returning: true }
 		);
-		ammoModel = await AmmunitionType.findOne({ where: { ammoModelID: req.params.ammoModelId } });
+		ammoModel = await AmmunitionType.findOne({ where: { ammoModelID: req.params.ammoModelID } });
 		return res.status(200).send( ammoModel);
 	} catch (e) {
 		return res.status(400).send(e.message);
@@ -52,7 +56,16 @@ exports.updateAmmoModel = async (req, res) => {
 
 exports.deleteAmmoModel = async (req, res) => {
 	try {
-		await AmmunitionType.destroy({ where: { ammoModelID: req.params.ammoModelId } });
+		await AmmunitionType.destroy({ where: { ammoModelID: req.params.ammoModelID } });
+		return res.status(200).send('Succesfully ammoModel deleted');
+	} catch (e) {
+		return res.status(400).send(e.message);
+	}
+};
+
+exports.deleteweaponAmmunition = async (req, res) => {
+	try {
+		await WeaponAmmunition.destroy({ where: { ammoModelID: req.params.ammoModelID, weaponModelID: req.params.weaponModelID } });
 		return res.status(200).send('Succesfully ammoModel deleted');
 	} catch (e) {
 		return res.status(400).send(e.message);

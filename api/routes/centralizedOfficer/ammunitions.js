@@ -1,9 +1,7 @@
 const express = require("express");
-const AmmunitionBatch = require('../../model/ammunitionBatch.model');
-const Controller = require('../../controlller/controller');
-const DbObject = require('../../controlller/dbObject'); 
 const AmmunitionController = require('../../controlller/ammunition.controller')
 const router = express.Router();
+
 
 router.get('/', AmmunitionController.getAmmunitionBatches);
 

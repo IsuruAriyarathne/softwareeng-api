@@ -10,6 +10,7 @@ const Recovery = sequelize.define(
 		recoveryID: {
 			type: DataTypes.INTEGER,
 			primaryKey: true,
+			autoIncrement: true,
 		},
 		recoveryDate: DataTypes.DATEONLY,
 		description: DataTypes.STRING(100),
