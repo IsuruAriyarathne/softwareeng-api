@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer')
 const { google } = require('googleapis')
-const defaultMailingList = "gkkpathirana@gmail.com,kavindag.18@cse.mrt.ac.lk,poorna2152@gmail.com";
+const defaultMailingList = "gkkpathirana@gmail.com,kavindag.18@cse.mrt.ac.lk";
 
 // These id's and secrets should come from .env file.
 const CLIENT_ID = '917672764962-2knb352otj1m9el69c41pnhepq6d3ngl.apps.googleusercontent.com'
@@ -33,7 +33,7 @@ const oAuth2Client = new google.auth.OAuth2(
       });
   
       const mailOptions = {
-        from: 'Report Generator <malnimkam@gmail.com>',
+        from: 'SLFire <malnimkam@gmail.com>',
         to,
         subject,
         text: subject,
