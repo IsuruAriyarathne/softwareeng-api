@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', StationController.getStations)
 
-router.get('/:stationId', StationController.geStation);
+router.get('/:stationId', StationController.getStation);
 
 router.put('/:stationId', StationController.updateStation )
 

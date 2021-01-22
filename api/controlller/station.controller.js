@@ -10,7 +10,7 @@ exports.getStations = async (req, res) => {
 	}
 };
 
-exports.geStation = async (req, res) => {
+exports.getStation = async (req, res) => {
 	let station = {};
 	try {
 		station = await Station.findOne({ where: { stationID: req.params.stationId } });

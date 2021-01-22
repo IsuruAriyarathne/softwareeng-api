@@ -17,8 +17,14 @@ router.get('/:orderID', OrderController.getOrder);
  */
 router.put('/:orderID', OrderController.updateOrder);
 
+/**
+ * @description create order with weapon models and count and ammunition types and count
+ */
 router.post('/', OrderController.createOrder);
 
+/**
+ * @description complete the order create entries in weapon table and ammunition batch table
+ */
 router.get('/:orderID/complete', OrderController.completeOrder);
 
 router.all('*', (req, res) => {
