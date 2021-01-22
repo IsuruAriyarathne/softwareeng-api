@@ -1,6 +1,7 @@
 const Weapon = require('../model/weapon.model');
 const WeaponModel = require('../model/weaponModel.model');
 const WeaponStation = require('../model/weaponStation.model');
+const Order = require('../model/order.model');
 var { converter } = require('../services/objectConverter');
 exports.getWeaponStation = async (req, res) => {
 	let weapons = [];
@@ -61,13 +62,9 @@ exports.getWeapons = async (req, res) => {
 	let weapons = {};
 	try {
 		weapons = await Weapon.findAll({
-			include: {
-				model: WeaponModel,
-				include: {
-					model: Order,
-				},
-			},
+			include: [WeaponModel, Order]
 		});
+		weapons = weapons.map( item => converter(item.dataValues))
 		return res.status(200).send(weapons);
 	} catch (e) {
 		return res.status(400).send( e.message);
