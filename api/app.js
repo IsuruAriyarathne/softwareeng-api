@@ -45,6 +45,7 @@ app.use("/centralizedOfficer/orders", require("./routes/centralizedOfficer/order
 app.use("/centralizedOfficer/weapons", require("./routes/centralizedOfficer/weapons"));
 app.use("/centralizedOfficer/weaponModels", require("./routes/centralizedOfficer/weaponModel"));
 app.use("/centralizedOfficer/ammoModels", require("./routes/centralizedOfficer/ammoModel"));
+app.use("/centralizedOfficer/recovery", require("./routes/centralizedOfficer/recovery"));
 // app.use("/centralizedOfficer/reports", require("./routes/centralizedOfficer/report"));
 app.use(cors())
 
