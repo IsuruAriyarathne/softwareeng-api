@@ -2,7 +2,7 @@ const express = require("express");
 const Station = require('../../model/station.model');
 const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject'); 
-const validator = require('../../validator/station.validator'); 
+const {validateStationSchema} = require('../../validator/station.validator'); 
 
 const router = express.Router();
 
@@ -32,26 +32,22 @@ router.put('/:stationId', (req,res) => {
 
 router.post('/', async(req,res) => {   
 	//validate the station
-	const {error} = validator(req.body);
-	if(error) return res.status(400).send(error.details[0].message);
-
-	let station = await Station.findOne({ stationID: req.body.stationID});
-	if(station) return res.status(400).send("Station already registered.");
-
-	station = new Station({
-		stationID: req.body.stationID,
-		name: req.body.name,
-		location: req.body.location,
-		type: req.body.type,
+	try{
+		const result = await validateStationSchema.validateAsync(req.body);
+		const station = new Station(result);
 		
-	});
+		const savedStation = await station.save();
 
-	await station.save();
-
-	let create = Controller.create(Station);
-	create(req.body)
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
+		let create = Controller.create(savedStation);
+		create(req.body)
+			.then((data) => res.send(data))
+			.catch((err) => console.log(err));
+		return res.status(200).send("Station added successfully.");
+	}
+	catch(err){
+		return res.status(400).send(err.details[0].message);
+	}	
+			
 } )
 
 router.delete('/:stationId', (req,res) => {

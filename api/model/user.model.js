@@ -18,13 +18,13 @@ const User = sequelize.define(
 User.removeAttribute('id');
 
 
-// function validateUser(User){
-// 	const schema = {
-// 	  officerId : Joi.number()
-// 					.integer()
-// 					.min(2)
-// 					.max(40)
-// 					.required(),
+function validateUser(User){
+	const schema = Joi.object.keys({
+	  officerId : Joi.number()
+					.integer()
+					.min(2)
+					.max(40)
+					.required(),
   
 // 	  name : Joi.string()
 // 				.min(3)
@@ -48,16 +48,20 @@ User.removeAttribute('id');
 // 				.max(10)
 // 				.required(),
   
-// 	  stationID : Joi.number()
-// 					.integer()
-// 					.min(1)
-// 					.max(10)
-// 					.required()
-// 	};
-// 	return Joi.validate(User,schema);
-//   }
+	  stationID : Joi.number()
+					.integer()
+					.min(1)
+					.max(10)
+					.required()
+	});
+	return Joi.validate(User,schema);
+  }
   
-  module.exports = User;
-//   exports.validate = validateUser;
+  module.exports = {
+	  User,
+	  validateUser
+  }
+  //exports.User = function(){};
+  //exports.validateUser = function(){};
 
 

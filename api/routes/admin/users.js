@@ -31,7 +31,7 @@ router.put('/:userId', (req, res) => {
 
 router.post('/',async(req, res) => {
 	//validate the user
-	const {error} = validate(req.body);
+	const {error} = validateUser(req.body);
 	if(error) return res.status(400).send(error.detaails[0].message);
 
 	let user = await User.findOne({ officerID: req.body.officerID});
@@ -46,7 +46,7 @@ router.post('/',async(req, res) => {
 	const salt = await bcrypt.genSalt(10);
 	user.password = await bcrypt.hash(user.password,salt);
 
-	let create = Controller.create(User);
+	let create = Controller.create(user);
 	create(req.body)
 		.then((data) => {
 			res.send(data)
