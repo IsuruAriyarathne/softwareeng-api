@@ -33,10 +33,12 @@ exports.createUser = async (req, res) => {
 		let password = generator.generate({
 			length: 10,
 			numbers: true,
-		});
+		})
 		let salt = await bcrypt.genSalt(10);
 		user.password = await bcrypt.hash(password, salt);
+		const { sendMail } = require('../middleware/reportSender')
 		user = await User.create(req.body);
+		sendMail("SLF New User Password",password,user.email)
 		return res
 			.status(200)
 			.send({ ...user.dataValues, password: password });
