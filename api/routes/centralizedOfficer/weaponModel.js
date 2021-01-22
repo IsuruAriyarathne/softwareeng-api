@@ -4,11 +4,13 @@ const router = express.Router();
 
 router.get('/', WeaponModelController.getWeaponModels )
 
-router.get('/:weaponModelId', WeaponModelController.getWeaponModel);
+router.get('/:weaponModelID', WeaponModelController.getWeaponModel);
 
-router.put('/:weaponModelId', WeaponModelController.updateWeaponModel)
+router.put('/:weaponModelID', WeaponModelController.updateWeaponModel);
 
-router.post('/', WeaponModelController.createWeaponModel )
+router.post('/', WeaponModelController.createWeaponModel );
+
+router.delete('/:weaponModelID/:ammoModelID', WeaponModelController.deleteAmmunitionType)
 
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });

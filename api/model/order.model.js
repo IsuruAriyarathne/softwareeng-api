@@ -7,7 +7,7 @@ const AmmunitionOrder = require('./ammunitionOrder.model');
 const Order = sequelize.define(
 	'Order',
 	{
-		orderID: { type: DataTypes.INTEGER, primaryKey: true },
+		orderID: { type: DataTypes.INTEGER, primaryKey: true,autoIncrement: true, },
 		supplierID: { type: DataTypes.INTEGER, references: { Model: Supplier, key: 'supplierID' } },
 		date: DataTypes.DATEONLY,
 		totalCost: DataTypes.FLOAT,

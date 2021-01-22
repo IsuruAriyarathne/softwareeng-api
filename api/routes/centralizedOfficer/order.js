@@ -4,11 +4,13 @@ const router = express.Router();
 
 router.get('/',	OrderController.getOrders);
 
-router.get('/:supplierID', OrderController.getOrder);
+router.get('/:orderID', OrderController.getOrder);
 
-router.put('/:supplierID', OrderController.updateOrder);
+router.put('/:orderID', OrderController.updateOrder);
 
 router.post('/', OrderController.createOrder);
+
+router.get('/:orderID/complete', OrderController.completeOrder);
 
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });

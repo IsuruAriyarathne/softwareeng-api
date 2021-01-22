@@ -3,6 +3,7 @@ const Supplier = require("../model/supplier.model");
 const SupplyAmmunition = require("../model/supplyAmmo.model");
 const SupplyWeapon = require("../model/supplyWeapon.model");
 const WeaponModel = require("../model/weaponModel.model");
+const { converter } = require("../services/objectConverter");
 
 
 exports.getCompanies = async (req, res) => {
@@ -16,23 +17,29 @@ exports.getCompanies = async (req, res) => {
 };
 
 exports.getCompany = async (req, res) => {
-    let models = {};
+	let models = {};
+	let supplyAmmunition = [];
+	let supplyWeapon = [];
 	try {
 
-		models.ammoModels = await SupplyAmmunition.findAll({
+		supplyAmmunition = await SupplyAmmunition.findAll({
             where:{supplierID:req.params.supplierID},
             include:{
                 model: AmmunitionType
             }
-        })
-        models.weaponModels = await SupplyWeapon.findAll({
+		})
+		supplyAmmunition = supplyAmmunition.map(item => converter(item.dataValues))
+        supplyWeapon = await SupplyWeapon.findAll({
             where:{
                 supplierID:req.params.supplierID,
             },
             include:{
                 model: WeaponModel
             }
-        })
+		})
+		supplyWeapon = supplyWeapon.map(item => converter(item.dataValues))
+		models.SupplyAmmunition =supplyAmmunition;
+		models.SupplyWeapon = supplyWeapon		
 
 		return res
 			.status(200)
@@ -58,8 +65,18 @@ exports.createCompany = async (req, res) => {
 
 
 exports.updateCompany = async (req, res) => {
-	let company = {};
+	let company = req.body;
+	let supplyAmmunition = [];
+	let supplyWeapon = [];
 	try {
+		if(company.hasOwnProperty('SupplyAmmunition')){
+			supplyAmmunition = await SupplyAmmunition.bulkCreate(company.SupplyAmmunition,{ignoreDuplicates:true});
+		}
+		
+		if(company.hasOwnProperty('SupplyWeapon')){
+			supplyWeapon = await SupplyWeapon.bulkCreate(company.SupplyWeapon,{ignoreDuplicates:true});
+		}
+
 		company = await Supplier.update(
 			{ ...req.body },
 			{
@@ -71,6 +88,9 @@ exports.updateCompany = async (req, res) => {
 		company = await Supplier.findOne({
 			where: { supplierID: req.params.supplierID },
 		});
+		company = company.dataValues;
+		company.SupplyAmmunition = supplyAmmunition;
+		company.SupplyWeapon = supplyWeapon;
 		return res.status(200).send( company);
 	} catch (e) {
 		return res.status(400).send( e.message);

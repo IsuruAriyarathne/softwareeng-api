@@ -67,6 +67,7 @@ exports.getAmmunitionBatches = async (req, res) => {
 		ammunitionBatches = await AmmunitionBatch.findAll({
 			include: [AmmunitionType,Order]
 		});
+		ammunitionBatches = ammunitionBatches.map(item => converter(item.dataValues))
 		return res
 			.status(200)
 			.send(ammunitionBatches);

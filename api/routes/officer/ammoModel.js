@@ -2,6 +2,7 @@ const express = require("express");
 const AmmunitionTypeController = require('../../controlller/ammoModel.controller')
 const router = express.Router();
 
+
 router.get('/', AmmunitionTypeController.getAmmoModels )
 
 router.all('*', (req, res) => {

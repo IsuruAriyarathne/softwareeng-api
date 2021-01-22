@@ -7,7 +7,7 @@ const RequestAmmunition = require('./requestAmmo.model');
 const Request = sequelize.define(
 	'Request',
 	{
-		requestID: { type: DataTypes.INTEGER, primaryKey: true },
+		requestID: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, },
 		date: DataTypes.DATEONLY,
 		comments: DataTypes.STRING(255),
 		state: DataTypes.STRING(20),
