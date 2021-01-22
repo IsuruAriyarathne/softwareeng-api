@@ -2,6 +2,7 @@ var User = require('../model/user.model');
 const bcrypt = require('bcrypt');
 var generator = require('generate-password');
 const Station = require('../model/station.model');
+const { sendMail } = require('../middleware/reportSender')
 
 exports.getUsers = async (req, res) => {
 	let users = [];
@@ -36,7 +37,6 @@ exports.createUser = async (req, res) => {
 		})
 		let salt = await bcrypt.genSalt(10);
 		user.password = await bcrypt.hash(password, salt);
-		const { sendMail } = require('../middleware/reportSender')
 		user = await User.create(req.body);
 		sendMail("SLF New User Password",password,user.email)
 		return res
