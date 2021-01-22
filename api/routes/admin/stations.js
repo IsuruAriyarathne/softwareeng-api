@@ -18,8 +18,14 @@ router.get('/:stationId', StationController.getStation);
  */
 router.put('/:stationId', validateStation, StationController.updateStation )
 
+/**
+ * @description add station
+ */
 router.post('/', validateStation, StationController.createStation)
 
+/**
+ * @description delete station
+ */
 router.delete('/:stationId', StationController.deleteStation)
 
 router.all('*', (req, res) => {
