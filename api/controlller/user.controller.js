@@ -63,8 +63,8 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
 	try {
 		await User.destroy({ where: { officerID: req.params.userId } });
-		return res.status(200).send({ status: 200, message: 'Succesfully user deleted' });
+		return res.status(200).send('Succesfully user deleted');
 	} catch (e) {
-		return res.status(400).send({ status: 400, message: e.message });
+		return res.status(400).send(e.message);
 	}
 };

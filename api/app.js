@@ -38,6 +38,7 @@ app.use("/officer/weapons", require("./routes/officer/weapons"));
 app.use("/officer/weaponModels", require("./routes/officer/weaponModel"));
 app.use("/officer/ammoModels", require("./routes/officer/ammoModel"));
 app.use("/officer/requests", require("./routes/officer/request"));
+app.use("/officer/maintainanceRecords", require("./routes/officer/maintainanceRecord"));
 app.use("/centralizedOfficer/companies", require("./routes/centralizedOfficer/companies"));
 app.use("/centralizedOfficer/stations", require("./routes/centralizedOfficer/station"));
 app.use("/centralizedOfficer/ammunitions", require("./routes/centralizedOfficer/ammunitions"));
@@ -46,6 +47,7 @@ app.use("/centralizedOfficer/weapons", require("./routes/centralizedOfficer/weap
 app.use("/centralizedOfficer/weaponModels", require("./routes/centralizedOfficer/weaponModel"));
 app.use("/centralizedOfficer/ammoModels", require("./routes/centralizedOfficer/ammoModel"));
 app.use("/centralizedOfficer/recovery", require("./routes/centralizedOfficer/recovery"));
+app.use("/centralizedOfficer/maintainanceRecords", require("./routes/centralizedOfficer/maintainanceRecord"));
 // app.use("/centralizedOfficer/reports", require("./routes/centralizedOfficer/report"));
 app.use(cors())
 
