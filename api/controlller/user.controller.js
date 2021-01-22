@@ -2,12 +2,14 @@ var User = require('../model/user.model');
 const bcrypt = require('bcrypt');
 var generator = require('generate-password');
 const Station = require('../model/station.model');
-const { sendMail } = require('../middleware/reportSender')
+const { sendMail } = require('../middleware/reportSender');
+const { converter } = require('../services/objectConverter');
 
 exports.getUsers = async (req, res) => {
 	let users = [];
 	try {
 		users = await User.findAll({ attributes: { exclude: 'password' }, include:{model:Station} });
+		users = users.map(item => converter(item.dataValues))
 		return res.status(200).send(users);
 	} catch (e) {
 		return res.status(400).send(e.message);
