@@ -2,10 +2,19 @@ const express = require('express');
 const OrderController = require('../../controlller/order.controller')
 const router = express.Router();
 
+/**
+ * @description get basic order details
+ */
 router.get('/',	OrderController.getOrders);
 
+/**
+ * @description get order details weapon models and ammunition types ordered with quantity and price.
+ */
 router.get('/:orderID', OrderController.getOrder);
 
+/**
+ * @description get order details weapon models and ammunition types ordered with quantity and price.
+ */
 router.put('/:orderID', OrderController.updateOrder);
 
 router.post('/', OrderController.createOrder);

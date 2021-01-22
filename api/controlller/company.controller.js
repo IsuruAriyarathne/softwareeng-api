@@ -10,7 +10,7 @@ exports.getCompanies = async (req, res) => {
 	let suppliers = [];
 	try {
 		suppliers = await Supplier.findAll();
-		return res.status(200).send( suppliers);
+		return res.status(200).send(suppliers);
 	} catch (e) {
 		return res.status(400).send( e.message);
 	}

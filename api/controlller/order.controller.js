@@ -64,12 +64,13 @@ exports.createOrder = async (req, res) => {
     result.weaponOrder = [];
 	try {
         order = await Order.create(req.body);
-        if(order.hasOwnProperty('ammoOrder')){
-            result.ammoOrder = AmmunitionOrder.bulkCreate(order.ammoOrder)
+        result = order.dataValues;
+        if(req.body.hasOwnProperty('AmmoOrder')){
+            result.ammoOrder = AmmunitionOrder.bulkCreate(req.body.ammoOrder)
         }
         
-        if(order.hasOwnProperty('weaponOrder')){
-            result.weaponOrder = WeaponOrder.bulkCreate(order.weaponOrder)
+        if(req.body.hasOwnProperty('WeaponOrder')){
+            result.weaponOrder = WeaponOrder.bulkCreate(req.body.weaponOrder)
         }
 
 		return res
@@ -87,12 +88,12 @@ exports.updateOrder = async (req, res) => {
     let weapons = [];
 
 	try {
-        if(order.hasOwnProperty('ammoOrder')){
-            ammos = await AmmunitionOrder.bulkCreate(order.ammoOrder,{updateOnDuplicate:["count"]});
+        if(order.hasOwnProperty('AmmoOrder')){
+            ammos = await AmmunitionOrder.bulkCreate(order.AmmoOrder,{updateOnDuplicate:["count"]});
         }
 
-        if(order.hasOwnProperty('weaponOrder')){
-            weapons = await WeaponOrder.bulkCreate(order.ammoOrder,{updateOnDuplicate:["count"]});
+        if(order.hasOwnProperty('WeaponOrder')){
+            weapons = await WeaponOrder.bulkCreate(order.WeaponOrder,{updateOnDuplicate:["count"]});
         }
 		order = await Order.update(
 			{ ...req.body },
@@ -105,9 +106,9 @@ exports.updateOrder = async (req, res) => {
 		order = await Order.findOne({
 			where: { orderID: req.params.orderID },
         });
-
-        order.ammoOrder = ammos;
-        order.weaponOrder = weapons;
+        order = order.dataValues
+        order.AmmoOrder = ammos;
+        order.WeaponOrder = weapons;
 
         
 		return res.status(200).send( order);
