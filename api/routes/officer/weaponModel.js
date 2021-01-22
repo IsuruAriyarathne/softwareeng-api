@@ -1,37 +1,10 @@
-const express = require("express");
-const Controller = require('../../controlller/controller');
-const DbObject = require('../../controlller/dbObject'); 
-const WeaponModel = require("../../model/weaponModel.model");
-
+const express = require('express');
+const WeaponModelController = require('../../controlller/weaponModel.controller');
 const router = express.Router();
 
-router.get('/', (req,res) => {
-	let findAll = Controller.findAll(WeaponModel);
-	findAll({})
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-} )
+router.get('/', WeaponModelController.getWeaponModels);
 
-router.get('/:weaponId', (req, res) => {
-	res.send('Unauthorized')
+router.all('*', (req, res) => {
+	res.status(404).json({ status: 404, message: 'Not found' });
 });
-
-router.put('/:weaponId', (req,res) => {
-	res.send('Unauthorized')
-
-} )
-
-router.post('/', (req,res) => {
-	res.send('Unauthorized')
-
-
-} )
-
-router.delete('/', (req,res) => {
-    res.send('Unauthorized');
-} )
-router.delete('/:weaponId', (req,res) => {
-    res.send('Unauthorized');
-} )
-
 module.exports = router;

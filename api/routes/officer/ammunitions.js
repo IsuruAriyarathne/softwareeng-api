@@ -1,43 +1,13 @@
-const express = require("express");
-const AmmunitionBatch = require('../../model/ammunitionBatch.model');
-const Controller = require('../../controlller/controller');
-const DbObject = require('../../controlller/dbObject'); 
-const AmmunitionStation = require("../../model/ammunitionStation.model");
-const AmmunitionType = require("../../model/ammunitionType.model");
-
+const express = require('express');
+const AmmunitionController = require('../../controlller/ammunition.controller');
 const router = express.Router();
 
-router.get('/:stationID', (req,res) => {
-	let findAll = Controller.findAll(AmmunitionStation);
-	let include = DbObject.getIncludeObject([AmmunitionType])
-	let where = DbObject.getWhereObject('stationID',req.body.stationID)
-	findAll({where:where,include:include})
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-} )
+router.get('/:stationID', AmmunitionController.getAmmunitionStation);
 
-// router.get('/:ammoId', (req, res) => {
-// 	res.send('Unauthorized');
-// });
+router.put('/:ammoModelID', AmmunitionController.updateAmmunitionStation);
 
-router.put('/:ammoId', (req,res) => {
-	let update = Controller.update(Ammunition);
-	let condition = DbObject.getWhereObject('ammoModelID', req.params.ammoId);
-	update(condition, req.body)
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-} )
-
-router.post('/', (req,res) => {
-	res.send('Unauthorized');
-} )
-
-router.delete('/', (req,res) => {
-	res.send('Unauthorized');
-} )
-
-router.delete('/:ammoId', (req,res) => {
-	res.send('Unauthorized');
-} )
+router.all('*', (req, res) => {
+	res.status(404).json({ status: 404, message: 'Not found' });
+});
 
 module.exports = router;

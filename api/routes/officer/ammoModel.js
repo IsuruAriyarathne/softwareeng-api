@@ -1,36 +1,12 @@
 const express = require("express");
-const Controller = require('../../controlller/controller');
-const DbObject = require('../../controlller/dbObject'); 
-const AmmunitionType = require("../../model/ammunitionType.model");
-
+const AmmunitionTypeController = require('../../controlller/ammoModel.controller')
 const router = express.Router();
 
-router.get('/', (req,res) => {
-	let findAll = Controller.findAll(AmmunitionType);
-	findAll({})
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-} )
 
-router.get('/:ammoId', (req, res) => {
-	res.send('Unauthorized');
-});
+router.get('/', AmmunitionTypeController.getAmmoModels )
 
-router.put('/:ammoId', (req,res) => {
-	res.send('Unauthorized')
-
-} )
-
-router.post('/', (req,res) => {
-
-	res.send('Unauthorized')
-})
-router.delete('/', (req,res) => {
-	res.send('Unauthorized');
-} )
-
-router.delete('/:ammoId', (req,res) => {
-	res.send('Unauthorized');
-} )
+router.all('*', (req, res) => {
+	res.status(404).json({ status: 404, message: "Not found" });
+  });
 
 module.exports = router;

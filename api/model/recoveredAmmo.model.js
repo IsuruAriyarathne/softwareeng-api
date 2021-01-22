@@ -9,11 +9,15 @@ const RecoveredAmmunition = sequelize.define(
 			type: DataTypes.INTEGER,
 
 			primaryKey: true,
+			
 		},
 		ammoModelID: {
 			type: DataTypes.INTEGER,
 
 			primaryKey: true,
+		},
+		amount: {
+			type: DataTypes.INTEGER,
 		},
 	},
 	{ freezeTableName: true, timestamps: false }

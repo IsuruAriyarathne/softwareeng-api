@@ -5,7 +5,7 @@ const Weapon = require('./weapon.model');
 const MaintainanceRecord = sequelize.define(
 	'MaintainanceRecord',
 	{
-		id: { type: DataTypes.INTEGER, primaryKey: true },
+		id: { type: DataTypes.INTEGER, primaryKey: true,autoIncrement: true, },
 		weaponID: {
 			type: DataTypes.INTEGER,
 		},

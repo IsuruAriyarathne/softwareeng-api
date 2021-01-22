@@ -6,7 +6,7 @@ const SupplyWeapon = require('./supplyWeapon.model');
 const Supplier = sequelize.define(
 	'Supplier',
 	{
-		supplierID: { type: DataTypes.INTEGER, primaryKey: true },
+		supplierID: { type: DataTypes.INTEGER, primaryKey: true ,autoIncrement: true,},
 		name: DataTypes.STRING(100),
 		contactNumber: DataTypes.STRING(10),
 		address: DataTypes.STRING(255),

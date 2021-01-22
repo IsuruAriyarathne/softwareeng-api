@@ -13,10 +13,13 @@ const RecoveredWeapon = sequelize.define(
 			type: DataTypes.INTEGER,
 			primaryKey: true,
 		},
+		amount: {
+			type: DataTypes.INTEGER,
+		},
 	},
 	{ freezeTableName: true, timestamps: false }
 );
 
 RecoveredWeapon.removeAttribute('id');
-RecoveredWeapon.belongsTo(WeaponModel,{foreignKey:'weaponModelID'})
+RecoveredWeapon.belongsTo(WeaponModel, { foreignKey: 'weaponModelID' });
 module.exports = RecoveredWeapon;

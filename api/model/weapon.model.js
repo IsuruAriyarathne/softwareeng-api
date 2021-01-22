@@ -7,7 +7,7 @@ const WeaponModel = require('./weaponModel.model');
 
 
 const Weapon = sequelize.define('Weapon', {
-    weaponID: DataTypes.INTEGER,
+    weaponID: {type:DataTypes.INTEGER,primaryKey:true, autoIncrement: true,},
     weaponModelID: DataTypes.INTEGER,
     orderID: DataTypes.INTEGER,
     state: DataTypes.STRING(20),
@@ -17,6 +17,5 @@ const Weapon = sequelize.define('Weapon', {
   Weapon.removeAttribute('id')
 Weapon.belongsTo(Order,{foreignKey:'orderID'})
 Weapon.belongsTo(WeaponModel,{foreignKey:'weaponModelID'})
-// Weapon.hasMany(WeaponAmmunition,{foreignKey:'weaponModelID'})
 
 module.exports = Weapon;

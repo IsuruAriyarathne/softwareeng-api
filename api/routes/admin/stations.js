@@ -4,23 +4,6 @@ const Controller = require('../../controlller/controller');
 const DbObject = require('../../controlller/dbObject'); 
 const {validateStationSchema} = require('../../validator/station.validator'); 
 
-const router = express.Router();
-
-router.get('/', (req,res) => {
-	let findAll = Controller.findAll(Station);
-	console.log("In");
-	findAll({})
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-} )
-
-router.get('/:stationId', (req, res) => {
-	let findAll = Controller.findAll(Station);
-	let where = DbObject.getWhereObject('stationID', req.params.stationId);
-	findAll({where:where})
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-});
 
 router.put('/:stationId', (req,res) => {
 	let update = Controller.update(Station);
@@ -49,16 +32,19 @@ router.post('/', async(req,res) => {
 	}	
 			
 } )
+const router = express.Router();
 
-router.delete('/:stationId', (req,res) => {
-    let deleteEntry = Controller.delete(Station);
-    let obj = DbObject.getDeleteObject('stationID',req.params.stationId)
-	deleteEntry(obj)
-		.then((result) => {
-            res.send('Success');
-            // res.send('Couldnt delete')
-		})
-		.catch((err) => res.send(err));
-} )
+router.get('/',  StationController.getStations)
 
+router.get('/:stationId', StationController.geStation);
+
+router.put('/:stationId', StationController.updateStation )
+
+router.post('/', StationController.createStation)
+
+router.delete('/:stationId', StationController.deleteStation)
+
+router.all('*', (req, res) => {
+	res.status(404).json({ status: 404, message: 'Not found' });
+});
 module.exports = router;

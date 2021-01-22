@@ -1,41 +1,18 @@
 const express = require("express");
-const WeaponStation = require('../../model/weaponStation.model');
-const Weapon = require('../../model/weapon.model');
-const Controller = require('../../controlller/controller');
-const DbObject = require('../../controlller/dbObject'); 
-const WeaponModel = require("../../model/weaponModel.model");
+const WeaponController= require("../../controlller/weapon.controller");
 
 const router = express.Router();
 
-router.get('/', (req,res) => {
-	let findAll = Controller.findAll(Weapon);
-	let include = DbObject.getIncludeObject([WeaponModel])
-	findAll({include: include})
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-} )
+router.get('/', WeaponController.getWeapons )
 
-router.get('/:weaponId', (req, res) => {
-	res.send('Unauthorized')
+router.get('/:weaponID', WeaponController.getWeapon);
+
+router.put('/:weaponID', WeaponController.updateWeapon )
+
+router.post('/', WeaponController.createWeapon)
+
+router.all('*', (req, res) => {
+	res.status(404).json({ status: 404, message: 'Not found' });
 });
-
-router.put('/:weaponId', (req,res) => {
-	let update = Controller.update(Weapon);
-	let condition = DbObject.getWhereObject('weaponID', req.params.weaponId);
-	update(condition, req.body)
-		.then((data) => res.send(data))
-		.catch((err) => console.log(err));
-} )
-
-router.post('/', (req,res) => {
-	res.send('Unauthorized');
-} )
-
-router.delete('/', (req,res) => {
-    res.send('Unauthorized');
-} )
-router.delete('/:weaponId', (req,res) => {
-    res.send('Unauthorized');
-} )
 
 module.exports = router;

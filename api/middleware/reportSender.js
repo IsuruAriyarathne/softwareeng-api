@@ -33,7 +33,7 @@ const oAuth2Client = new google.auth.OAuth2(
       });
   
       const mailOptions = {
-        from: 'Report Generator <malnimkam@gmail.com>',
+        from: 'SLFire <malnimkam@gmail.com>',
         to,
         subject,
         text: subject,
