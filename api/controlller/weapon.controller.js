@@ -4,6 +4,7 @@ const WeaponStation = require('../model/weaponStation.model');
 const Order = require('../model/order.model');
 const Station = require('../model/station.model');
 var { converter } = require('../services/objectConverter');
+const sequelize = require('../config/db');
 exports.getWeaponStation = async (req, res) => {
 	let weapons = [];
 	try {
@@ -49,12 +50,12 @@ exports.updateWeaponStation = async (req, res) => {
 			});
 			weapon = converter(weapon.dataValues);
 		} else {
-			return res.status(401).send( weapon);
+			return res.status(401).send(weapon);
 		}
 
 		return res.status(200).send(weapon);
 	} catch (e) {
-		return res.status(400).send( e.message);
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -63,12 +64,12 @@ exports.getWeapons = async (req, res) => {
 	let weapons = {};
 	try {
 		weapons = await Weapon.findAll({
-			include: [WeaponModel, Order]
+			include: [WeaponModel, Order],
 		});
-		weapons = weapons.map( item => converter(item.dataValues))
+		weapons = weapons.map((item) => converter(item.dataValues));
 		return res.status(200).send(weapons);
 	} catch (e) {
-		return res.status(400).send( e.message);
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -78,15 +79,15 @@ exports.getWeapon = async (req, res) => {
 		weapon = await WeaponStation.findAll({
 			where: {
 				weaponID: req.params.weaponID,
-				assigned: 1,
 			},
 			include: {
 				model: Station,
 			},
 		});
-		return res.status(200).send( weapon);
+		weapon = weapon.map((item) => converter(item.dataValues));
+		return res.status(200).send(weapon);
 	} catch (e) {
-		return res.status(400).send( e.message);
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -101,12 +102,27 @@ exports.createWeapon = async (req, res) => {
 };
 
 exports.updateWeapon = async (req, res) => {
-	let weapon = {};
+	let weapon = req.body;
+	let stations = [];
+	let t = await sequelize.transaction();
 	try {
-		weapon = await Weapon.update({ ...req.body }, { where: { weaponID: req.params.weaponID }, returning: true });
-		weapon = await weapon.findOne({ where: { weaponModel: req.params.weaponModel } });
+		if (weapon.hasOwnProperty('Station')) {
+			stations = await WeaponStation.bulkCreate(weapon.Station, {
+				updateOnDuplicate: ['assigned'],
+				transaction: t,
+			});
+		}
+		weapon = await Weapon.update(
+			{ ...req.body },
+			{ where: { weaponID: req.params.weaponID }, returning: true, transaction: t }
+		);
+		await t.commit();
+		weapon = await Weapon.findOne({ where: { weaponID: req.params.weaponID } });
+		weapon = weapon.dataValues;
+		weapon.Station = stations;
 		return res.status(200).send(weapon);
 	} catch (e) {
-		return res.status(400).send( e.message);
+		await t.rollback();
+		return res.status(400).send(e.message);
 	}
 };

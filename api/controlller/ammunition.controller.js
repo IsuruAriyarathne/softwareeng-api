@@ -6,6 +6,7 @@ const Station = require('../model/station.model');
 var { Op } = require('sequelize');
 var { converter } = require('../services/objectConverter');
 const AmmunitionOrder = require('../model/ammunitionOrder.model');
+const sequelize = require('../config/db');
 
 exports.getAmmunitionStation = async (req, res) => {
 	let ammunitions = [];
@@ -110,8 +111,20 @@ exports.createAmmunitionBatch = async (req, res) => {
 };
 
 exports.updateAmmunitionBatch = async (req, res) => {
-	let ammunitionBatch = {};
+	let ammunitionBatch = req.body;
+	let stations = [];
+	let assigned = [];
+	let t = await sequelize.transaction();
 	try {
+		assigned  = AmmunitionStation.findAll({attributes:[[sequelize.fn('sum', sequelize.col('count')), 'total']],where:{ammoModelID:req.params.ammoModelID,orderID:req.params.orderID}})
+		ammunitionBatch = await AmmunitionBatch.findOne({
+			where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID },
+		});
+		// let remain = 
+		console.log(assigned);
+		if(ammunitionBatch.hasOwnProperty('Station')){
+		}
+		ammunitionBatch = 
 		ammunitionBatch = await AmmunitionBatch.update(
 			{ ...req.body },
 			{ where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID }, returning: true }
@@ -119,6 +132,9 @@ exports.updateAmmunitionBatch = async (req, res) => {
 		ammunitionBatch = await AmmunitionBatch.findOne({
 			where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID },
 		});
+		if(req.body.AmmunitionStation){
+
+		}
 		return res
 			.status(200)
 			.send(ammunitionBatch);

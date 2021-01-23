@@ -5,6 +5,7 @@ const RequestWeapon = require('../model/requestWeapon.model');
 const AmmunitionType = require('../model/ammunitionType.model');
 const WeaponModel = require('../model/weaponModel.model');
 const { converter } = require('../services/objectConverter');
+const sequelize = require('../config/db');
 
 exports.getRequests = async (req, res) => {
 	let requests = [];
@@ -60,26 +61,29 @@ exports.createRequest = async (req, res) => {
 	let request = req.body;
 	let result = request;
     let weaponRequests = [];
-    let ammoRequests = [];
+	let ammoRequests = [];
+	let t = await sequelize.transaction() 
 	try {
-		result = await Request.create(request);
+		result = await Request.create(request,{transaction:t});
 		if (request.hasOwnProperty('WeaponRequests')) {
 			if (request.WeaponRequests.length > 0) {
 				request.WeaponRequests = request.WeaponRequests.map(item => {return {...item,requestID:result.requestID}})
-				weaponRequests = await RequestWeapon.bulkCreate(request.WeaponRequests);
+				weaponRequests = await RequestWeapon.bulkCreate(request.WeaponRequests,{transaction:t});
 			}
 		}
 		if (request.hasOwnProperty('AmmunitionRequests')) {
 			if (request.AmmunitionRequests.length > 0) {
 				request.AmmunitionRequests = request.AmmunitionRequests.map(item => {return {...item,requestID:result.requestID}})
-				ammoRequests = await RequestAmmunition.bulkCreate(request.AmmunitionRequests);
+				ammoRequests = await RequestAmmunition.bulkCreate(request.AmmunitionRequests,{transaction:t});
 			}
 		}
+		await t.commit()
 		result = result.dataValues
 		result.WeaponRequests = weaponRequests;
 		result.AmmunitionRequests = ammoRequests;
 		return res.status(200).send( result);
 	} catch (e) {
+		await t.rollback();
 		return res.status(400).send( e.message);
 	}
 };
@@ -87,28 +91,31 @@ exports.createRequest = async (req, res) => {
 exports.updateRequest = async (req, res) => {
     let request = req.body;
     let weaponRequests = [];
-    let ammoRequests = [];
+	let ammoRequests = [];
+	let t = await sequelize.transaction();
 	try {
 		if (request.hasOwnProperty('AmmunitionRequests')) {
 			ammoRequests = await RequestAmmunition.bulkCreate(request.AmmunitionRequests, {
-				updateOnDuplicate: ['amount'],
+				updateOnDuplicate: ['amount'], transaction:t
 			});
 		}
 		if (request.hasOwnProperty('WeaponRequests')) {
 			weaponRequests = await RequestWeapon.bulkCreate(request.WeaponRequests, {
-				updateOnDuplicate: ['amount'],
+				updateOnDuplicate: ['amount'],transaction:t
 			});
         }
         request = await Request.update(
 			{ ...req.body },
-			{ where: { requestID: req.params.requestID }, returning: true }
+			{ where: { requestID: req.params.requestID }, returning: true ,transaction:t}
 		);
+		await t.commit()
 		request = await Request.findOne({ where: { requestID: req.params.requestID } });
 		request = request.dataValues;
         request.AmmunitionRequests = ammoRequests;
         request.WeaponRequests = weaponRequests;
 		return res.status(200).send( request);
 	} catch (e) {
+		await t.rollback();
 		return res.status(400).send( e.message);
 	}
 };

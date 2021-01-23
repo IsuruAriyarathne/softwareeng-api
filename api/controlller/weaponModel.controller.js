@@ -2,6 +2,7 @@ var WeaponModel = require('../model/weaponModel.model');
 var WeaponAmmunition = require('../model/weaponAmmo.model');
 const AmmunitionType = require('../model/ammunitionType.model');
 const { converter } = require('../services/objectConverter');
+const sequelize = require('../config/db');
 
 exports.getWeaponModels = async (req, res) => {
 	let weaponModels = [];
@@ -42,19 +43,21 @@ exports.createWeaponModel = async (req, res) => {
 exports.updateWeaponModel = async (req, res) => {
 	let weaponModel = {};
 	let ammunitionTypes = [];
+	let t = await sequelize.transaction();
 	try {
 		if(req.body.hasOwnProperty('AmmunitionTypes')){
-			ammunitionTypes = WeaponAmmunition.bulkCreate(req.body.AmmunitionTypes,{ignoreDuplicates:true})
+			ammunitionTypes = WeaponAmmunition.bulkCreate(req.body.AmmunitionTypes,{ignoreDuplicates:true, transaction:t})
 		}
 		weaponModel = await WeaponModel.update(
 			{ ...req.body },
-			{ where: { weaponModelID: req.params.weaponModelID }, returning: true }
+			{ where: { weaponModelID: req.params.weaponModelID }, returning: true ,transaction:t}
 		);
-
+		await t.commit();
 		weaponModel = await WeaponModel.findOne({ where: { weaponModelID: req.params.weaponModelID } });
 		weaponModel.dataValues.AmmunitionTypes = ammunitionTypes;
 		return res.status(200).send(weaponModel);
 	} catch (e) {
+		await t.rollback();
 		return res.status(400).send( e.message );
 	}
 };

@@ -1,3 +1,4 @@
+const sequelize = require('../config/db');
 const AmmunitionType = require('../model/ammunitionType.model');
 const RecoveredAmmunition = require('../model/recoveredAmmo.model');
 const RecoveredWeapon = require('../model/recoveredWeapon.model');
@@ -44,28 +45,6 @@ exports.getRecoveryStation = async (req, res) => {
 	}
 };
 
-exports.updateWeaponStation = async (req, res) => {
-	let weapon = {};
-	try {
-		weapon = await WeaponStation.update(
-			{ ...req.body },
-			{
-				where: {
-					weaponID: req.params.weaponID,
-					stationID: req.body.stationID,
-					assigned: 1,
-				},
-				returning: true,
-			}
-		);
-		weapon = await WeaponStation.findOne({
-			where: { weaponID: req.params.weaponID, stationID: req.body.stationID, assigned: 1 },
-		});
-		return res.status(200).send(weapon);
-	} catch (e) {
-		return res.status(400).send(e.message);
-	}
-};
 
 //check
 exports.getRecoveries = async (req, res) => {
@@ -106,30 +85,34 @@ exports.getRecovery = async (req, res) => {
 exports.updateRecovery = async (req, res) => {
     let recovery = req.body;
     let recoveredAmmunitions = [];
-    let recoveredWeapons = [];
+	let recoveredWeapons = [];
+	let t = await sequelize.transaction();
 	try {
 		if (recovery.hasOwnProperty('RecoveredAmmunitions')) {
 			recoveredAmmunitions = [];
 			recoveredAmmunitions = await RecoveredAmmunition.bulkCreate(recovery.RecoveredAmmunitions, {
-				updateOnDuplicate: ['amount'],
+				updateOnDuplicate: ['amount'],transaction:t
 			});
 		}
 		if (recovery.hasOwnProperty('RecoveredWeapons')) {
 			recoveredWeapons = [];
 			recoveredWeapons = await RecoveredWeapon.bulkCreate(recovery.RecoveredWeapons, {
-				updateOnDuplicate: ['amount'],
+				updateOnDuplicate: ['amount'],transaction:t
 			});
         }
         recovery = await Recovery.update(
 			{ ...req.body },
-			{ where: { recoveryID: req.params.recoveryID }, returning: true }
+			{ where: { recoveryID: req.params.recoveryID }, returning: true ,transaction:t},
 		);
+
         recovery = await Recovery.findOne({ where: { recoveryID: req.params.recoveryID } });
+		await t.commit();
 		recovery = recovery.dataValues
 		recovery.RecoveredAmmunitions = recoveredAmmunitions;
-        recovery.RecoveredWeapons = recoveredWeapons;
+		recovery.RecoveredWeapons = recoveredWeapons;
 		return res.status(200).send( recovery);
 	} catch (e) {
+		await t.rollback();
 		return res.status(400).send( e.message);
 	}
 };
@@ -138,26 +121,28 @@ exports.createRecovery = async (req, res) => {
 	let recovery = req.body;
 	let recoveredAmmunition = [];
 	let recoveredWeapons = [];
+	let t = await sequelize.transaction();
 	try {
-		recovery = await Recovery.create(recovery);
+		recovery = await Recovery.create(recovery,{transaction:t});
 		recovery = recovery.dataValues;
 		if (req.body.hasOwnProperty('RecoveredAmmunitions')) {
 			if (req.body.RecoveredAmmunitions.length > 0) {
 				req.body.RecoveredAmmunitions = req.body.RecoveredAmmunitions.map(item => {return {...item,recoveryID:recovery.recoveryID}})
-				recoveredAmmunition = await RecoveredAmmunition.bulkCreate(req.body.RecoveredAmmunitions);
+				recoveredAmmunition = await RecoveredAmmunition.bulkCreate(req.body.RecoveredAmmunitios,{transaction:t});
 			}
 		}
 		if (req.body.hasOwnProperty('RecoveredWeapons')) {
 			if (req.body.RecoveredWeapons.length > 0) {
 				req.body.RecoveredWeapons = req.body.RecoveredWeapons.map(item => {return {...item,recoveryID:recovery.recoveryID}})
-				recoveredWeapons = await RecoveredWeapon.bulkCreate(req.body.RecoveredWeapons);
+				recoveredWeapons = await RecoveredWeapon.bulkCreate(req.body.RecoveredWeapons,{transaction:t});
 			}
 		}
-		
+		await t.commit();		
 		recovery.RecoveredAmmunitions = recoveredAmmunition;
 		recovery.RecoveredWeapons = recoveredWeapons;
 		return res.status(200).send(recovery);
 	} catch (e) {
+		await t.rollback();
 		return res.status(400).send( e.message);
 	}
 };

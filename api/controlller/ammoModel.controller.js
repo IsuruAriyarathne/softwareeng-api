@@ -41,22 +41,24 @@ exports.createAmmoModel = async (req, res) => {
 };
 
 exports.updateAmmoModel = async (req, res) => {
-
 	let ammoModel = req.body;
 	let weaponModels = [];
+	let t = await sequelize.transaction();
 	try {
 		if(ammoModel.hasOwnProperty('WeaponModels')){
-			weaponModels = await WeaponAmmunition.bulkCreate(ammoModel.WeaponModels,{ignoreDuplicates:true})
+			weaponModels = await WeaponAmmunition.bulkCreate(ammoModel.WeaponModels,{ignoreDuplicates:true, transaction:t})
 		}
 		ammoModel = await AmmunitionType.update(
 			{ ...req.body },
-			{ where: { ammoModelID: req.params.ammoModelID }, returning: true }
+			{ where: { ammoModelID: req.params.ammoModelID }, returning: true , transaction:t}
 		);
+		await t.commit();
 		ammoModel = await AmmunitionType.findOne({ where: { ammoModelID: req.params.ammoModelID } });
 		ammoModel = ammoModel.dataValues;
 		ammoModel.WeaponModels = weaponModels;
 		return res.status(200).send( ammoModel);
 	} catch (e) {
+		await t.rollback();
 		return res.status(400).send(e.message);
 	}
 };

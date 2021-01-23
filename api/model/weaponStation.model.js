@@ -1,5 +1,6 @@
 const {DataTypes} = require('sequelize');
 const sequelize = require('../config/db');
+const Station = require('./station.model');
 const Weapon = require('./weapon.model');
 
 
@@ -13,5 +14,5 @@ const WeaponStation = sequelize.define('WeaponStation', {
   
   WeaponStation.removeAttribute('id')
   WeaponStation.hasOne(Weapon, { foreignKey: 'weaponID' });
-
+WeaponStation.belongsTo(Station,{foreignKey:'stationID'})
 module.exports = WeaponStation;

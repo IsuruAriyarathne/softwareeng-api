@@ -68,13 +68,14 @@ exports.updateCompany = async (req, res) => {
 	let company = req.body;
 	let supplyAmmunition = [];
 	let supplyWeapon = [];
+	let t = await sequelize.transaction();
 	try {
 		if(company.hasOwnProperty('SupplyAmmunition')){
-			supplyAmmunition = await SupplyAmmunition.bulkCreate(company.SupplyAmmunition,{ignoreDuplicates:true});
+			supplyAmmunition = await SupplyAmmunition.bulkCreate(company.SupplyAmmunition,{ignoreDuplicates:true, transaction:t});
 		}
 		
 		if(company.hasOwnProperty('SupplyWeapon')){
-			supplyWeapon = await SupplyWeapon.bulkCreate(company.SupplyWeapon,{ignoreDuplicates:true});
+			supplyWeapon = await SupplyWeapon.bulkCreate(company.SupplyWeapon,{ignoreDuplicates:true, transaction:t});
 		}
 
 		company = await Supplier.update(
@@ -83,8 +84,10 @@ exports.updateCompany = async (req, res) => {
 				where: {
 					supplierID: req.params.supplierID,
 				},
+				transaction:t
 			}
 		);
+		await t.commit();
 		company = await Supplier.findOne({
 			where: { supplierID: req.params.supplierID },
 		});
@@ -93,6 +96,7 @@ exports.updateCompany = async (req, res) => {
 		company.SupplyWeapon = supplyWeapon;
 		return res.status(200).send( company);
 	} catch (e) {
+		await t.rollback();
 		return res.status(400).send( e.message);
 	}
 };
