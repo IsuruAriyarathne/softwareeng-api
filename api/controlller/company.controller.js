@@ -101,4 +101,17 @@ exports.updateCompany = async (req, res) => {
 	}
 };
 
-//check
+/**
+ * @returns success or error message 
+ */
+exports.deleteCompany = async (req, res) => {
+	try {
+		await Supplier.destroy({ where: {  supplierID:req.params.supplierID } });
+		return res.status(200).send('Succesfully supplier  deleted');
+	} catch (e) {
+		if(e.message.toLowerCase().includes('foreign key constraint')){
+			return res.status(400).send('Supplier cannot be deleted ,it has many records in database')
+		}
+		return res.status(400).send(e.message);
+	}
+};

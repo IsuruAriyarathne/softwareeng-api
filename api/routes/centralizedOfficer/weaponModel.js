@@ -23,7 +23,14 @@ router.put('/:weaponModelID', validateWeaponModel, WeaponModelController.updateW
  */
 router.post('/', validateWeaponModel, WeaponModelController.createWeaponModel );
 
+/**
+ * @description delete weapon Model which are not foreign keys are only deleted
+ */
+router.delete('/:weaponModelID', WeaponModelController.deleteWeaponModel)
 
+/**
+ * @description delete ammunition types of the weapon Model 
+ */
 router.delete('/:weaponModelID/:ammoModelID', WeaponModelController.deleteAmmunitionType)
 
 router.all('*', (req, res) => {

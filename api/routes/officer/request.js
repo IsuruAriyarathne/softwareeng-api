@@ -27,6 +27,11 @@ router.put('/:requestID',validateRequest,RequestController.updateRequest)
  */
 router.post('/',validateRequest,RequestController.createRequest);
 
+/**
+ * @description delete request.
+ */
+router.delete('/:requestID',validateRequest,RequestController.deleteRequest);
+
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });
 });

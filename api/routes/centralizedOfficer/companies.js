@@ -23,6 +23,10 @@ router.put('/:supplierID', validateCompanies, CompanyController.updateCompany);
  */
 router.post('/', validateCompanies, CompanyController.createCompany);
 
+/**
+ * @description delete company, companies which are not foreign keys are only deleted
+ */
+router.delete('/:supplierID', CompanyController.deleteCompany);
 
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });

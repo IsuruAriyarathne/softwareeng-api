@@ -25,6 +25,12 @@ router.put('/:ammoModelID/:orderID', AmmunitionController.updateAmmunitionBatch 
  */
 router.post('/', validateAmmunition, AmmunitionController.createAmmunitionBatch)
 
+/**
+ * @description delete a ammunition batch 
+ */
+router.delete('/:ammoModelID/:orderID', AmmunitionController.deleteAmmunitionBatch)
+
+
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });
 });
