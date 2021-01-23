@@ -1,5 +1,6 @@
 const express = require('express');
 const OrderController = require('../../controlller/order.controller')
+const validateOrder = require('../../validator/centralizedOfficer/order.validator');
 const router = express.Router();
 
 /**
@@ -15,12 +16,9 @@ router.get('/:orderID', OrderController.getOrder);
 /**
  * @description get order details weapon models and ammunition types ordered with quantity and price.
  */
-router.put('/:orderID', OrderController.updateOrder);
+router.put('/:orderID', validateOrder, OrderController.updateOrder);
 
-/**
- * @description create order with weapon models and count and ammunition types and count
- */
-router.post('/', OrderController.createOrder);
+router.post('/', validateOrder, OrderController.createOrder);
 
 /**
  * @description complete the order create entries in weapon table and ammunition batch table

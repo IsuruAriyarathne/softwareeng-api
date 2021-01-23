@@ -1,6 +1,7 @@
 const express = require('express');
 const UserController = require('../../controlller/user.controller')
 const router = express.Router();
+const validateUser = require('../../validator/admin/user.validator');
 
 /**
  * @description get all users
@@ -10,12 +11,12 @@ router.get('/', UserController.getUsers);
 /**
  * @description update user
  */
-router.put('/:userId', UserController.updateUser);
+router.put('/:userId', validateUser, UserController.updateUser);
 
 /**
  * @description create user
  */
-router.post('/', UserController.createUser);
+router.post('/', validateUser, UserController.createUser);
 
 
 /**
