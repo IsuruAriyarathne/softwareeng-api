@@ -103,9 +103,7 @@ exports.createAmmunitionBatch = async (req, res) => {
 };
 
 exports.updateAmmunitionBatch = async (req, res) => {
-	let ammunitionBatch = req.body;
 	let stations = [];
-	let assigned = [];
 	let t = await sequelize.transaction();
 	try {
 		if (req.body.hasOwnProperty('Station')) {
@@ -141,7 +139,17 @@ exports.updateAmmunitionBatch = async (req, res) => {
 	}
 };
 
-const getRemainingAmmunition = async (ammoModelID, orderID) => {
-	
-	return remain;
+/**
+ * @returns success or error message 
+ */
+exports.deleteAmmunitionBatch = async (req, res) => {
+	try {
+		await AmmunitionBatch.destroy({ where: { ammoModelID: req.params.ammoModelID, orderID:req.params.orderID } });
+		return res.status(200).send('Succesfully ammunition batch deleted');
+	} catch (e) {
+		if(e.message.toLowerCase().includes('foreign key constraint')){
+			return res.status(400).send('User cannot be deleted ,it has many records in database')
+		}
+		return res.status(400).send(e.message);
+	}
 };

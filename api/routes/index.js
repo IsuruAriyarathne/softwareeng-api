@@ -7,6 +7,9 @@ router.get('/', function (req, res, next) {
 	res.render('index', { title: 'Express' });
 });
 
+/**
+ * @description login
+ */
 router.post('/', async (req, res, next) => {
 	passport.authenticate('local', async (err, user, info) => {
 		try {

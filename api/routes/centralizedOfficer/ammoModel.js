@@ -25,10 +25,16 @@ router.put('/:ammoModelID', validateAmmoModel, AmmunitionTypeController.updateAm
  */
 router.post('/', validateAmmoModel, AmmunitionTypeController.createAmmoModel )
 
-
+/**
+ * @description delete ammunition model 
+ */
 router.delete('/:ammoModelID',AmmunitionTypeController.deleteAmmoModel )
 
-router.delete('/:ammoModelID/:weaponModelID',AmmunitionTypeController.deleteAmmoModel )
+/**
+ * @description delete weapon models of the ammunitions type 
+ */
+router.delete('/:ammoModelID',AmmunitionTypeController.deleteweaponAmmunition )
+
 
 router.all('*', (req, res) => {
 	res.status(404).send( "Not found");

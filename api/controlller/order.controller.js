@@ -148,3 +148,18 @@ exports.completeOrder = async (req, res) => {
 		return res.status(400).send(e.message);
 	}
 };
+
+/**
+ * @returns success or error message 
+ */
+exports.deleteOrder = async (req, res) => {
+	try {
+		await Order.destroy({ where: { orderID:req.params.orderID } });
+		return res.status(200).send('Succesfully order deleted');
+	} catch (e) {
+		if(e.message.toLowerCase().includes('foreign key constraint')){
+			return res.status(400).send('Order cannot be deleted ,it has many records in database')
+		}
+		return res.status(400).send(e.message);
+	}
+};
