@@ -49,8 +49,9 @@ exports.createUser = async (req, res) => {
 			numbers: true,
 		})
 		let salt = await bcrypt.genSalt(10);
+		let station = await Station.findOne({where:{stationName:req.body.stationName}}) 
 		user.password = await bcrypt.hash(password, salt);
-		user = await User.create(req.body);
+		user = await User.create({...req.body, stationID:station.stationID});
 		sendMail("SLF New User Password",password,user.email)
 		return res
 			.status(200)
@@ -69,7 +70,8 @@ exports.createUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
 	let user = {};
 	try {
-		user = await User.update({ ...req.body }, { where: { officerID: req.params.userId }, returning: true });
+		let station = await Station.findOne({where:{stationName:req.body.stationName}}) 
+		user = await User.update({ ...req.body, stationID:station.stationID }, { where: { officerID: req.params.userId }, returning: true });
 		user = await User.findOne({ attributes:{exclude:'password'},where: { officerID: req.params.userId } ,include:{model:Station}});
 		user = converter(user.dataValues)
 		return res.status(200).send(user);

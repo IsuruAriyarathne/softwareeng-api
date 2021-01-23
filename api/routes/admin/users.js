@@ -11,12 +11,12 @@ router.get('/', UserController.getUsers);
 /**
  * @description update user
  */
-router.put('/:userId', validateUser, UserController.updateUser);
+router.put('/:userId', UserController.updateUser);
 
 /**
  * @description create user
  */
-router.post('/', validateUser, UserController.createUser);
+router.post('/', UserController.createUser);
 
 
 /**
