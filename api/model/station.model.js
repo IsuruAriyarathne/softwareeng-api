@@ -5,7 +5,7 @@ const Station = sequelize.define(
 	'Station',
 	{
 		stationID: { type: DataTypes.INTEGER, primaryKey: true , autoIncrement: true,},
-		name: DataTypes.STRING(100),
+		stationName: DataTypes.STRING(100),
 		location: DataTypes.STRING(100),
 		type: DataTypes.STRING(10),
 		contactNo: DataTypes.STRING(10),

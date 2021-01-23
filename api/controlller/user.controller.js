@@ -9,7 +9,7 @@ exports.getUsers = async (req, res) => {
 	let users = [];
 	try {
 		users = await User.findAll({ attributes: { exclude: 'password' }, include:{model:Station} });
-		// users = users.map(item => converter(item.dataValues))
+		users = users.map(item => converter(item.dataValues))
 		return res.status(200).send(users);
 	} catch (e) {
 		return res.status(400).send(e.message);
