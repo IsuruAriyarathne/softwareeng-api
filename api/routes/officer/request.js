@@ -1,5 +1,6 @@
 const express = require("express");
 const RequestController = require('../../controlller/request.controller');
+const validateRequest = require('../../validator/officer/request.validator');
 
 const router = express.Router();
 
@@ -18,13 +19,13 @@ router.get('/:stationID/:requestID',RequestController.getRequestStation);
 /**
  * @description update the basic details and ammunition models and weapon models in the request
  */
-router.put('/:requestID', RequestController.updateRequest)
+router.put('/:requestID',validateRequest,RequestController.updateRequest)
 
 
 /**
  * @description create new request with ammunition models and weapon models.
  */
-router.post('/', RequestController.createRequest);
+router.post('/',validateRequest,RequestController.createRequest);
 
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });

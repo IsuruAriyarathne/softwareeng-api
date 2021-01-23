@@ -1,5 +1,6 @@
 const express = require("express");
 const RecoveryController = require('../../controlller/recovery.controller');
+const validateRecovery = require('../../validator/officer/recovery.validator');
 const router = express.Router();
 
 /**
@@ -15,12 +16,12 @@ router.get('/:stationID/:recoveryID', RecoveryController.getRecoveryStation);
 /**
  * @description update the ammunition type and weapon model amounts of recovery and basic info
  */
-router.put('/:recoveryID', RecoveryController.updateRecovery )
+router.put('/:recoveryID', validateRecovery, RecoveryController.updateRecovery )
 
 /**
  * @description create new recovery
  */
-router.post('/', RecoveryController.createRecovery )
+router.post('/', validateRecovery, RecoveryController.createRecovery )
 
 /**
  * @description create new recovery

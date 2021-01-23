@@ -6,7 +6,7 @@ function validateUser(req,res,next) {
 		name: Joi.string().min(2).max(100).required(),
         email: Joi.string().email().lowercase().required(),
 		role: Joi.string().valid('admin', 'officer','cenofficer').required(),
-        stationID: Joi.number().integer().min(1).required() 
+        stationID: Joi.number().integer().min(1) 
 		});
 
 	const { error, value } = schema.validate(req.body);

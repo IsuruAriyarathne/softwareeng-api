@@ -1,5 +1,6 @@
 const express = require('express');
-const MaintainanceRecordController = require('../../controlller/maintainanceRecords.controller')
+const MaintainanceRecordController = require('../../controlller/maintainanceRecords.controller');
+const validateMaintainanceRecord = require('../../validator/officer/maintainanceRecord.validator');
 const router = express.Router();
 
 /**
@@ -10,12 +11,12 @@ router.get('/:stationID', MaintainanceRecordController.getStationMaintainanceRec
 /**
  * @description update maintainance record
  */
-router.put('/:id', MaintainanceRecordController.updateMaintainanceRecord);
+router.put('/:id', validateMaintainanceRecord , MaintainanceRecordController.updateMaintainanceRecord);
 
 /**
  * @description create maintainance record
  */
-router.post('/', MaintainanceRecordController.createMaintainanceRecord);
+router.post('/', validateMaintainanceRecord, MaintainanceRecordController.createMaintainanceRecord);
 
 
 /**
