@@ -65,17 +65,19 @@ exports.createOrder = async (req, res) => {
 	try {
         order = await Order.create(req.body);
         result = order.dataValues;
+        req.body.AmmoOrder = req.body.AmmoOrder.map(item => {return {...item,orderID:result.orderID}})
+        req.body.WeaponOrder = req.body.WeaponOrder.map(item => {return {...item,orderID:result.orderID}})
         if(req.body.hasOwnProperty('AmmoOrder')){
-            result.ammoOrder = AmmunitionOrder.bulkCreate(req.body.ammoOrder)
+            result.AmmoOrder = await AmmunitionOrder.bulkCreate(req.body.AmmoOrder)
         }
         
         if(req.body.hasOwnProperty('WeaponOrder')){
-            result.weaponOrder = WeaponOrder.bulkCreate(req.body.weaponOrder)
+            result.WeaponOrder = await WeaponOrder.bulkCreate(req.body.WeaponOrder)
         }
 
 		return res
 			.status(200)
-			.send( order);
+			.send( result);
 	} catch (e) {
 		return res.status(400).send( e.message );
 	}
@@ -120,42 +122,27 @@ exports.updateOrder = async (req, res) => {
 exports.completeOrder = async (req,res) =>{
     let ammunitionOrders = [];
     let weaponOrders = [];
+    let bulkWeapons = [];
+    let update = false
     try{
         ammunitionOrders = await AmmunitionOrder.findAll({where:{orderID:req.params.orderID}})
         weaponOrders = await WeaponOrder.findAll({where:{orderID:req.params.orderID}})
         weaponOrders = weaponOrders.map(item => converter(item.dataValues))
+        for(let i= 0;i< weaponOrders.length;i++){
+            let obj = weaponOrders[i]
+            let arr = Array(obj.count).fill({...obj,state:'Available'});
+            bulkWeapons.push(...arr)
+        }
         ammunitionOrders = ammunitionOrders.map(item =>{
             item = converter(item.dataValues)
             item.remain = item.count
             return item;
         })
         ammunitions = await AmmunitionBatch.bulkCreate(ammunitionOrders);
-        weapons = await Weapon.bulkCreate(weaponOrders)
+        weapons = await Weapon.bulkCreate(bulkWeapons)
+		return res.status(200).send("Order completed");
     }catch(e){
 		return res.status(400).send(e.message);
     }
     
 }
-//check
-
-
-            // let newAmmoOrder = [];
-            // let updateAmmoOrder = [];
-            // let available = await AmmunitionOrder.findAll({
-            //     where:{
-            //         orderID:order.orderID,
-            //         ammoModelID: ammos.map(item => item.ammoModelID)
-            //     }
-            // })
-            // ammos.foreach(item =>{
-            //     let index = available.findIndex(entry => entry.ammoModelID = item.ammoModelID)
-            //     if(index>=0) {
-            //         if(item.count != available[index].count){
-            //             updateAmmoOrder.push(item);
-            //         }
-            //     }
-            //     else{
-            //         newAmmoOrder.push(item)
-            //     }
-
-            // })

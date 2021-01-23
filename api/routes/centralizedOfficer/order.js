@@ -20,6 +20,9 @@ router.put('/:orderID', validateOrder, OrderController.updateOrder);
 
 router.post('/', validateOrder, OrderController.createOrder);
 
+/**
+ * @description complete the order create entries in weapon table and ammunition batch table
+ */
 router.get('/:orderID/complete', OrderController.completeOrder);
 
 router.all('*', (req, res) => {

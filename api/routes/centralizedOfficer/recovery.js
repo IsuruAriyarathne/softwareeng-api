@@ -3,12 +3,24 @@ const RecoveryController = require('../../controlller/recovery.controller');
 
 const router = express.Router();
 
+/**
+ * @description get all the recoveries 
+ */
 router.get('/', RecoveryController.getRecoveries)
 
+/**
+ * @description get the recovery with the ammunition type and weapon model recovered and their amount
+ */
 router.get('/:recoveryID', RecoveryController.getRecovery);
 
+/**
+ * @description update recovery with basic info and the ammunition type and weapon model recovered and their amount
+ */
 router.put('/:recoveryID', RecoveryController.updateRecovery)
 
+/**
+ * @description create recovery with the ammunition type and weapon model recovered and their amount
+ */
 router.post('/', RecoveryController.createRecovery);
 
 router.all('*', (req, res) => {

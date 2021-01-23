@@ -2,6 +2,9 @@ var Request = require('../model/request.model');
 var { Op } = require('sequelize');
 const RequestAmmunition = require('../model/requestAmmo.model');
 const RequestWeapon = require('../model/requestWeapon.model');
+const AmmunitionType = require('../model/ammunitionType.model');
+const WeaponModel = require('../model/weaponModel.model');
+const { converter } = require('../services/objectConverter');
 
 exports.getRequests = async (req, res) => {
 	let requests = [];
@@ -38,12 +41,15 @@ exports.getRequest = async (req, res) => {
 };
 exports.getRequestStation = async (req, res) => {
 	let request = {};
-	request.ammoRequests = [];
-	request.weaponRequests = [];
+	let ammoRequests = [];
+	let weaponRequests = [];
 	try {
-        request = await Request.findAll({ where: { stationID: req.params.stationID, requestID: req.params.requestID} });
-        request.ammoRequests = await RequestAmmunition.findAll({where:{ stationID: req.params.stationID,requestID: req.params.requestID}})
-        request.weaponRequests = await RequestWeapon.findAll({where:{ stationID: req.params.stationID, requestID: req.params.requestID}})
+        ammoRequests = await RequestAmmunition.findAll({where:{ requestID: req.params.requestID}, include:{model:AmmunitionType}})
+        weaponRequests = await RequestWeapon.findAll({where:{  requestID: req.params.requestID}, include:{model:WeaponModel}})
+		ammoRequests = ammoRequests.map(item => converter(item.dataValues))
+		weaponRequests = weaponRequests.map(item => converter(item.dataValues))
+		request.AmmunitionRequests = ammoRequests;
+		request.WeaponRequests = weaponRequests
 		return res.status(200).send( request);
 	} catch (e) {
 		return res.status(400).send( e.message);
@@ -51,41 +57,45 @@ exports.getRequestStation = async (req, res) => {
 };
 
 exports.createRequest = async (req, res) => {
-    let request = req.body;
+	let request = req.body;
+	let result = request;
     let weaponRequests = [];
     let ammoRequests = [];
 	try {
-		if (request.hasOwnProperty('weaponRequests')) {
-			if (request.weaponRequests.length > 0) {
-				weaponRequests = await RequestWeapon.bulkCreate(request.weaponRequests);
+		result = await Request.create(request);
+		if (request.hasOwnProperty('WeaponRequests')) {
+			if (request.WeaponRequests.length > 0) {
+				request.WeaponRequests = request.WeaponRequests.map(item => {return {...item,requestID:result.requestID}})
+				weaponRequests = await RequestWeapon.bulkCreate(request.WeaponRequests);
 			}
 		}
-		if (request.hasOwnProperty('ammoRequests')) {
-			if (request.ammoRequests.length > 0) {
-				ammoRequests = await RequestAmmunition.bulkCreate(request.ammoRequests);
+		if (request.hasOwnProperty('AmmunitionRequests')) {
+			if (request.AmmunitionRequests.length > 0) {
+				request.AmmunitionRequests = request.AmmunitionRequests.map(item => {return {...item,requestID:result.requestID}})
+				ammoRequests = await RequestAmmunition.bulkCreate(request.AmmunitionRequests);
 			}
 		}
-		request = await request.create(request);
-		request.weaponRequests = weaponRequests;
-		request.ammoRequests = ammoRequests;
-		return res.status(200).send( request);
+		result = result.dataValues
+		result.WeaponRequests = weaponRequests;
+		result.AmmunitionRequests = ammoRequests;
+		return res.status(200).send( result);
 	} catch (e) {
 		return res.status(400).send( e.message);
 	}
 };
 
 exports.updateRequest = async (req, res) => {
-    let request = {};
+    let request = req.body;
     let weaponRequests = [];
     let ammoRequests = [];
 	try {
-		if (request.hasOwnProperty('ammoRequests')) {
-			ammoRequests = await RecoveredAmmunition.bulkCreate(order.ammoOrder, {
+		if (request.hasOwnProperty('AmmunitionRequests')) {
+			ammoRequests = await RequestAmmunition.bulkCreate(request.AmmunitionRequests, {
 				updateOnDuplicate: ['amount'],
 			});
 		}
-		if (request.hasOwnProperty('weaponRequests')) {
-			weaponRequests = await RecoveredAmmunition.bulkCreate(order.ammoOrder, {
+		if (request.hasOwnProperty('WeaponRequests')) {
+			weaponRequests = await RequestWeapon.bulkCreate(request.WeaponRequests, {
 				updateOnDuplicate: ['amount'],
 			});
         }
@@ -93,9 +103,10 @@ exports.updateRequest = async (req, res) => {
 			{ ...req.body },
 			{ where: { requestID: req.params.requestID }, returning: true }
 		);
-        request = await Request.findOne({ where: { requestID: req.params.requestID } });
-        request.ammoRequests = ammoRequests;
-        request.weaponRequests = weaponRequests;
+		request = await Request.findOne({ where: { requestID: req.params.requestID } });
+		request = request.dataValues;
+        request.AmmunitionRequests = ammoRequests;
+        request.WeaponRequests = weaponRequests;
 		return res.status(200).send( request);
 	} catch (e) {
 		return res.status(400).send( e.message);

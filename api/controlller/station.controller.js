@@ -1,5 +1,9 @@
 var Station = require('../model/station.model');
 
+/**
+ * @typedef {Object} station
+ *@returns {Array}: {stationID, stationName, contactNo, location, type}  
+ */
 exports.getStations = async (req, res) => {
 	let stations = [];
 	try {
@@ -10,7 +14,11 @@ exports.getStations = async (req, res) => {
 	}
 };
 
-exports.geStation = async (req, res) => {
+
+/**
+ *@returns {Object}: {stationID, stationName, contactNo, location, type}  
+ */
+exports.getStation = async (req, res) => {
 	let station = {};
 	try {
 		station = await Station.findOne({ where: { stationID: req.params.stationId } });
@@ -24,6 +32,9 @@ exports.geStation = async (req, res) => {
 	}
 };
 
+/**
+ *@returns {Object}: {stationID, stationName, contactNo, location, type}  
+ */
 exports.createStation = async (req, res) => {
 	let station = req.body;
 	try {
@@ -34,6 +45,9 @@ exports.createStation = async (req, res) => {
 	}
 };
 
+/**
+ *@returns {Array}: {stationID, stationName, contactNo, location, type}  
+ */
 exports.updateStation = async (req, res) => {
 	let station = {};
 	try {
@@ -53,6 +67,11 @@ exports.deleteStation = async (req, res) => {
 		await Station.destroy({ where: { stationID: req.params.stationId } });
 		return res.status(200).send('Succesfully station deleted');
 	} catch (e) {
+		if(e.message.toLowerCase().includes('foreign key constraint')){
+			return res.status(400).send('Station cannot be deleted ,it has many records in database')
+		}
 		return res.status(400).send( e.message );
 	}
 };
+
+

@@ -7,8 +7,8 @@ var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config/config');
 var bcrypt = require('bcrypt')
 
-exports.local = passport.use(new LocalStrategy( {usernameField:"officerID", passwordField:"password" },(officerID,password, done) => {
-    User.findOne({where:{officerID:officerID}})
+exports.local = passport.use(new LocalStrategy( {usernameField:"email", passwordField:"password" },(email,password, done) => {
+    User.findOne({where:{email:email}})
         .then(user => {
             if(!user){
                 return done(null,false)
