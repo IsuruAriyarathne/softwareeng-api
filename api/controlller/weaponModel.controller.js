@@ -76,3 +76,4 @@ exports.deleteAmmunitionType = async (req, res) => {
 		return res.status(400).send(e.message);
 	}
 };
+

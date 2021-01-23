@@ -8,11 +8,6 @@ const router = express.Router();
 router.get('/', UserController.getUsers);
 
 /**
- * @description get user
- */
-router.get('/:userId', UserController.getUser);
-
-/**
  * @description update user
  */
 router.put('/:userId', UserController.updateUser);
@@ -27,6 +22,12 @@ router.post('/', UserController.createUser);
  * @description delete user
  */
 router.delete('/:userId', UserController.deleteUser);
+
+/**
+ * @description change the password of the user
+ */
+router.post('/changePassword/:userId', UserController.changePassword);
+
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });
 });
