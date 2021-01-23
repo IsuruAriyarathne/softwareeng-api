@@ -2,12 +2,16 @@ const { sendMail } = require('../middleware/reportSender');
 var cron = require('node-cron');
 const { groupRecovery } = require('../services/groupBy');
 const ReportController = require('../controlller/report.controller');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 
 cron.schedule('* * * * *', async () => {
 	// cron.schedule('55 23 30 * *', () => {     // This is set to function on every 30th day of the month at 11.55 pm
 
 	let reportBody = '';
 	let error = Array(9).fill(false);
+	let doc = new PDFDocument();
+	doc.pipe(fs.createWriteStream("SLF Monthly Report.pdf"));
 
 	try {
 		[stations, error[0]] = await ReportController.getReportStations();
@@ -73,7 +77,11 @@ cron.schedule('* * * * *', async () => {
 		}); // ammunitionArr is created with each element in the format[ { name: 'Bullet', count: 10 } ]
 
 		for (i = 0; i < stations.length; i++) {
-			reportBody += '<h2>Station : ' + stations[i].stationName + '</h2>';
+			// reportBody += '<h2>Station : ' + stations[i].stationName + '</h2>';
+			reportBody += 'Station : ' + stations[i].stationName ;
+			// doc
+  			// 	.fontSize(14)
+  			// 	.text('Some text with an embedded font!', 100, 100);
 			reportBody += '<h3>Weapons</h3>';
 			weaponArr[i].weapons.forEach((weapon) => {
 				reportBody += '<p>' + weapon.name + ' : ' + weapon.count + '</p>';
@@ -131,7 +139,14 @@ cron.schedule('* * * * *', async () => {
 		];
 		const reportSubject = `Monthly Report: ${monthNames[new Date().getMonth()]} ${new Date().getFullYear()}`;
 
-		sendMail(reportSubject, reportBody);
+		doc
+  			.fontSize(10)
+			  .text('This is the January report\n', 100, 100);
+			  doc
+  			.fontSize(10)
+  			.text('This is the weapon details', 100, 100);
+		doc.end();
+		// sendMail(reportSubject, reportBody);
 	} catch (error) {
 		console.log(error.message);
 		console.log('Error while retreiving data');
