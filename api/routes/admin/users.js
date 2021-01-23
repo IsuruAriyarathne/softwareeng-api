@@ -1,7 +1,7 @@
 const express = require('express');
 const UserController = require('../../controlller/user.controller')
 const router = express.Router();
-const validateUser = require('../../validator/user.validator');
+const validateUser = require('../../validator/admin/user.validator');
 
 /**
  * @description get all users

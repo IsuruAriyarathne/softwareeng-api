@@ -1,5 +1,6 @@
 const express = require("express");
 const AmmunitionTypeController = require('../../controlller/ammoModel.controller')
+const validateAmmoModel = require('../../validator/centralizedOfficer/ammoModel.validator');
 
 const router = express.Router();
 
@@ -16,13 +17,13 @@ router.get('/:ammoModelID', AmmunitionTypeController.getAmmoModel);
 /**
  * @description update the ammunition Model. Can add a weapon model for ammunition type.
  */
-router.put('/:ammoModelID', AmmunitionTypeController.updateAmmoModel)
+router.put('/:ammoModelID', validateAmmoModel, AmmunitionTypeController.updateAmmoModel)
 
 
 /**
  * @description create ammunition model 
  */
-router.post('/', AmmunitionTypeController.createAmmoModel )
+router.post('/', validateAmmoModel, AmmunitionTypeController.createAmmoModel )
 
 
 router.delete('/:ammoModelID',AmmunitionTypeController.deleteAmmoModel )

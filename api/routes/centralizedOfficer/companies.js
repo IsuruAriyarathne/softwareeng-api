@@ -1,5 +1,6 @@
 const express = require('express');
 const CompanyController = require('../../controlller/company.controller')
+const validateCompanies = require('../../validator/centralizedOfficer/companies.validator');
 const router = express.Router();
 
 /**
@@ -15,12 +16,12 @@ router.get('/:supplierID', CompanyController.getCompany);
 /**
  * @description update company can add ammunition types and weapon models supplied by company
  */
-router.put('/:supplierID', CompanyController.updateCompany);
+router.put('/:supplierID', validateCompanies, CompanyController.updateCompany);
 
 /**
  * @description create new company
  */
-router.post('/', CompanyController.createCompany);
+router.post('/', validateCompanies, CompanyController.createCompany);
 
 
 router.all('*', (req, res) => {
