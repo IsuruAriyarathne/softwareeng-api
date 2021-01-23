@@ -2,7 +2,7 @@ var User = require('../model/user.model');
 const bcrypt = require('bcrypt');
 var generator = require('generate-password');
 const Station = require('../model/station.model');
-const { sendMail } = require('../middleware/reportSender');
+const { sendMail } = require('../middleware/emailSender');
 const { converter } = require('../services/objectConverter');
 
 /**
