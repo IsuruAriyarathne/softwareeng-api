@@ -47,3 +47,17 @@ exports.groupRecovery = (ammunition,weapon) =>{
     })
     return result;
 }
+
+exports.groupRecoveryArr = (recovery,ammo,weapons) =>{
+    let result = recovery;
+    let final = [];
+    result.forEach(item =>{
+        let obj = item;
+        let recAmmunitions = ammo.filter(entry => entry.recoveryID == item.recoveryID);
+        obj.RecoveredAmmunitions = recAmmunitions;
+        let recWeapons = weapons.filter(entry => entry.recoveryID == item.recoveryID);
+        obj.RecoveredWeapons = recWeapons;
+        final.push(obj)
+    })
+    return final
+}

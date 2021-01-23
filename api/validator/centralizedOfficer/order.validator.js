@@ -7,7 +7,7 @@ function validateOrder(req,res,next) {
         date: Joi.date().iso().required(),
         totalCost: Joi.number().positive().greater(1).precision(2).required(),
         state: Joi.string().min(3).max(20).required(),
-		description: Joi.string().min(3).max(200).required()
+		description: Joi.string().min(3).max(200)
 	});
 
 	const { error, value } = schema.validate(req.body);

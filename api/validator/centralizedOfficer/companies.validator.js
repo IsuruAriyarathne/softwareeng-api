@@ -6,7 +6,7 @@ function validateCompanies(req,res,next) {
         name: Joi.string().min(2).max(100).required(),
         contactNo: Joi.string().max(10).required(),
 		address: Joi.string().alphanum().min(2).max(255).required(),
-		description: Joi.string().min(2).max(100).required()
+		description: Joi.string().min(2).max(100)
 		});
 
 	const { error, value } = schema.validate(req.body);
