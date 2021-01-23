@@ -49,8 +49,9 @@ exports.createUser = async (req, res) => {
 			numbers: true,
 		})
 		let salt = await bcrypt.genSalt(10);
+		let station = await Station.findOne({where:{stationName:req.body.stationName}}) 
 		user.password = await bcrypt.hash(password, salt);
-		user = await User.create(req.body);
+		user = await User.create({...req.body, stationID:station.stationID});
 		sendMail("SLF New User Password",password,user.email)
 		return res
 			.status(200)

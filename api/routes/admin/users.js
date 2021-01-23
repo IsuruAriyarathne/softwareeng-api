@@ -16,7 +16,7 @@ router.put('/:userId', validateUser, UserController.updateUser);
 /**
  * @description create user
  */
-router.post('/', validateUser, UserController.createUser);
+router.post('/', UserController.createUser);
 
 
 /**
