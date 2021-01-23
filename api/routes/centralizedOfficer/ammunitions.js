@@ -18,7 +18,7 @@ router.get('/:ammoModelID/:orderID', AmmunitionController.getAmmunitionBatch );
 /**
  * @description update the ammunition batches with order information
  */
-router.put('/:ammoModelID/:orderID', validateAmmunition, AmmunitionController.updateAmmunitionBatch )
+router.put('/:ammoModelID/:orderID', AmmunitionController.updateAmmunitionBatch )
 
 /**
  * @description create the ammunition batches 

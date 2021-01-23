@@ -23,7 +23,7 @@ exports.getAmmunitionStation = async (req, res) => {
 		ammunitions = ammunitions.map((item) => converter(item.dataValues));
 		return res.status(200).send(ammunitions);
 	} catch (e) {
-		return res.status(400).send( e.message);
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -50,14 +50,12 @@ exports.updateAmmunitionStation = async (req, res) => {
 					orderID: req.body.orderID,
 				},
 			});
-			return res
-				.status(200)
-				.send( ammunition);
+			return res.status(200).send(ammunition);
 		} else {
 			return res.status(401).send('Unauthorized');
 		}
 	} catch (e) {
-		return res.status(400).send( e.message);
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -66,12 +64,10 @@ exports.getAmmunitionBatches = async (req, res) => {
 	let ammunitionBatches = {};
 	try {
 		ammunitionBatches = await AmmunitionBatch.findAll({
-			include: [AmmunitionType,Order]
+			include: [AmmunitionType, Order],
 		});
-		ammunitionBatches = ammunitionBatches.map(item => converter(item.dataValues))
-		return res
-			.status(200)
-			.send(ammunitionBatches);
+		ammunitionBatches = ammunitionBatches.map((item) => converter(item.dataValues));
+		return res.status(200).send(ammunitionBatches);
 	} catch (e) {
 		return res.status(400).send(e.message);
 	}
@@ -89,10 +85,8 @@ exports.getAmmunitionBatch = async (req, res) => {
 				model: Station,
 			},
 		});
-		ammunitionBatch = ammunitionBatch.map(item => converter(item.dataValues))
-		return res
-			.status(200)
-			.send(ammunitionBatch);
+		ammunitionBatch = ammunitionBatch.map((item) => converter(item.dataValues));
+		return res.status(200).send(ammunitionBatch);
 	} catch (e) {
 		return res.status(400).send(e.message);
 	}
@@ -102,9 +96,7 @@ exports.createAmmunitionBatch = async (req, res) => {
 	let ammunitionBatch = req.body;
 	try {
 		ammunitionBatch = await AmmunitionBatch.create(req.body);
-		return res
-			.status(200)
-			.send(ammunitionBatch);
+		return res.status(200).send(ammunitionBatch);
 	} catch (e) {
 		return res.status(400).send(e.message);
 	}
@@ -116,29 +108,40 @@ exports.updateAmmunitionBatch = async (req, res) => {
 	let assigned = [];
 	let t = await sequelize.transaction();
 	try {
-		assigned  = AmmunitionStation.findAll({attributes:[[sequelize.fn('sum', sequelize.col('count')), 'total']],where:{ammoModelID:req.params.ammoModelID,orderID:req.params.orderID}})
-		ammunitionBatch = await AmmunitionBatch.findOne({
+		if (req.body.hasOwnProperty('Station')) {
+			stations = await AmmunitionStation.bulkCreate(req.body.Station, { updateOnDuplicate: ['count'], transaction: t });
+		}
+		let assigned = await AmmunitionStation.findAll({
+			attributes: [[sequelize.fn('sum', sequelize.col('count')), 'total']],
 			where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID },
 		});
-		// let remain = 
-		console.log(assigned);
-		if(ammunitionBatch.hasOwnProperty('Station')){
+		let ammunitionBatch = await AmmunitionBatch.findOne({
+			where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID },
+		});
+		let remain = ammunitionBatch.dataValues.count - assigned[0].dataValues.total;
+		console.log(remain);
+		if(remain < 0){
+			console.log("In");
+			throw "remain less than 0";
 		}
-		ammunitionBatch = 
 		ammunitionBatch = await AmmunitionBatch.update(
-			{ ...req.body },
-			{ where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID }, returning: true }
+			{ ...req.body, remain:remain },
+			{ where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID }, returning: true, transaction:t }
 		);
 		ammunitionBatch = await AmmunitionBatch.findOne({
 			where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID },
 		});
-		if(req.body.AmmunitionStation){
-
-		}
-		return res
-			.status(200)
-			.send(ammunitionBatch);
+		await t.commit();
+		ammunitionBatch = ammunitionBatch.dataValues;
+		ammunitionBatch.Station = stations;
+		return res.status(200).send(ammunitionBatch);
 	} catch (e) {
-		return res.status(400).send( e.message);
+		await t.rollback();
+		return res.status(400).send(e.message);
 	}
+};
+
+const getRemainingAmmunition = async (ammoModelID, orderID) => {
+	
+	return remain;
 };

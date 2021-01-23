@@ -8,17 +8,6 @@ cron.schedule('* * * * *', async () => {
 
 	let reportBody = '';
 	let error = Array(9).fill(false);
-	// let forward = true;
-	// let stations = [];
-	// let weaponModels = []; //
-	// let ammunitionModels = [];
-	// let weapons = []; //array of objects. each object of form {'stationID': , "weapons":[{"weaponID","name","description",stationID","assigned",assignedDate, weaponModelID, orderID, state}, {}, {}]}
-	// let ammunitions = []; //array of objects. each object of form {'stationID': , "ammunitions":[{"ammoModelID",name, description,"stationID","count",allocatedDate, remaining, orderID,}, {}, {}]}
-	// let weaponStock = []; //array of objects each object is of form {"weaponID","count","weaponModel"}
-	// let ammunitionsStock = []; //array of objects each object is of form {"ammoModelID","count","ammoModel"}
-	// let recovery = []; // array of objects each object is of form {"recoveryID","recoveryDate","description","stationID","RecoveredAmmunition":[array with objects]}
-	// let recoveredWeapons = [];
-	// let recoveredAmmunition = [];
 
 	try {
 		[stations, error[0]] = await ReportController.getReportStations();
@@ -100,8 +89,8 @@ cron.schedule('* * * * *', async () => {
 		recovery.forEach((reco) => {
 			reportBody += '<h4>' + reco.recoveryDate + ' : ' + reco.description + '</h4>';
 			const recoveredItems = [];
-			if (reco.RecoveredAmmunition.length > 0) {
-				reco.RecoveredAmmunition.forEach((ammo) => {
+			if (reco.RecoveredAmmunitions.length > 0) {
+				reco.RecoveredAmmunitions.forEach((ammo) => {
 					if (!recoveredItems.includes(`${ammo.name}s`)) recoveredItems.push(`${ammo.name}s`);
 				});
 			}
@@ -144,6 +133,7 @@ cron.schedule('* * * * *', async () => {
 
 		sendMail(reportSubject, reportBody);
 	} catch (error) {
+		console.log(error.message);
 		console.log('Error while retreiving data');
 	}
 });

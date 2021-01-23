@@ -1,3 +1,4 @@
+const sequelize = require('../config/db');
 const AmmunitionBatch = require('../model/ammunitionBatch.model');
 const AmmunitionOrder = require('../model/ammunitionOrder.model');
 const AmmunitionType = require('../model/ammunitionType.model');
@@ -56,26 +57,28 @@ exports.createOrder = async (req, res) => {
 	let order = req.body;
 	let result = {};
 	result.ammoOrder = [];
-	result.weaponOrder = [];
+    result.weaponOrder = [];
+    let t  = await sequelize.transaction();
 	try {
-		order = await Order.create(req.body);
+		order = await Order.create(req.body,{transaction:t});
 		result = order.dataValues;
 		if (req.body.hasOwnProperty('AmmoOrder')) {
 			    req.body.AmmoOrder = req.body.AmmoOrder.map((item) => {
 				return { ...item, orderID: result.orderID };
 			});
-			result.AmmoOrder = await AmmunitionOrder.bulkCreate(req.body.AmmoOrder);
+			result.AmmoOrder = await AmmunitionOrder.bulkCreate(req.body.AmmoOrder,{transaction:t});
 		}
 
 		if (req.body.hasOwnProperty('WeaponOrder')) {
 			    req.body.WeaponOrder = req.body.WeaponOrder.map((item) => {
 				return { ...item, orderID: result.orderID };
 			});
-			result.WeaponOrder = await WeaponOrder.bulkCreate(req.body.WeaponOrder);
+			result.WeaponOrder = await WeaponOrder.bulkCreate(req.body.WeaponOrder,{transaction:t});
 		}
-
+        await t.commit();
 		return res.status(200).send(result);
 	} catch (e) {
+        await t.rollback();
 		return res.status(400).send(e.message);
 	}
 };
@@ -84,23 +87,25 @@ exports.updateOrder = async (req, res) => {
 	let order = req.body;
 	let ammos = [];
 	let weapons = [];
-
+    let t = await sequelize.transaction();
 	try {
 		if (order.hasOwnProperty('AmmoOrder')) {
-			ammos = await AmmunitionOrder.bulkCreate(order.AmmoOrder, { updateOnDuplicate: ['count'] });
+			ammos = await AmmunitionOrder.bulkCreate(order.AmmoOrder, { updateOnDuplicate: ['count'] ,transaction:t});
 		}
 
 		if (order.hasOwnProperty('WeaponOrder')) {
-			weapons = await WeaponOrder.bulkCreate(order.WeaponOrder, { updateOnDuplicate: ['count'] });
+			weapons = await WeaponOrder.bulkCreate(order.WeaponOrder, { updateOnDuplicate: ['count'] , transaction:t});
 		}
 		order = await Order.update(
 			{ ...req.body },
 			{
 				where: {
 					orderID: req.params.orderID,
-				},
+                },
+                transaction:t
 			}
-		);
+        );
+        await t.commit();
 		order = await Order.findOne({
 			where: { orderID: req.params.orderID },
 		});
@@ -110,6 +115,7 @@ exports.updateOrder = async (req, res) => {
 
 		return res.status(200).send(order);
 	} catch (e) {
+        await t.rollback();
 		return res.status(400).send(e.message);
 	}
 };
@@ -118,7 +124,7 @@ exports.completeOrder = async (req, res) => {
 	let ammunitionOrders = [];
 	let weaponOrders = [];
 	let bulkWeapons = [];
-	let update = false;
+    let t = await sequelize.transaction();
 	try {
 		ammunitionOrders = await AmmunitionOrder.findAll({ where: { orderID: req.params.orderID } });
 		weaponOrders = await WeaponOrder.findAll({ where: { orderID: req.params.orderID } });
@@ -133,10 +139,12 @@ exports.completeOrder = async (req, res) => {
 			item.remain = item.count;
 			return item;
 		});
-		ammunitions = await AmmunitionBatch.bulkCreate(ammunitionOrders);
-		weapons = await Weapon.bulkCreate(bulkWeapons);
+		ammunitions = await AmmunitionBatch.bulkCreate(ammunitionOrders, {transaction:t});
+        weapons = await Weapon.bulkCreate(bulkWeapons, {transaction:t});
+        await t.commit();
 		return res.status(200).send('Order completed');
 	} catch (e) {
+        await t.rollback();
 		return res.status(400).send(e.message);
 	}
 };
