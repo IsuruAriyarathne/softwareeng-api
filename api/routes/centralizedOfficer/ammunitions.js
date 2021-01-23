@@ -1,5 +1,6 @@
 const express = require("express");
 const AmmunitionController = require('../../controlller/ammunition.controller')
+const validateAmmunition = require('../../validator/ammunition.validator');
 const router = express.Router();
 
 /**
@@ -17,12 +18,12 @@ router.get('/:ammoModelID/:orderID', AmmunitionController.getAmmunitionBatch );
 /**
  * @description update the ammunition batches with order information
  */
-router.put('/:ammoModelID/:orderID', AmmunitionController.updateAmmunitionBatch )
+router.put('/:ammoModelID/:orderID', validateAmmunition, AmmunitionController.updateAmmunitionBatch )
 
 /**
  * @description create the ammunition batches 
  */
-router.post('/', AmmunitionController.createAmmunitionBatch)
+router.post('/', validateAmmunition, AmmunitionController.createAmmunitionBatch)
 
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });
