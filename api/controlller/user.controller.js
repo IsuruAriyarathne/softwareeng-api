@@ -70,7 +70,8 @@ exports.createUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
 	let user = {};
 	try {
-		user = await User.update({ ...req.body }, { where: { officerID: req.params.userId }, returning: true });
+		let station = await Station.findOne({where:{stationName:req.body.stationName}}) 
+		user = await User.update({ ...req.body, stationID:station.stationID }, { where: { officerID: req.params.userId }, returning: true });
 		user = await User.findOne({ attributes:{exclude:'password'},where: { officerID: req.params.userId } ,include:{model:Station}});
 		user = converter(user.dataValues)
 		return res.status(200).send(user);
