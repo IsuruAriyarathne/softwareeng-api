@@ -8,7 +8,8 @@ function validateOrder(req,res,next) {
         totalCost: Joi.number().positive().greater(1).precision(2).required(),
         state: Joi.string().min(3).max(20).required(),
 		description: Joi.string().min(3).max(200),
-		//WeaponOrder: Joi.array()
+		//WeaponOrder: Joi.array(),
+		
 	}).unknown(true);
 
 	const { error, value } = schema.validate(req.body);
