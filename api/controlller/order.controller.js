@@ -8,6 +8,7 @@ const Weapon = require('../model/weapon.model');
 const WeaponModel = require('../model/weaponModel.model');
 const WeaponOrder = require('../model/weaponOrder.model');
 const { converter } = require('../services/objectConverter');
+const {Op} = require('sequelize')
 
 exports.getOrders = async (req, res) => {
 	let orders = [];
@@ -159,6 +160,35 @@ exports.deleteOrder = async (req, res) => {
 	} catch (e) {
 		if(e.message.toLowerCase().includes('foreign key constraint')){
 			return res.status(400).send('Order cannot be deleted ,it has many records in database')
+		}
+		return res.status(400).send(e.message);
+	}
+};
+
+/**
+ * @returns success or error message 
+ */
+exports.deleteOrderWeapon = async (req, res) => {
+	try {
+		await WeaponOrder.destroy({ where: { orderID:req.params.orderID ,weaponModelID:req.params.weaponModelID, state:{[Op.ne]:'complete'} } });
+		return res.status(200).send('Succesfully order weapon deleted');
+	} catch (e) {
+		if(e.message.toLowerCase().includes('foreign key constraint')){
+			return res.status(400).send('Order Weapon cannot be deleted ,it has many records in database')
+		}
+		return res.status(400).send(e.message);
+	}
+};
+/**
+ * @returns success or error message 
+ */
+exports.deleteOrderAmmunition = async (req, res) => {
+	try {
+		await AmmunitionOrder.destroy({ where: { orderID:req.params.orderID, ammoModelID:req.params.ammoModelID, state:{[Op.ne]:'complete'} } });
+		return res.status(200).send('Succesfully order ammunition deleted');
+	} catch (e) {
+		if(e.message.toLowerCase().includes('foreign key constraint')){
+			return res.status(400).send('Order ammunition cannot be deleted ,it has many records in database')
 		}
 		return res.status(400).send(e.message);
 	}

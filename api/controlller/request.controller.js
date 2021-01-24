@@ -4,6 +4,7 @@ const RequestAmmunition = require('../model/requestAmmo.model');
 const RequestWeapon = require('../model/requestWeapon.model');
 const AmmunitionType = require('../model/ammunitionType.model');
 const WeaponModel = require('../model/weaponModel.model');
+const Station = require('../model/station.model');
 const { converter } = require('../services/objectConverter');
 const sequelize = require('../config/db');
 

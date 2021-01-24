@@ -30,6 +30,16 @@ router.get('/:orderID/complete', OrderController.completeOrder);
  */
 router.delete('/:orderID', OrderController.deleteOrder);
 
+/**
+ * @description delete the order weapon model 
+ */
+router.delete('/weapon/:orderID/:weaponModelID', OrderController.deleteOrderWeapon);
+
+/**
+ * @description delete the order ammunition type
+ */
+router.delete('/ammo/:orderID/:ammoModelID', OrderController.deleteOrderAmmunition);
+
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });
 });
