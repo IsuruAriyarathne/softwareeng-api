@@ -5,8 +5,8 @@ const ReportController = require('../controlller/report.controller');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 
-cron.schedule('* * * * *', async () => {
-	// cron.schedule('55 23 30 * *', () => {     // This is set to function on every 30th day of the month at 11.55 pm
+// cron.schedule('* * * * *', async () => {
+cron.schedule('30 18 30 * *', () => {     // This is set to function on every 30th day of the month at 11.55 pm
 	let reportBody = '';
 	let error = Array(9).fill(false);
 	let doc = new PDFDocument();

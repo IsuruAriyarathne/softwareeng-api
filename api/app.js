@@ -11,7 +11,7 @@ const fs = require('fs')
 
 var indexRouter = require('./routes/index');
   
-// require('./services/report')   // generates and sends the monthly report
+require('./services/report')   // generates and sends the monthly report
 
 var app = express();
 
@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use('/',cors(), indexRouter);
 
-// app.use(authenticate.verifyUser);
+app.use(authenticate.verifyUser);
 // Define all routes
 app.use("/admin/stations", require("./routes/admin/stations"));
 app.use("/admin/users",cors(), require("./routes/admin/users"));
@@ -50,7 +50,7 @@ app.use("/centralizedOfficer/ammoModels", require("./routes/centralizedOfficer/a
 app.use("/centralizedOfficer/recovery", require("./routes/centralizedOfficer/recovery"));
 app.use("/centralizedOfficer/requests", require("./routes/centralizedOfficer/request"));
 app.use("/centralizedOfficer/maintainanceRecords", require("./routes/centralizedOfficer/maintainanceRecord"));
-// app.use("/centralizedOfficer/reports", require("./routes/centralizedOfficer/report"));
+
 app.use(cors())
 
 // catch 404 and forward to error handler
