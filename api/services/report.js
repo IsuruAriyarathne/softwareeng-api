@@ -22,6 +22,7 @@ cron.schedule('* * * * *', async () => {
 		[ammunitionsStock, error[6]] = await ReportController.getReportAmmunitionStock(ammunitionModels);
 		[recoveredAmmunition, error[7]] = await ReportController.getReportRecoveredAmmunitions();
 		[recoveredWeapons, error[8]] = await ReportController.getReportRecoveredWeapons();
+		[cenOfficerList, error[9]] =  await ReportController.getEmailList();
 		recovery = groupRecovery(recoveredAmmunition, recoveredWeapons);
 		let index = error.findIndex((err) => err == true);
 		if (index > 0) {
@@ -140,11 +141,16 @@ cron.schedule('* * * * *', async () => {
 		];
 		const reportSubject = `Monthly Report: ${monthNames[new Date().getMonth()]} ${new Date().getFullYear()}`;
 
+		let mailList = []
+		cenOfficerList.forEach((officer) => {
+			mailList.push(officer.dataValues.email)
+		})
+
 		doc
   			.fontSize(10)
 			  .text(reportBody, 100, 100);
 		doc.end();
-		sendMail(reportSubject, 'Please find attached herewith');
+		sendMail(reportSubject, 'Please find attached herewith',mailList.join());
 	} catch (error) {
 		console.log(error.message);
 		console.log('Error while retreiving data');
