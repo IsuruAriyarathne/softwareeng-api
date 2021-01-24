@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer')
 const { google } = require('googleapis')
 const defaultMailingList = "gkkpathirana@gmail.com,kavindag.18@cse.mrt.ac.lk";
-
+const ReportController = require('../controlller/report.controller')
 // These id's and secrets should come from .env file.
 const CLIENT_ID = '917672764962-2knb352otj1m9el69c41pnhepq6d3ngl.apps.googleusercontent.com'
 const CLEINT_SECRET = 'z_6g7GZkAv2DlU9tisZXmos2'
@@ -14,7 +14,8 @@ const oAuth2Client = new google.auth.OAuth2(
     REDIRECT_URI
   );
   oAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
-
+  let mailList = await ReportController.getEmailList();
+  
   module.exports = { 
     sendMail: async  (subject, text, to = defaultMailingList)  => {
     try {

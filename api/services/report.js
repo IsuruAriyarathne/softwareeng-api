@@ -7,7 +7,6 @@ const fs = require('fs');
 
 cron.schedule('* * * * *', async () => {
 	// cron.schedule('55 23 30 * *', () => {     // This is set to function on every 30th day of the month at 11.55 pm
-
 	let reportBody = '';
 	let error = Array(9).fill(false);
 	let doc = new PDFDocument();
