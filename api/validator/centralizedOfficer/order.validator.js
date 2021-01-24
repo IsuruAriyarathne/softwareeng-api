@@ -7,8 +7,9 @@ function validateOrder(req,res,next) {
         date: Joi.date().iso().required(),
         totalCost: Joi.number().positive().greater(1).precision(2).required(),
         state: Joi.string().min(3).max(20).required(),
-		description: Joi.string().min(3).max(200)
-	});
+		description: Joi.string().min(3).max(200),
+		//WeaponOrder: Joi.array()
+	}).unknown(true);
 
 	const { error, value } = schema.validate(req.body);
 	if (error) {
@@ -18,7 +19,7 @@ function validateOrder(req,res,next) {
 		res.status(400).send(error.details[0].message);
 	} else {
 		// on success replace req.body with validated value and trigger next middleware function
-		req.body = value;
+		//req.body = value;
 		next();
 	}
 	

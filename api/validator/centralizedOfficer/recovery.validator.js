@@ -5,8 +5,10 @@ function validateRecovery(req,res,next) {
 		recoveryID: Joi.number().integer().min(1),
 		recoveryDate: Joi.date().iso().required(),
 		description: Joi.string().min(2).max(100).required(),
-		stationID: Joi.number().integer().min(1).required()
-		});
+		stationID: Joi.number().integer().min(1).required(),
+		RecoveredAmmunitions: Joi.array(),
+		RecoveredWeapons: Joi.array()
+	}).unknown(true);
 
 	const { error, value } = schema.validate(req.body);
 	if (error) {
@@ -16,7 +18,7 @@ function validateRecovery(req,res,next) {
 		res.status(400).send(error.details[0].message);
 	} else {
 		// on success replace req.body with validated value and trigger next middleware function
-		req.body = value;
+		//req.body = value;
 		next();
 	}
 	

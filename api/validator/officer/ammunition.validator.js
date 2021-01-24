@@ -5,7 +5,7 @@ function validateAmmunition(req,res,next) {
 		ammoModelID: Joi.number().integer().min(1).required(),
 		count: Joi.number().integer().min(1).required(),
         orderID: Joi.number().integer().min(1).required(),
-        remain: Joi.number().integer().min(0).required()
+		remain: Joi.number().integer().min(0).required(),
 		});
 
 	const { error, value } = schema.validate(req.body);
@@ -16,7 +16,7 @@ function validateAmmunition(req,res,next) {
 		res.status(400).send(error.details[0].message);
 	} else {
 		// on success replace req.body with validated value and trigger next middleware function
-		req.body = value;
+		//req.body = value;
 		next();
 	}
 	
