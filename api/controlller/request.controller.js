@@ -120,3 +120,17 @@ exports.updateRequest = async (req, res) => {
 	}
 };
 
+/**
+ * @returns success or error message 
+ */
+exports.deleteRequest = async (req, res) => {
+	try {
+		await Request.destroy({ where: { requestID: req.params.requestID } });
+		return res.status(200).send('Succesfully request deleted');
+	} catch (e) {
+		if(e.message.toLowerCase().includes('foreign key constraint')){
+			return res.status(400).send('Request cannot be deleted ,it has many records in database')
+		}
+		return res.status(400).send(e.message);
+	}
+};

@@ -4,7 +4,7 @@ const WeaponModel = require('../model/weaponModel.model');
 const { converter } = require('../services/objectConverter');
 
 /**
- * @description  
+ * @returns 
  */
 exports.getAmmoModels = async (req, res) => {
 	let ammoModels = [];

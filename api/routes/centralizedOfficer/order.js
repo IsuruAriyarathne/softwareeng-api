@@ -25,6 +25,11 @@ router.post('/', validateOrder, OrderController.createOrder);
  */
 router.get('/:orderID/complete', OrderController.completeOrder);
 
+/**
+ * @description delete the order
+ */
+router.delete('/:orderID', OrderController.deleteOrder);
+
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });
 });

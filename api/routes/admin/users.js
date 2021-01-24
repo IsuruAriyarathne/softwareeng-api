@@ -9,6 +9,12 @@ const validateUser = require('../../validator/admin/user.validator');
 router.get('/', UserController.getUsers);
 
 /**
+/**
+ * @description get all users
+ */
+router.get('/:userId', UserController.getUser);
+
+/**
  * @description update user
  */
 router.put('/:userId', validateUser, UserController.updateUser);

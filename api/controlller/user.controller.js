@@ -2,7 +2,7 @@ var User = require('../model/user.model');
 const bcrypt = require('bcrypt');
 var generator = require('generate-password');
 const Station = require('../model/station.model');
-const { sendMail } = require('../middleware/reportSender');
+const { sendMail } = require('../middleware/emailSender');
 const { converter } = require('../services/objectConverter');
 
 /**
@@ -52,10 +52,12 @@ exports.createUser = async (req, res) => {
 		let station = await Station.findOne({where:{stationName:req.body.stationName}}) 
 		user.password = await bcrypt.hash(password, salt);
 		user = await User.create({...req.body, stationID:station.stationID});
+		user = await User.findOne({where:{officerID:user.officerID},include:{model:Station}})
+		user = converter(user.dataValues);
 		sendMail("SLF New User Password",password,user.email)
 		return res
 			.status(200)
-			.send({ ...user.dataValues, password: password });
+			.send({ ...user, password: password });
 	} catch (e) {
 		return res.status(400).send({ status: 400, message: e.message });
 	}

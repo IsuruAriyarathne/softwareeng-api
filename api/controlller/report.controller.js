@@ -11,6 +11,7 @@ const AmmunitionBatch = require('../model/ammunitionBatch.model');
 const Recovery = require('../model/recovery.model');
 const RecoveredAmmunition = require('../model/recoveredAmmo.model');
 const RecoveredWeapon = require('../model/recoveredWeapon.model');
+const User = require('../model/user.model');
 let date = new Date();
 let startDate = new Date(date.getFullYear(), date.getMonth(), 1);
 let endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -206,5 +207,15 @@ exports.getReportRecoveredWeapons = async () => {
         return [recoveredWeapons,false];        
     } catch (error) {
         return [[],true];
+    }
+}
+
+exports.getEmailList = async () =>{
+    let emails = [];
+    try {
+        emails = await User.findAll({attributes:["email"],where:{role:"cenofficer"}});
+        return [emails,false];
+    } catch (error) {
+        return [[],true];   
     }
 }

@@ -11,7 +11,7 @@ const fs = require('fs')
 
 var indexRouter = require('./routes/index');
   
-require('./services/report')   // generates and sends the monthly report
+// require('./services/report')   // generates and sends the monthly report
 
 var app = express();
 
@@ -38,6 +38,7 @@ app.use("/officer/weapons", require("./routes/officer/weapons"));
 app.use("/officer/weaponModels", require("./routes/officer/weaponModel"));
 app.use("/officer/ammoModels", require("./routes/officer/ammoModel"));
 app.use("/officer/requests", require("./routes/officer/request"));
+app.use("/officer/maintenance", require("./routes/officer/maintainanceRecord"));
 app.use("/officer/maintainanceRecords", require("./routes/officer/maintainanceRecord"));
 app.use("/centralizedOfficer/companies", require("./routes/centralizedOfficer/companies"));
 app.use("/centralizedOfficer/stations", require("./routes/centralizedOfficer/station"));

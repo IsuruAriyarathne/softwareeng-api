@@ -4,7 +4,7 @@ const SupplyAmmunition = require("../model/supplyAmmo.model");
 const SupplyWeapon = require("../model/supplyWeapon.model");
 const WeaponModel = require("../model/weaponModel.model");
 const { converter } = require("../services/objectConverter");
-
+const sequelize = require('../config/db')
 
 exports.getCompanies = async (req, res) => {
 	let suppliers = [];
@@ -101,4 +101,17 @@ exports.updateCompany = async (req, res) => {
 	}
 };
 
-//check
+/**
+ * @returns success or error message 
+ */
+exports.deleteCompany = async (req, res) => {
+	try {
+		await Supplier.destroy({ where: {  supplierID:req.params.supplierID } });
+		return res.status(200).send('Succesfully supplier  deleted');
+	} catch (e) {
+		if(e.message.toLowerCase().includes('foreign key constraint')){
+			return res.status(400).send('Supplier cannot be deleted ,it has many records in database')
+		}
+		return res.status(400).send(e.message);
+	}
+};

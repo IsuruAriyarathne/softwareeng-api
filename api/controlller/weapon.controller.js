@@ -126,3 +126,19 @@ exports.updateWeapon = async (req, res) => {
 		return res.status(400).send(e.message);
 	}
 };
+
+
+/**
+ * @returns success or error message 
+ */
+exports.deleteWeapon = async (req, res) => {
+	try {
+		await Weapon.destroy({ where: { weaponID: req.params.weaponID } });
+		return res.status(200).send('Succesfully weapon deleted');
+	} catch (e) {
+		if(e.message.toLowerCase().includes('foreign key constraint')){
+			return res.status(400).send('Weapon cannot be deleted ,it has many records in database')
+		}
+		return res.status(400).send(e.message);
+	}
+};

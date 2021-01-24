@@ -1,13 +1,16 @@
-const { sendMail } = require('../middleware/reportSender');
+const { sendMail } = require('../middleware/pdfSender');
 var cron = require('node-cron');
 const { groupRecovery } = require('../services/groupBy');
 const ReportController = require('../controlller/report.controller');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 
 cron.schedule('* * * * *', async () => {
 	// cron.schedule('55 23 30 * *', () => {     // This is set to function on every 30th day of the month at 11.55 pm
-
 	let reportBody = '';
 	let error = Array(9).fill(false);
+	let doc = new PDFDocument();
+	doc.pipe(fs.createWriteStream("SLFMonthlyReport.pdf"));
 
 	try {
 		[stations, error[0]] = await ReportController.getReportStations();
@@ -37,9 +40,12 @@ cron.schedule('* * * * *', async () => {
 				weapObject.name = weap.name;
 				weapObject.count = 1;
 				if (!dataObject.weapons.includes(weapObject)) {
+					dataObject.weapons.push(weapObject);
+				} else {
+					dataObject.weapons.splice(dataObject.weapons.indexOf(weapObject),1)
 					weapObject.count++;
-				}
-				dataObject.weapons.push(weapObject);
+					dataObject.weapons.push(weapObject);
+			}
 			});
 
 			weaponArr.push(dataObject);
@@ -73,21 +79,23 @@ cron.schedule('* * * * *', async () => {
 		}); // ammunitionArr is created with each element in the format[ { name: 'Bullet', count: 10 } ]
 
 		for (i = 0; i < stations.length; i++) {
-			reportBody += '<h2>Station : ' + stations[i].stationName + '</h2>';
-			reportBody += '<h3>Weapons</h3>';
+			// reportBody += '<h2>Station : ' + stations[i].stationName + '</h2>';
+			reportBody += 'Station : ' + stations[i].stationName +'\n\n';
+			reportBody += 'Weapons\n';
 			weaponArr[i].weapons.forEach((weapon) => {
-				reportBody += '<p>' + weapon.name + ' : ' + weapon.count + '</p>';
+				reportBody +=   weapon.name + ' : ' + weapon.count+'\n';
 			});
-			reportBody += '<h3>Ammunitions</h3>';
+			reportBody += 'Ammunitions\n';
 			ammunitionArr[i].ammunitions.forEach((ammunition) => {
-				reportBody += '<p>' + ammunition.name + ' : ' + ammunition.count + '</p><br>';
+				reportBody +=  ammunition.name + ' : ' + ammunition.count +'\n';
 			});
+			reportBody += '\n\n';
 		}
 
-		reportBody += '<br><h2>' + 'Recovered' + '</h2>';
+		reportBody += '\n' + 'Recovered' + '\n';
 
 		recovery.forEach((reco) => {
-			reportBody += '<h4>' + reco.recoveryDate + ' : ' + reco.description + '</h4>';
+			reportBody += '\n' + reco.recoveryDate + ' : ' + reco.description + '\n';
 			const recoveredItems = [];
 			if (reco.RecoveredAmmunitions.length > 0) {
 				reco.RecoveredAmmunitions.forEach((ammo) => {
@@ -101,19 +109,20 @@ cron.schedule('* * * * *', async () => {
 			}
 			if (recoveredItems.length > 0) {
 				recoveredItems.forEach((item) => {
-					reportBody += '<p>' + item + '</p>';
+					reportBody +=   item + '\n';
 				});
 			}
 		});
 
-		reportBody += '<br><h2>' + 'Stocks' + '</h2>';
-		reportBody += '<h3>Weapons</h3>';
+
+		reportBody += '\n' + 'Stocks' + '\n';
+		reportBody += '\nWeapons\n';
 		weaponStock.forEach((weapon) => {
-			reportBody += '<p>' + weapon.weaponModel + ' : ' + weapon.count + '</p>';
+			reportBody += weapon.weaponModel + ' : ' + weapon.count + '\n';
 		});
-		reportBody += '<h3>Ammunitions</h3>';
+		reportBody += '\nAmmunitions\n';
 		ammunitionsStock.forEach((ammo) => {
-			reportBody += '<p>' + ammo.ammoModel + ' : ' + ammo.count + '</p>';
+			reportBody +=  ammo.ammoModel + ' : ' + ammo.count + '\n';
 		});
 		const monthNames = [
 			'January',
@@ -131,7 +140,11 @@ cron.schedule('* * * * *', async () => {
 		];
 		const reportSubject = `Monthly Report: ${monthNames[new Date().getMonth()]} ${new Date().getFullYear()}`;
 
-		sendMail(reportSubject, reportBody);
+		doc
+  			.fontSize(10)
+			  .text(reportBody, 100, 100);
+		doc.end();
+		sendMail(reportSubject, 'Please find attached herewith');
 	} catch (error) {
 		console.log(error.message);
 		console.log('Error while retreiving data');

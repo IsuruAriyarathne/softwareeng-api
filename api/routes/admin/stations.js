@@ -16,12 +16,12 @@ router.get('/:stationId', StationController.getStation);
 /**
  * @description update stations
  */
-router.put('/:stationId', validateStation, StationController.updateStation )
+router.put('/:stationId',validateStation,StationController.updateStation )
 
 /**
  * @description add station
  */
-router.post('/', validateStation, StationController.createStation)
+router.post('/', validateStation,StationController.createStation)
 
 /**
  * @description delete station

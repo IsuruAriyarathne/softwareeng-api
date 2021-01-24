@@ -23,6 +23,16 @@ router.put('/:recoveryID', validateRecovery, RecoveryController.updateRecovery )
  */
 router.post('/', validateRecovery, RecoveryController.createRecovery )
 
+/**
+ * @description create new recovery
+ */
+router.post('/', RecoveryController.createRecovery )
+
+/**
+ * @description delete recovery
+ */
+router.delete('/:recoveryID', RecoveryController.deleteRecovery )
+
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });
 });
