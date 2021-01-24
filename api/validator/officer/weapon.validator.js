@@ -3,9 +3,9 @@ const Joi = require('@hapi/joi');
 function validateWeapon(req,res,next) {
 	const schema = Joi.object({
 		weaponID: Joi.number().integer().min(1),
-		weaponModelID: Joi.number().integer().min(1).required(),
-		orderID: Joi.number().integer().min(1).required(),
-		state: Joi.string().valid('Lost','Available','Unavailable','Maintainance').required()
+		weaponModelID: Joi.number().integer().min(1),
+		orderID: Joi.number().integer().min(1),
+		state: Joi.string().valid('Lost','Available','Unavailable','Maintainance'),
 		}).unknown(true);
 
 	const { error, value } = schema.validate(req.body);

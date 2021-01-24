@@ -10,27 +10,28 @@ router.get('/', function (req, res, next) {
 /**
  * @description login
  */
-router.post('/', async (req, res, next) => {
+router.post('/', async (req, res) => {
 	passport.authenticate('local', async (err, user, info) => {
 		try {
 			if (err || !user) {
 				const error = new Error('An error occurred.');
-				return res.json({ success: false, status: 'Unauthorized!' });
+				return res.status(400).send({ success: false, status: 'Unauthorized!' });
 			}
 
 			var token = authenticate.getToken({ username: req.body.officerID });
 			console.log(user);
 			let success = true;
-			if(!token){
+			if (!token) {
 				success = false;
+				return res.status(400).send("Password incorrect");
 			}
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'application/json');
-			return res.json({ success: success, token: token,type: user.role ,stationID:user.stationID});
+			return res.status(200).send({ success: success, token: token, type: user.role, stationID: user.stationID });
 		} catch (error) {
 			return next(error);
 		}
-	})(req, res, next);
+	})(req, res);
 });
 
 passport.authenticate();

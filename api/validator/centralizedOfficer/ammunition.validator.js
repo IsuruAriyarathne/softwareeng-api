@@ -2,10 +2,10 @@ const Joi = require('@hapi/joi');
 
 function validateAmmunition(req,res,next) {
 	const schema = Joi.object({
-		ammoModelID: Joi.number().integer().min(1).required(),
-		count: Joi.number().integer().min(1).required(),
-        orderID: Joi.number().integer().min(1).required(),
-		remain: Joi.number().integer().min(0).required(),
+		ammoModelID: Joi.number().integer().min(1),
+		count: Joi.number().integer().min(1),
+        orderID: Joi.number().integer().min(1),
+		remain: Joi.number().integer().min(0),
 		//Station: Joi.array()
 		}).unknown(true);
 

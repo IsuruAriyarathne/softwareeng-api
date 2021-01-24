@@ -106,13 +106,18 @@ exports.updateOrder = async (req, res) => {
                 transaction:t
 			}
         );
-        await t.commit();
+		await t.commit();
+		ammos = await AmmunitionOrder.findAll({where:{orderID:req.params.orderID},include:{model:AmmunitionType}});
+		weapons = await WeaponOrder.findAll({where:{orderID:req.params.orderID},include:{model:WeaponModel}});
+		ammos = ammos.map(item => converter(item.dataValues))
+		weapons = weapons.map(item => converter(item.dataValues))
 		order = await Order.findOne({
 			where: { orderID: req.params.orderID },
 		});
 		order = order.dataValues;
 		order.AmmoOrder = ammos;
 		order.WeaponOrder = weapons;
+		console.log(order);
 
 		return res.status(200).send(order);
 	} catch (e) {
@@ -183,8 +188,13 @@ exports.deleteOrderWeapon = async (req, res) => {
  * @returns success or error message 
  */
 exports.deleteOrderAmmunition = async (req, res) => {
+	let obj = {}
 	try {
 		await AmmunitionOrder.destroy({ where: { orderID:req.params.orderID, ammoModelID:req.params.ammoModelID, state:{[Op.ne]:'complete'} } });
+		obj = await AmmunitionOrder.findOne({where:{orderID:req.params.orderID, ammoModelID:req.params.ammoModelID}})
+		if(obj){
+			return res.status(400).send('Order completion');
+		}
 		return res.status(200).send('Succesfully order ammunition deleted');
 	} catch (e) {
 		if(e.message.toLowerCase().includes('foreign key constraint')){

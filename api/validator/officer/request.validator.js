@@ -3,10 +3,10 @@ const Joi = require('@hapi/joi');
 function validateRequest(req,res,next) {
 	const schema = Joi.object({
 		requestID: Joi.number().integer().min(1),
-		date: Joi.date().iso().required(),
-		comments: Joi.string().min(2).max(100).required(),
-		stationID: Joi.number().integer().min(1).required(),
-		state: Joi.string().min(2).max(20).required(),
+		date: Joi.date().iso(),
+		comments: Joi.string().min(2).max(100),
+		stationID: Joi.number().integer().min(1),
+		state: Joi.string().min(2).max(20),
 		WeaponRequests: Joi.array(),
 		WeaponRequests: Joi.array()
 		}).unknown(true);
