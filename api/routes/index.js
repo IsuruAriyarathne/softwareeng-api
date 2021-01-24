@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
 		try {
 			if (err || !user) {
 				const error = new Error('An error occurred.');
-				return res.status(400).send({ success: false, status: 'Unauthorized!' });
+				return res.status(200).send({ success: false, status: 'Unauthorized!' });
 			}
 
 			var token = authenticate.getToken({ username: req.body.officerID });
@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
 			let success = true;
 			if (!token) {
 				success = false;
-				return res.status(400).send("Password incorrect");
+				return res.status(200).send("Password incorrect");
 			}
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'application/json');

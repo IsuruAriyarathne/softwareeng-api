@@ -64,7 +64,7 @@ exports.getWeapons = async (req, res) => {
 	let weapons = {};
 	try {
 		weapons = await Weapon.findAll({
-			include: [WeaponModel, Order],
+			include: [WeaponModel],
 		});
 		weapons = weapons.map((item) => converter(item.dataValues));
 		return res.status(200).send(weapons);

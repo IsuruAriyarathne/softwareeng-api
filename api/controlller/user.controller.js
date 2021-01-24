@@ -88,7 +88,11 @@ exports.updateUser = async (req, res) => {
  * @returns success or error message 
  */
 exports.changePassword = async (req,res) =>{
-	let password = req.body.password;
+	let password = req.body.newPassword;
+	let confirmPassword = req.body.confirmPassword;
+	if(password != confirmPassword){
+		return res.status(200).send("Passwords dont match")
+	}
 	let salt = await bcrypt.genSalt(10);
 	password = await bcrypt.hash(password, salt);
 	try{

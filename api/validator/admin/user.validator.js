@@ -3,11 +3,11 @@ const Joi = require('@hapi/joi');
 function validateUser(req,res,next) {
 	const schema = Joi.object({
 		officerID: Joi.number().integer().min(1),
-		name: Joi.string().min(2).max(100).required(),
-        email: Joi.string().email().lowercase().required(),
-		role: Joi.string().valid('admin', 'officer','cenofficer').required(),
-        stationName: Joi.string().min(2).max(100).required()
-		});
+		name: Joi.string().min(2).max(100),
+        email: Joi.string().email().lowercase(),
+		role: Joi.string().valid('admin', 'officer','cenofficer'),
+        stationName: Joi.string().min(2).max(100),
+		}).unknown(true);
 
 	const { error, value } = schema.validate(req.body);
 	if (error) {

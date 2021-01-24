@@ -8,7 +8,7 @@ function validateAmmunition(req,res,next) {
 		stationID: Joi.number().integer().min(1),
 		allocatedDate: Joi.date().iso(),
         remaining: Joi.number().integer().min(0)
-		});
+		}).unknown(true);
 
 	const { error, value } = schema.validate(req.body);
 	if (error) {
