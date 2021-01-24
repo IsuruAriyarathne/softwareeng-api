@@ -17,12 +17,12 @@ router.get('/:userId', UserController.getUser);
 /**
  * @description update user
  */
-router.put('/:userId', UserController.updateUser);
+router.put('/:userId', validateUser, UserController.updateUser);
 
 /**
  * @description create user
  */
-router.post('/', UserController.createUser);
+router.post('/',validateUser, UserController.createUser);
 
 
 /**

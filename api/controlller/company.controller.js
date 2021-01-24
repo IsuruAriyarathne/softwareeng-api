@@ -4,7 +4,7 @@ const SupplyAmmunition = require("../model/supplyAmmo.model");
 const SupplyWeapon = require("../model/supplyWeapon.model");
 const WeaponModel = require("../model/weaponModel.model");
 const { converter } = require("../services/objectConverter");
-
+const sequelize = require('../config/db')
 
 exports.getCompanies = async (req, res) => {
 	let suppliers = [];

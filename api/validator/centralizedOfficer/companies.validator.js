@@ -4,10 +4,10 @@ function validateCompanies(req,res,next) {
 	const schema = Joi.object({
 		supplierID: Joi.number().integer().min(1),
         name: Joi.string().min(2).max(100).required(),
-        contactNo: Joi.string().max(10).required(),
+        contactNumber: Joi.string().max(10).required(),
 		address: Joi.string().alphanum().min(2).max(255).required(),
 		description: Joi.string().min(2).max(100)
-		});
+		}).unknown(true);
 
 	const { error, value } = schema.validate(req.body);
 	if (error) {
