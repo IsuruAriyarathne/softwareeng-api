@@ -89,15 +89,18 @@ exports.updateUser = async (req, res) => {
  */
 exports.changePassword = async (req,res) =>{
 	let password = req.body.newPassword;
-	let confirmPassword = req.body.confirmPassword;
+	let confirmPassword = req.body.confirmNewPassword;
+	console.log(req.body);
 	if(password != confirmPassword){
-		return res.status(200).send("Passwords dont match")
+		return res.status(400).send("Passwords dont match")
 	}
 	let salt = await bcrypt.genSalt(10);
 	password = await bcrypt.hash(password, salt);
 	try{
-		password = await User.update({password:password},{where:{officerID:req.params.userId}})
-		return res.satus(200).send("Password succesfully changed")
+		user = await User.update({password:password},{where:{officerID:req.params.userId}})
+		user = await User.findOne({where:{officerID:req.params.userId}})
+		sendMail("SLF New User Password",req.body.confirmNewPassword,user.email)
+		return res.status(200).send("Password succesfully changed")
 	} catch (e){
 		return res.status(400).send(e.message)
 	}
