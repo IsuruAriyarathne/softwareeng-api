@@ -5,8 +5,9 @@ function validateWeapon(req,res,next) {
 		weaponID: Joi.number().integer().min(1),
 		weaponModelID: Joi.number().integer().min(1).required(),
 		orderID: Joi.number().integer().min(1).required(),
-		state: Joi.string().valid('Lost','Available','Unavailable').required()
-		});
+		state: Joi.string().valid('Lost','Available','Unavailable').required(),
+		//Station: Joi.array()
+		}).unknown(true);
 
 	const { error, value } = schema.validate(req.body);
 	if (error) {
@@ -16,7 +17,7 @@ function validateWeapon(req,res,next) {
 		res.status(400).send(error.details[0].message);
 	} else {
 		// on success replace req.body with validated value and trigger next middleware function
-		req.body = value;
+		//req.body = value;
 		next();
 	}
 	
