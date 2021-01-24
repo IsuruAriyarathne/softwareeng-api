@@ -71,11 +71,14 @@ exports.updateCompany = async (req, res) => {
 	let t = await sequelize.transaction();
 	try {
 		if(company.hasOwnProperty('SupplyAmmunition')){
+
 			supplyAmmunition = await SupplyAmmunition.bulkCreate(company.SupplyAmmunition,{ignoreDuplicates:true, transaction:t});
+			
 		}
 		
 		if(company.hasOwnProperty('SupplyWeapon')){
 			supplyWeapon = await SupplyWeapon.bulkCreate(company.SupplyWeapon,{ignoreDuplicates:true, transaction:t});
+			
 		}
 
 		company = await Supplier.update(
@@ -91,6 +94,10 @@ exports.updateCompany = async (req, res) => {
 		company = await Supplier.findOne({
 			where: { supplierID: req.params.supplierID },
 		});
+		supplyAmmunition = await SupplyAmmunition.findAll({where:{supplierID:req.params.supplierID},include:{model:AmmunitionType}})
+		supplyAmmunition = supplyAmmunition.map(item => converter(item.dataValues))
+		supplyWeapon = await SupplyWeapon.findAll({where:{supplierID:req.params.supplierID},include:{model:WeaponModel}})
+		supplyWeapon = supplyWeapon.map(item => converter(item.dataValues))
 		company = company.dataValues;
 		company.SupplyAmmunition = supplyAmmunition;
 		company.SupplyWeapon = supplyWeapon;
@@ -104,6 +111,7 @@ exports.updateCompany = async (req, res) => {
 /**
  * @returns success or error message 
  */
+
 exports.deleteCompany = async (req, res) => {
 	try {
 		await Supplier.destroy({ where: {  supplierID:req.params.supplierID } });
@@ -111,6 +119,34 @@ exports.deleteCompany = async (req, res) => {
 	} catch (e) {
 		if(e.message.toLowerCase().includes('foreign key constraint')){
 			return res.status(400).send('Supplier cannot be deleted ,it has many records in database')
+		}
+		return res.status(400).send(e.message);
+	}
+};
+/**
+ * @returns success or error message 
+ */
+exports.deleteAmmunitionTypes = async (req, res) => {
+	try {
+		await SupplyAmmunition.destroy({ where: {  supplierID:req.params.supplierID, ammoModelID:req.params.ammoModelID} });
+		return res.status(200).send('Succesfully ammunition type  deleted');
+	} catch (e) {
+		if(e.message.toLowerCase().includes('foreign key constraint')){
+			return res.status(400).send('Ammunition Type cannot be deleted ,it has many records in database')
+		}
+		return res.status(400).send(e.message);
+	}
+};
+/**
+ * @returns success or error message 
+ */
+exports.deleteWeaponModel = async (req, res) => {
+	try {
+		await SupplyWeapon.destroy({ where: {  supplierID:req.params.supplierID, weaponModelID:req.params.weaponModelID } });
+		return res.status(200).send('Succesfully weapon model  deleted');
+	} catch (e) {
+		if(e.message.toLowerCase().includes('foreign key constraint')){
+			return res.status(400).send('Weapon Model cannot be deleted ,it has many records in database')
 		}
 		return res.status(400).send(e.message);
 	}

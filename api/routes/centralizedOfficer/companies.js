@@ -28,6 +28,15 @@ router.post('/', validateCompanies, CompanyController.createCompany);
  */
 router.delete('/:supplierID', CompanyController.deleteCompany);
 
+/**
+ * @description delete company, ammunition type
+ */
+router.delete('/:supplierID/:ammoModelID', CompanyController.deleteAmmunitionTypes);
+/**
+ * @description delete company, weapon Model Type
+ */
+router.delete('/:supplierID/:weaponModelID', CompanyController.deleteWeaponModel);
+
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });
 });

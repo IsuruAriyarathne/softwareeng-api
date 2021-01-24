@@ -3,9 +3,9 @@ const Joi = require('@hapi/joi');
 function validateCompanies(req,res,next) {
 	const schema = Joi.object({
 		supplierID: Joi.number().integer().min(1),
-        name: Joi.string().min(2).max(100).required(),
-        contactNumber: Joi.string().max(10).required(),
-		address: Joi.string().min(2).max(255).required(),
+        name: Joi.string().min(2).max(100),
+        contactNumber: Joi.string().max(10),
+		address: Joi.string().min(2).max(255),
 		description: Joi.string().min(2).max(100)
 		}).unknown(true);
 
