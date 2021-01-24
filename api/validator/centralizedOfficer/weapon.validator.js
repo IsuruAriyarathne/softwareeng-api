@@ -5,7 +5,7 @@ function validateWeapon(req,res,next) {
 		weaponID: Joi.number().integer().min(1),
 		weaponModelID: Joi.number().integer().min(1).required(),
 		orderID: Joi.number().integer().min(1).required(),
-		state: Joi.string().valid('Lost','Available','Unavailable').required(),
+		state: Joi.string().valid('Lost','Available','Unavailable','Maintainance').required(),
 		//Station: Joi.array()
 		}).unknown(true);
 

@@ -4,7 +4,7 @@ function validateAmmoModel(req,res,next) {
 	const schema = Joi.object({
 		ammoModelID: Joi.number().integer().min(1),
         name: Joi.string().min(2).max(100).required(),
-		description: Joi.string().min(2).max(100).required()
+		description: Joi.string().min(2).max(100)
 		}).unknown(true);
 
 	const { error, value } = schema.validate(req.body);

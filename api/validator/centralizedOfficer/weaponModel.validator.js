@@ -5,7 +5,6 @@ function validateWeaponModel(req,res,next) {
 		weaponModelID: Joi.number().integer().min(1),
         name: Joi.string().min(2).max(100).required(),
 		description: Joi.string().min(2).max(100).required(),
-		//AmmunitionTypes: Joi.array()
 		}).unknown(true);
 
 	const { error, value } = schema.validate(req.body);
