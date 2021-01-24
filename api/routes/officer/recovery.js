@@ -33,6 +33,16 @@ router.post('/', RecoveryController.createRecovery )
  */
 router.delete('/:recoveryID', RecoveryController.deleteRecovery )
 
+/**
+ * @description delete recovery weapon
+ */
+router.delete('/weaponModel/:recoveryID/:weaponModelID', RecoveryController.deleteRecoveryWeapon )
+
+/**
+ * @description delete recovery ammunition
+ */
+router.delete('/ammoModel/:recoveryID/:ammoModelID', RecoveryController.deleteRecoveryAmmunition )
+
 router.all('*', (req, res) => {
 	res.status(404).json({ status: 404, message: 'Not found' });
 });

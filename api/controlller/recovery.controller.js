@@ -7,7 +7,7 @@ const Station = require('../model/station.model');
 const WeaponModel = require('../model/weaponModel.model');
 var { converter } = require('../services/objectConverter');
 const { Op } = require('sequelize');
-const {groupRecoveryArr} = require('../services/groupBy')
+const { groupRecoveryArr } = require('../services/groupBy');
 exports.getRecoveriesStation = async (req, res) => {
 	let recoveries = [];
 	let ids = [];
@@ -17,7 +17,7 @@ exports.getRecoveriesStation = async (req, res) => {
 		recoveries = await Recovery.findAll({
 			where: { stationID: req.params.stationID },
 		});
-		recoveries = recoveries.map(item => converter(item.dataValues));
+		recoveries = recoveries.map((item) => converter(item.dataValues));
 		console.log(recoveries);
 		ids = recoveries.map((item) => item.recoveryID);
 		recoveredAmmo = await RecoveredAmmunition.findAll({
@@ -32,7 +32,7 @@ exports.getRecoveriesStation = async (req, res) => {
 		recoveredWeapons = recoveredWeapons.map((item) => converter(item.dataValues));
 		console.log(recoveredWeapons);
 		console.log(recoveredAmmo);
-		recoveries = groupRecoveryArr(recoveries,recoveredAmmo,recoveredWeapons)
+		recoveries = groupRecoveryArr(recoveries, recoveredAmmo, recoveredWeapons);
 		return res.status(200).send(recoveries);
 	} catch (e) {
 		return res.status(400).send(e.message);
@@ -129,6 +129,16 @@ exports.updateRecovery = async (req, res) => {
 
 		recovery = await Recovery.findOne({ where: { recoveryID: req.params.recoveryID } });
 		await t.commit();
+		recoveredWeapons = await RecoveredWeapon.findAll({
+			where: { recoveryID: req.params.recoveryID },
+			include: { model: WeaponModel },
+		});
+		recoveredWeapons = recoveredWeapons.map((item) => converter(item.dataValues));
+		recoveredAmmunitions = await RecoveredAmmunition.findAll({
+			where: { recoveryID: req.params.recoveryID },
+			include: { model: AmmunitionType },
+		});
+		recoveredAmmunitions = recoveredAmmunitions.map((item) => converter(item.dataValues));
 		recovery = recovery.dataValues;
 		recovery.RecoveredAmmunitions = recoveredAmmunitions;
 		recovery.RecoveredWeapons = recoveredWeapons;
@@ -189,5 +199,31 @@ exports.deleteRecovery = async (req, res) => {
 		return res.status(400).send(e.message);
 	}
 };
-
-
+/**
+ * @returns success or error message
+ */
+exports.deleteRecoveryWeapon = async (req, res) => {
+	try {
+		await RecoveredWeapon.destroy({ where: { recoveryID: req.params.recoveryID,weaponModelID: req.params.weaponModelID } });
+		return res.status(200).send('Recovery Weapon succesfully deleted');
+	} catch (e) {
+		if (e.message.toLowerCase().includes('foreign key constraint')) {
+			return res.status(400).send('Recovery Weapon cannot be deleted ,it has many records in database');
+		}
+		return res.status(400).send(e.message);
+	}
+};
+/**
+ * @returns success or error message
+ */
+exports.deleteRecoveryAmmunition = async (req, res) => {
+	try {
+		await RecoveredAmmunition.destroy({ where: { recoveryID: req.params.recoveryID, ammoModelID: req.params.ammoModelID } });
+		return res.status(200).send('Recovery Ammunition succesfully deleted');
+	} catch (e) {
+		if (e.message.toLowerCase().includes('foreign key constraint')) {
+			return res.status(400).send('Recovery Ammunition cannot be deleted ,it has many records in database');
+		}
+		return res.status(400).send(e.message);
+	}
+};
