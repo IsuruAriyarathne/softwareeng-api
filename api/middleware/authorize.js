@@ -1,4 +1,3 @@
-const {USER_TYPES_OBJ} = require('../utils/constants')
 exports.authorize = (userTypes) => (req,res,next) =>{
     userTypes = Array.isArray(userTypes) ? userTypes : [userTypes]
     console.log(userTypes);
