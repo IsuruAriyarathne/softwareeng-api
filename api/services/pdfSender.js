@@ -2,11 +2,13 @@ const nodemailer = require('nodemailer')
 const { google } = require('googleapis')
 const defaultMailingList = "slfreportgen@gmail.com,samantha@gmail.com";
 const ReportController = require('../controlller/report.controller')
-// These id's and secrets should come from .env file.
-const CLIENT_ID = '917672764962-2knb352otj1m9el69c41pnhepq6d3ngl.apps.googleusercontent.com'
-const CLEINT_SECRET = 'z_6g7GZkAv2DlU9tisZXmos2'
-const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
-const REFRESH_TOKEN = '1//04QEHXQJIHN-FCgYIARAAGAQSNwF-L9IrTpoDNnuGCUY2GTrbpydC8V--FH0P_AbC8fkQANuyfyZU7JZGVj3OAKoomppgD1uIXwE'
+const config = require('../config/config')
+
+const CLIENT_ID = config.mail.clinetID
+const CLEINT_SECRET = config.mail.clientSecret
+const REDIRECT_URI = config.mail.redirectUri
+const REFRESH_TOKEN = config.refreshToken
+const mail = config.mail.mail
 
 const oAuth2Client = new google.auth.OAuth2(
     CLIENT_ID,
@@ -24,7 +26,7 @@ const oAuth2Client = new google.auth.OAuth2(
         service: 'gmail',
         auth: {
           type: 'OAuth2',
-          user: 'malnimkam@gmail.com',
+          user: mail,
           clientId: CLIENT_ID,
           clientSecret: CLEINT_SECRET,
           refreshToken: REFRESH_TOKEN,

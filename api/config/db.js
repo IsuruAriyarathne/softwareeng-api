@@ -2,8 +2,6 @@ const Sequelize = require('sequelize');
 const config = require('../config/config');
 
 const db = process.env.NODE_ENV == 'test' ? config.test.db:config.production.db;
-console.log(db);
-console.log(process.env.NODE_ENV);
 const sequelize = new Sequelize(db.dbName, db.user,db.password,{
   host: db.host,
   dialect: "mysql",

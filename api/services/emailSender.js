@@ -3,7 +3,6 @@ const { google } = require('googleapis')
 const defaultMailingList = "gkkpathirana@gmail.com,kavindag.18@cse.mrt.ac.lk";
 const config = require('../config/config')
 
-// These id's and secrets should come from .env file.
 const CLIENT_ID = config.mail.clinetID
 const CLEINT_SECRET = config.mail.clientSecret
 const REDIRECT_URI = config.mail.redirectUri

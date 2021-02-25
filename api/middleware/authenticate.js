@@ -41,14 +41,14 @@ opts.secretOrKey = config.secretKey;
 exports.jwtPassport = passport.use(new JwtStrategy(opts,
     (jwt_payload, done) => {
         console.log("JWT payload: ", jwt_payload);
-        User.findOne({officerID:jwt_payload.username})
+        User.findOne({email:jwt_payload.email})
         .then(user => {
-            console.log(user);
-            if(!user[0]){
+            user = user.dataValues
+            if(!user){
                 done(null,false)
             }
-            else if(user[0]){
-                return done(null,user[0]);
+            else if(user){
+                return done(null,user);
             }
         })
         .catch(err => done(err,false))
