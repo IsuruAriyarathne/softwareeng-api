@@ -1,4 +1,5 @@
 var Station = require('../model/station.model');
+const { converter } = require('../utils/objectConverter');
 
 /**
  * @typedef {Object} station
@@ -8,6 +9,7 @@ exports.getStations = async (req, res) => {
 	let stations = [];
 	try {
 		stations = await Station.findAll();
+		stations = stations.map(item => converter(item.dataValues))
 		return res.status(200).send(stations);
 	} catch (e) {
 		return res.status(400).send(e.message);

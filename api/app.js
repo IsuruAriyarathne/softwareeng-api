@@ -24,7 +24,7 @@ app.use(cors())
 
 app.use('/', indexRouter);
 
-app.use(authenticate.verifyUser);
+// app.use(authenticate.verifyUser);
 
 
 require('./routes/routes')(app)
