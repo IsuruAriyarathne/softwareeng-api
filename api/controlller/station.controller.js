@@ -25,6 +25,7 @@ exports.getStation = async (req, res) => {
 	try {
 		station = await Station.findOne({ where: { stationID: req.params.stationId } });
 		if (station) {
+			station = station.dataValues;
 			return res.status(200).send(station);
 		} else {
 			return res.status(404).send( station );
