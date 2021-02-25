@@ -14,7 +14,7 @@ describe('station controller', () => {
 	});
 
 	afterAll(async () => {
-		await Station.destroy({ where: { stationID: stations.map((item) => item.stationID) } });
+		await Station.destroy({ where: {} });
 		server.close();
 	});
 
@@ -48,10 +48,10 @@ describe('station controller', () => {
 		
 		req.body = createStation()[0];
 		
-		await StationController.createStation(req, res);
-		
+		let station = await StationController.createStation(req, res);
+		stations.push(station);
+
 		expect(res.status).toHaveBeenCalledWith(200);
-		expect(res.send).toHaveBeenCalledWith(200);
 
 	});
 
