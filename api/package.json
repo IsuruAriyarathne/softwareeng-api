@@ -17,6 +17,7 @@
         "googleapis": "^67.0.0",
         "http-errors": "~1.6.3",
         "jade": "^0.29.0",
+        "jest": "^26.6.3",
         "joi": "^17.3.0",
         "jsonwebtoken": "^8.5.1",
         "morgan": "~1.9.1",
@@ -27,6 +28,7 @@
         "passport-jwt": "^4.0.0",
         "passport-local": "^1.0.0",
         "pdfkit": "^0.11.0",
-        "sequelize": "^6.3.5"
+        "sequelize": "^6.3.5",
+        "supertest": "^6.1.3"
     }
 }
