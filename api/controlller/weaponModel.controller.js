@@ -1,7 +1,7 @@
 var WeaponModel = require('../model/weaponModel.model');
 var WeaponAmmunition = require('../model/weaponAmmo.model');
 const AmmunitionType = require('../model/ammunitionType.model');
-const { converter } = require('../services/objectConverter');
+const { converter } = require('../utils/objectConverter');
 const sequelize = require('../config/db');
 
 exports.getWeaponModels = async (req, res) => {

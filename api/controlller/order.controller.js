@@ -7,7 +7,7 @@ const Supplier = require('../model/supplier.model');
 const Weapon = require('../model/weapon.model');
 const WeaponModel = require('../model/weaponModel.model');
 const WeaponOrder = require('../model/weaponOrder.model');
-const { converter } = require('../services/objectConverter');
+const { converter } = require('../utils/objectConverter');
 const {Op} = require('sequelize')
 
 exports.getOrders = async (req, res) => {

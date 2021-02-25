@@ -4,7 +4,7 @@ const AmmunitionStation = require('../model/ammunitionStation.model');
 const Order = require('../model/order.model');
 const Station = require('../model/station.model');
 var { Op } = require('sequelize');
-var { converter } = require('../services/objectConverter');
+var { converter } = require('../utils/objectConverter');
 const AmmunitionOrder = require('../model/ammunitionOrder.model');
 const sequelize = require('../config/db');
 

@@ -2,8 +2,8 @@ var User = require('../model/user.model');
 const bcrypt = require('bcrypt');
 var generator = require('generate-password');
 const Station = require('../model/station.model');
-const { sendMail } = require('../middleware/emailSender');
-const { converter } = require('../services/objectConverter');
+const { sendMail } = require('../services/emailSender');
+const { converter } = require('../utils/objectConverter');
 
 /**
  *@returns Array<{officerID, name, role, stationID, stationName, location, type, contactNo}> 
@@ -29,7 +29,7 @@ exports.getUser = async (req, res) => {
 		if (user) {
 			return res.status(200).send(user);
 		} else {
-			return res.status(404).send(user);
+			return res.status(404).send("User not found");
 		}
 	} catch (e) {
 		return res.status(400).send(e.message );

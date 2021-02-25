@@ -3,7 +3,7 @@ const WeaponModel = require('../model/weaponModel.model');
 const WeaponStation = require('../model/weaponStation.model');
 const Order = require('../model/order.model');
 const Station = require('../model/station.model');
-var { converter } = require('../services/objectConverter');
+var { converter } = require('../utils/objectConverter');
 const sequelize = require('../config/db');
 exports.getWeaponStation = async (req, res) => {
 	let weapons = [];

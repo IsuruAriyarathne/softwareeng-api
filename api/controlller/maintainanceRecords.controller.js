@@ -3,7 +3,7 @@ const WeaponModel = require('../model/weaponModel.model');
 const MaintainanceRecord = require('../model/maintainanceRecord.model');
 const WeaponStation = require('../model/weaponStation.model');
 const { Op } = require('sequelize');
-const { converter } = require('../services/objectConverter');
+const { converter } = require('../utils/objectConverter');
 
 exports.getMaintainanceRecords = async (req, res) => {
 	let maintainanceRecords = [];

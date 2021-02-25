@@ -1,7 +1,14 @@
 const Sequelize = require('sequelize');
+const config = require('../config/config');
 
-const path = 'mysql://TMeU6ua5df:kp69GbxwjU@remotemysql.com:3306/TMeU6ua5df';
-const sequelize = new Sequelize(path);
+const db = process.env.NODE_ENV == 'test' ? config.test.db:config.production.db;
+
+const sequelize = new Sequelize(db.dbName, db.user,db.password,{
+  host: db.host,
+  dialect: "mysql",
+  port: db.port
+
+});
 
 sequelize.authenticate().then(() => {
   console.log('Connection established successfully.');
