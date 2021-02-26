@@ -13,7 +13,7 @@ router.get('/:stationID', RequestController.getRequestsStation)
 /**
  * @description get the ammunition models and weapon models in the request
  */
-router.get('/:requestID',RequestController.getRequest);
+router.get('/:stationID/:requestID',RequestController.getRequestStation);
 
 
 /**

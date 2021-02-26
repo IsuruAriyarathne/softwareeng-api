@@ -28,8 +28,20 @@ exports.getRequestsStation = async (req, res) => {
 	}
 };
 
-
 exports.getRequest = async (req, res) => {
+    let request = {};
+    request.ammoRequests = [];
+    request.weaponRequests = [];
+	try {
+        request = await Request.findOne({ where: { requestID: req.params.requestID} });
+        request.ammoRequests = await RequestAmmunition.findAll({where:{ requestID: req.params.requestID}})
+        request.weaponRequests = await RequestWeapon.findAll({where:{ requestID: req.params.requestID}})
+		return res.status(200).send( request);
+	} catch (e) {
+		return res.status(400).send( e.message);
+	}
+};
+exports.getRequestStation = async (req, res) => {
 	let request = {};
 	let ammoRequests = [];
 	let weaponRequests = [];
