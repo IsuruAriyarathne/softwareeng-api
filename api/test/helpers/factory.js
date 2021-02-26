@@ -145,3 +145,33 @@ exports.createUser =  (count = 1) => {
     return user;
 
 }
+
+exports.createWeapon =  (count = 1) => {
+    let weapons = [];
+    for(let i =0; i < count; i++){
+        weapons.push(
+            {
+                weaponModelID: 1,
+                orderID: 1,
+                state: faker.lorem.words(3)
+            }
+        )
+    } 
+    if(count == 1) return weapons[0]
+    return weapon;
+
+}
+
+exports.createWeaponModel =  (count = 1) => {
+    let weaponModels = [];
+    for(let i =0; i < count; i++){
+        weaponModels.push(
+            {
+                name: faker.name.findName(), 
+                description: faker.lorem.words(5)
+            }
+        )
+    }
+    if(count == 1) return weaponModels[0]
+    return weaponModel;
+}
