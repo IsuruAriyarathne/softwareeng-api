@@ -49,12 +49,13 @@ exports.createWeaponModel = (count = 1) => {
     return weaponModels;
 }
 
-
-exports.createRequestAmmunition = (count = 1,ammoModel, requestID = -1) => {
-    let ammoModelIDs = ammoModel.map(item => item.ammoModelID) 
-    let requestAmmo = [];
-
-    for(let i =0; i < count; i++){
+exports.createRequestAmmunition = (ammoModel, requestID = -1) => {
+	let ammoModelIDs = []
+	if(ammoModel.length>0){
+		ammoModelIDs = ammoModel.map((item) => item.ammoModelID);
+	}
+	let requestAmmo = [];
+    for(let i =0; i < ammoModel.length; i++){
         requestAmmo.push(
             {
                 name: faker.lorem.words(3),
@@ -66,17 +67,18 @@ exports.createRequestAmmunition = (count = 1,ammoModel, requestID = -1) => {
     if(requestID != -1){
         requestAmmo = requestAmmo.map(item => item.requestID = requestID)
     }
-    if(count == 1) return requestAmmo[0]
     
     return requestAmmo;
 }
 
+exports.createRequestWeapon = (weaponModel, requestID = -1) => {
+	let weaponModelIDs = []
+	if(weaponModel.length>0){
+		weaponModelIDs = weaponModel.map((item) => item.weaponModelID);
+	}
+	let requestWeapon = [];
 
-exports.createRequestWeapon = (count = 1,weaponModel,requestID = -1) => {
-    let weaponModelIDs = weaponModel.map(item => item.weaponModelID) 
-    let requestWeapon = [];
-
-    for(let i =0; i < count; i++){
+    for(let i =0; i < weaponModel.length; i++){
         requestWeapon.push(
             {
                 name: faker.lorem.words(3),
@@ -88,25 +90,40 @@ exports.createRequestWeapon = (count = 1,weaponModel,requestID = -1) => {
     if(requestID != -1){
         requestWeapon = requestWeapon.map(item => item.requestID = requestID)
     }
-    if(count == 1) return requestWeapon[0]
+    
     
     return requestWeapon;
 }
 
-exports.createRequest = (station,weaponModel,ammoModel) => {
-    let requests = [];
-    
+exports.createRequest = (station, weaponModel = [], ammoModel = []) => {
+	let request = {};
+	request = {
+		date: faker.date,
+		comments: faker.address.city(),
+		state: STATION_TYPES[Math.floor(Math.random() * STATION_TYPES.length)],
+		stationID: station.stationID,
+	};
+
+	request.WeaponRequests = this.createRequestAmmunition(ammoModel);
+	request.AmmunitionRequests = this.createRequestWeapon(weaponModel);
+
+	return request;
+};
+
+exports.createAmmunitionBatch = (count = 1) => {
+    let ammunitionBatch = [];
     for(let i =0; i < count; i++){
-        requests.push(
+        ammunitionBatch.push(
             {
-                date: faker.company.companyName(), 
-                comments: faker.address.city(),
-                state: STATION_TYPES[Math.floor(Math.random() * STATION_TYPES.length)],
-                stationID: stationID 
+                orderID: faker.random.number(1000),
+                count: faker.random.number(100),
+                remain: faker.random.number(100),
             }
         )
     }
-
+    if(count == 1) return ammunitionBatch[0]
+     
+    return ammunitionBatch;
 }
 
 exports.createUser =  (count = 1) => {
@@ -126,4 +143,5 @@ exports.createUser =  (count = 1) => {
     // console.log('This is the fake user' , users) 
     if(count == 1) return users[0]
     return user;
+
 }
