@@ -112,81 +112,81 @@ describe('request controller', () => {
 		});		
 	});
 
-	// describe('error handling', () => {
-	// 	beforeAll(() => {
-	// 		Models.Request.create = () => {
-	// 			throw new Error();
-	// 		};
-	// 		Models.Request.findAll = () => {
-	// 			throw new Error();
-	// 		};
-	// 		Models.Request.findOne = () => {
-	// 			throw new Error();
-	// 		};
-	// 		Models.Request.update = () => {
-	// 			throw new Error();
-	// 		};
-	// 		Models.Request.destroy = () => {
-	// 			throw new Error();
-	// 		};
-	// 	});
-	// 	afterAll(() => {
-	// 		jest.clearAllMocks();
-	// 	});
+	describe('error handling', () => {
+		beforeAll(() => {
+			Models.Request.create = () => {
+				throw new Error();
+			};
+			Models.Request.findAll = () => {
+				throw new Error();
+			};
+			Models.Request.findOne = () => {
+				throw new Error();
+			};
+			Models.Request.update = () => {
+				throw new Error();
+			};
+			Models.Request.destroy = () => {
+				throw new Error();
+			};
+		});
+		afterAll(() => {
+			jest.clearAllMocks();
+		});
 
-	// it('should return an error message on sequelize errors', async () => {
-	// 	req.body = requestWithWeapon;
+	it('should return an error message on sequelize errors', async () => {
+		req.body = request;
 
-	// 	await RequestController.createRequest(req, res);
+		await RequestController.createRequest(req, res);
 
-	// 	expect(res.status).toHaveBeenCalledWith(400);
-	// });
-	// 	it('should return 400 state on create for errors', async () => {
-	// 		req.body = requestWithWeapon;
+		expect(res.status).toHaveBeenCalledWith(400);
+	});
+		it('should return 400 state on create for errors', async () => {
+			req.body = request;
 
-	// 		await RequestController.createRequest(req, res);
+			await RequestController.createRequest(req, res);
 
-	// 		expect(res.status).toHaveBeenCalledWith(400);
-	// 	});
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
 
-	// 	it('should return 400 state on delete for errors', async () => {
-	// 		req.body = {};
+		it('should return 400 state on delete for errors', async () => {
+			req.body = {};
 
-	// 		await RequestController.deleteRequest(req, res);
+			await RequestController.deleteRequest(req, res);
 
-	// 		expect(res.status).toHaveBeenCalledWith(400);
-	// 	});
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
 
-	// 	it('should return 400 state on update for errors', async () => {
-	// 		req.body = {};
+		it('should return 400 state on update for errors', async () => {
+			req.body = {};
 
-	// 		await RequestController.updateRequest(req, res);
+			await RequestController.updateRequest(req, res);
 
-	// 		expect(res.status).toHaveBeenCalledWith(400);
-	// 	});
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
 
-	// 	it('should return 400 state on get request details for errors', async () => {
-	// 		req.body = {};
+		it('should return 400 state on get request details for errors', async () => {
+			req.body = {};
 
-	// 		await RequestController.getRequest(req, res);
+			await RequestController.getRequest(req, res);
 
-	// 		expect(res.status).toHaveBeenCalledWith(400);
-	// 	});
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
 
-	// 	it('should return 400 state on get requests of stations for errors', async () => {
-	// 		req.body = {};
+		it('should return 400 state on get requests of stations for errors', async () => {
+			req.body = {};
 
-	// 		await RequestController.getRequestsStation(req, res);
+			await RequestController.getRequestsStation(req, res);
 
-	// 		expect(res.status).toHaveBeenCalledWith(400);
-	// 	});
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
 
-	// 	it('should return 400 state on get all requests for errors', async () => {
-	// 		req.body = {};
+		it('should return 400 state on get all requests for errors', async () => {
+			req.body = {};
 
-	// 		await RequestController.getRequests(req, res);
+			await RequestController.getRequests(req, res);
 
-	// 		expect(res.status).toHaveBeenCalledWith(400);
-	// 	});
-	// });
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
+	});
 });
