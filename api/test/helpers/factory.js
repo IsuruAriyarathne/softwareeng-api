@@ -1,5 +1,5 @@
 const faker = require('faker');
-const {STATION_TYPES} = require('../../utils/constants')
+const {STATION_TYPES, USER_TYPES} = require('../../utils/constants')
 
 exports.createStation =  (count = 1) => {
     let stations = [];
@@ -107,4 +107,23 @@ exports.createRequest = (station,weaponModel,ammoModel) => {
         )
     }
 
+}
+
+exports.createUser =  (count = 1) => {
+    let users = [];
+    for(let i =0; i < count; i++){
+        users.push(
+            {
+                name: faker.name.findName(),
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+                role: USER_TYPES[Math.floor(Math.random() * USER_TYPES.length)], 
+                // stationID: faker.random.number()
+                stationID: 1
+            }
+        )
+    }
+    // console.log('This is the fake user' , users) 
+    if(count == 1) return users[0]
+    return user;
 }

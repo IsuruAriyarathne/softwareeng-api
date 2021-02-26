@@ -43,6 +43,7 @@ exports.getUser = async (req, res) => {
  */
 exports.createUser = async (req, res) => {
 	let user = req.body;
+	console.log(user)
 	try {
 		let password = generator.generate({
 			length: 10,

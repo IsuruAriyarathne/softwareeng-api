@@ -14,6 +14,7 @@ const models = {
     RequestAmmunition : require('./requestAmmo.model'),
     RequestWeapon : require('./requestWeapon.model'),
     Station : require('./station.model'),
+    User : require('./user.model'),
     WeaponModel: require('./weaponModel.model')
 }
 
