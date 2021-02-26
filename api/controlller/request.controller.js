@@ -28,20 +28,8 @@ exports.getRequestsStation = async (req, res) => {
 	}
 };
 
+
 exports.getRequest = async (req, res) => {
-    let request = {};
-    request.ammoRequests = [];
-    request.weaponRequests = [];
-	try {
-        request = await Request.findOne({ where: { requestID: req.params.requestID} });
-        request.ammoRequests = await RequestAmmunition.findAll({where:{ requestID: req.params.requestID}})
-        request.weaponRequests = await RequestWeapon.findAll({where:{ requestID: req.params.requestID}})
-		return res.status(200).send( request);
-	} catch (e) {
-		return res.status(400).send( e.message);
-	}
-};
-exports.getRequestStation = async (req, res) => {
 	let request = {};
 	let ammoRequests = [];
 	let weaponRequests = [];
@@ -66,7 +54,9 @@ exports.createRequest = async (req, res) => {
 	let t = await sequelize.transaction() 
 	try {
 		result = await Request.create(request,{transaction:t});
+		console.log(req.body.WeaponRequests);
 		if (request.hasOwnProperty('WeaponRequests')) {
+			console.log("Here");
 			if (request.WeaponRequests.length > 0) {
 				request.WeaponRequests = request.WeaponRequests.map(item => {return {...item,requestID:result.requestID}})
 				weaponRequests = await RequestWeapon.bulkCreate(request.WeaponRequests,{transaction:t});

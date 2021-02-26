@@ -23,7 +23,6 @@ describe('station controller', () => {
 	let station;
 
 	describe('get and delete stations', () => {
-
 		beforeAll(async() => {
 			station = await writeToDB(Models.Station,createStation())
 		})
@@ -45,6 +44,19 @@ describe('station controller', () => {
 
 			expect(res.status).toHaveBeenCalledWith(200);
 			// expect(res.send).toHaveBeenCalledWith(stations);
+			// expect(users).toEqual(
+			// 	expect.arrayContaining([
+			// 	  expect.objectContaining({id: 1}),
+			// 	  expect.objectContaining({id: 2})
+			// 	])
+			//   );
+			expect(res.send).toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({
+				stationID: expect.any(Number),
+				stationName: expect.any(String),
+				location: expect.any(String),
+				type: expect.any(String),
+				contactNo: expect.any(String)
+			  })],))
 		});
 
 		it('should delete a station', async () => {
