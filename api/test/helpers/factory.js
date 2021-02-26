@@ -108,3 +108,20 @@ exports.createRequest = (station,weaponModel,ammoModel) => {
     }
 
 }
+
+exports.createAmmunitionBatch = (count = 1) => {
+    let ammunitionBatch = [];
+    for(let i =0; i < count; i++){
+        ammunitionBatch.push(
+            {
+                orderID: faker.random.number(1000),
+                count: faker.random.number(100),
+                remain: faker.random.number(100),
+            }
+        )
+    }
+    
+    if(count == 1) return ammunitionBatch[0]
+     
+    return ammunitionBatch;
+}
