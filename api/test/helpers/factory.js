@@ -44,7 +44,10 @@ exports.createWeaponModel = (count = 1) => {
 };
 
 exports.createRequestAmmunition = (ammoModel, requestID = -1) => {
-	let ammoModelIDs = ammoModel.map((item) => item.ammoModelID);
+	let ammoModelIDs = []
+	if(ammoModel.length>0){
+		ammoModelIDs = ammoModel.map((item) => item.ammoModelID);
+	}
 	let requestAmmo = [];
 
 	for (let i = 0; i < ammoModel.length; i++) {
@@ -61,7 +64,10 @@ exports.createRequestAmmunition = (ammoModel, requestID = -1) => {
 };
 
 exports.createRequestWeapon = (weaponModel, requestID = -1) => {
-	let weaponModelIDs = weaponModel.map((item) => item.weaponModelID);
+	let weaponModelIDs = []
+	if(weaponModel.length>0){
+		weaponModelIDs = weaponModel.map((item) => item.weaponModelID);
+	}
 	let requestWeapon = [];
 
 	for (let i = 0; i < weaponModel.length; i++) {
@@ -78,16 +84,16 @@ exports.createRequestWeapon = (weaponModel, requestID = -1) => {
 };
 
 exports.createRequest = (station, weaponModel = [], ammoModel = []) => {
-	let requests = {};
-	requests = {
+	let request = {};
+	request = {
 		date: faker.date,
 		comments: faker.address.city(),
 		state: STATION_TYPES[Math.floor(Math.random() * STATION_TYPES.length)],
 		stationID: station.stationID,
 	};
 
-	requests.WeaponRequests = this.createRequestAmmunition(ammoModel);
-	requests.AmmunitionRequests = this.createRequestWeapon(weaponModel);
+	request.WeaponRequests = this.createRequestAmmunition(ammoModel);
+	request.AmmunitionRequests = this.createRequestWeapon(weaponModel);
 
-	return requests;
+	return request;
 };

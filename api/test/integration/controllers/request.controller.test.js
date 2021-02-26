@@ -5,6 +5,7 @@ const {
 	createAmmoModel,
 	createRequest,
 	createRequestAmmunition,
+    createRequestWeapon,
 } = require('../../helpers/factory');
 const Models = require('../../../model');
 const { writeToDB, destroyFromDB } = require('../../helpers/dbHelper');
@@ -18,7 +19,7 @@ describe('request controller', () => {
 	beforeAll(async () => {
 		server = require('../../../server');
 		station = await writeToDB(Models.Station, createStation());
-		ammoModels = ammoModels = await writeToDB(Models.AmmunitionType, createAmmoModel(3));
+		ammoModels = await writeToDB(Models.AmmunitionType, createAmmoModel(3));
 		weaponModels = await writeToDB(Models.WeaponModel, createWeaponModel(3));
 	});
 
@@ -37,14 +38,13 @@ describe('request controller', () => {
 	};
 
 	let request;
-	let requestWithBothModels;
-	let requestWithOnlyAmmo;
-	let requestWithWeapon;
 
 	describe('get and delete request given by ID', () => {
-
 		beforeAll(async () => {
-			request = await writeToDB(Models.Request, createRequest(station, weaponModels.slice(0,-1), ammoModels.slice(0,-1)));
+			request = await writeToDB(
+				Models.Request,
+				createRequest(station, weaponModels.slice(0, -1), ammoModels.slice(0, -1))
+			);
 		});
 
 		afterAll(async () => {
@@ -52,13 +52,11 @@ describe('request controller', () => {
 		});
 
 		it('should return request given by ID', async () => {
-
 			req.params = { requestID: request.requestID };
 
 			await RequestController.getRequest(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(200);
-			// expect(res.send).toHaveBeenCalledWith(request);
 		});
 
 		it('should delete a request', async () => {
@@ -70,12 +68,11 @@ describe('request controller', () => {
 			expect(res.send).toHaveBeenCalledWith('Succesfully request deleted');
 		});
 
-
 		it('should update a request', async () => {
 			let newRequest = {
 				...request,
 				AmmunitionRequests: createRequestAmmunition(ammoModels, request.requestID),
-				WeaponRequests: createRequestAmmunition(weaponModels, request.requestID),
+				WeaponRequests: createRequestWeapon(weaponModels, request.requestID),
 			};
 			req.body = newRequest;
 			req.params = { requestID: request.requestID };
@@ -83,60 +80,113 @@ describe('request controller', () => {
 			await RequestController.updateRequest(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(200);
-			// expect(res.send).toHaveBeenCalledWith();
 		});
 
-        it('should get requests of the station', async () => {
-            req.params = {stationID: station.stationID}
+		it('should get requests of the station', async () => {
+			req.params = { stationID: station.stationID };
 
-            await RequestController.getRequestsStation(req,res);
-            
+			await RequestController.getRequestsStation(req, res);
+
 			expect(res.status).toHaveBeenCalledWith(200);
-			// expect(res.send).toHaveBeenCalledWith();
+		});
+		
+        it('should get all requests of the station', async () => {
 
-        })
+			await RequestController.getRequests(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(200);
+		});
 	});
 
 	describe('create request', () => {
 		beforeAll(() => {
-			requestWithBothModels = createRequest(station, weaponModels, ammoModels);
-			requestWithOnlyAmmo = createRequest(station, [], ammoModels);
-			requestWithWeapon = createRequest(station, weaponModels);
+			request = createRequest(station, weaponModels, ammoModels);
 		});
 
 		it('should create a request with both ammoModel and weapon Models', async () => {
-			req.body = requestWithBothModels;
+			req.body = request;
 
 			await RequestController.createRequest(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(200);
-		});
-
-		it('should create a request with only ammoModel', async () => {
-			req.body = requestWithOnlyAmmo;
-
-			await RequestController.createRequest(req, res);
-
-			expect(res.status).toHaveBeenCalledWith(200);
-		});
-
-		it('should create a request with only  weapon Models', async () => {
-			req.body = requestWithWeapon;
-
-			await RequestController.createRequest(req, res);
-
-			expect(res.status).toHaveBeenCalledWith(200);
-		});
-        
-		it('should return an error message on sequelize errors', async () => {
-            Models.Request.create = () => {
-                throw new Error();
-            }
-			req.body = requestWithWeapon;
-
-			await RequestController.createRequest(req, res);
-
-			expect(res.status).toHaveBeenCalledWith(400);
-		});
+		});		
 	});
+
+	// describe('error handling', () => {
+	// 	beforeAll(() => {
+	// 		Models.Request.create = () => {
+	// 			throw new Error();
+	// 		};
+	// 		Models.Request.findAll = () => {
+	// 			throw new Error();
+	// 		};
+	// 		Models.Request.findOne = () => {
+	// 			throw new Error();
+	// 		};
+	// 		Models.Request.update = () => {
+	// 			throw new Error();
+	// 		};
+	// 		Models.Request.destroy = () => {
+	// 			throw new Error();
+	// 		};
+	// 	});
+	// 	afterAll(() => {
+	// 		jest.clearAllMocks();
+	// 	});
+
+	// it('should return an error message on sequelize errors', async () => {
+	// 	req.body = requestWithWeapon;
+
+	// 	await RequestController.createRequest(req, res);
+
+	// 	expect(res.status).toHaveBeenCalledWith(400);
+	// });
+	// 	it('should return 400 state on create for errors', async () => {
+	// 		req.body = requestWithWeapon;
+
+	// 		await RequestController.createRequest(req, res);
+
+	// 		expect(res.status).toHaveBeenCalledWith(400);
+	// 	});
+
+	// 	it('should return 400 state on delete for errors', async () => {
+	// 		req.body = {};
+
+	// 		await RequestController.deleteRequest(req, res);
+
+	// 		expect(res.status).toHaveBeenCalledWith(400);
+	// 	});
+
+	// 	it('should return 400 state on update for errors', async () => {
+	// 		req.body = {};
+
+	// 		await RequestController.updateRequest(req, res);
+
+	// 		expect(res.status).toHaveBeenCalledWith(400);
+	// 	});
+
+	// 	it('should return 400 state on get request details for errors', async () => {
+	// 		req.body = {};
+
+	// 		await RequestController.getRequest(req, res);
+
+	// 		expect(res.status).toHaveBeenCalledWith(400);
+	// 	});
+
+	// 	it('should return 400 state on get requests of stations for errors', async () => {
+	// 		req.body = {};
+
+	// 		await RequestController.getRequestsStation(req, res);
+
+	// 		expect(res.status).toHaveBeenCalledWith(400);
+	// 	});
+
+	// 	it('should return 400 state on get all requests for errors', async () => {
+	// 		req.body = {};
+
+	// 		await RequestController.getRequests(req, res);
+
+	// 		expect(res.status).toHaveBeenCalledWith(400);
+	// 	});
+	// });
 });

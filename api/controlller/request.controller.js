@@ -54,9 +54,7 @@ exports.createRequest = async (req, res) => {
 	let t = await sequelize.transaction() 
 	try {
 		result = await Request.create(request,{transaction:t});
-		console.log(req.body.WeaponRequests);
 		if (request.hasOwnProperty('WeaponRequests')) {
-			console.log("Here");
 			if (request.WeaponRequests.length > 0) {
 				request.WeaponRequests = request.WeaponRequests.map(item => {return {...item,requestID:result.requestID}})
 				weaponRequests = await RequestWeapon.bulkCreate(request.WeaponRequests,{transaction:t});
