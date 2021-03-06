@@ -4,7 +4,8 @@
     "private": true,
     "scripts": {
         "start": "node server",
-        "test": "jest --detectOpenHandles"
+        "test": "jest --detectOpenHandles --watchAll --verbose --coverage"
+
     },
     "dependencies": {
         "@hapi/joi": "^17.1.1",

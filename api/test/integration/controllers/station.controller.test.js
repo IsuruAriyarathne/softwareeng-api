@@ -31,13 +31,23 @@ describe('station controller', () => {
 			await destroyFromDB(Models.Station,station,'stationID')
 		})
 
-		it('should return stations given by ID', async () => {
+		it('should return station given by ID', async () => {
 			req.params = { stationId: station.stationID };
 
 			await StationController.getStation(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(200);
 			expect(res.send).toHaveBeenCalledWith(station);
+		});
+		
+		it('should update station given by ID', async () => {
+			req.body = {...createStation(), stationID:station.stationID}
+			req.params = { stationId: station.stationID };
+
+			await StationController.updateStation(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.send).toHaveBeenCalledWith(req.body);
 		});
 
 		it('should return all stations', async () => {

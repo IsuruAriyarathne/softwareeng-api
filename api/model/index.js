@@ -14,7 +14,9 @@ const models = {
     RequestAmmunition : require('./requestAmmo.model'),
     RequestWeapon : require('./requestWeapon.model'),
     Station : require('./station.model'),
-    WeaponModel: require('./weaponModel.model')
+    User : require('./user.model'),
+    WeaponModel: require('./weaponModel.model'),
+    Weapon: require('./weapon.model')
 }
 
 module.exports = models;
