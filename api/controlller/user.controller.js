@@ -58,7 +58,7 @@ exports.createUser = async (req, res) => {
 		sendMail("SLF New User Password",password,user.email)
 		return res
 			.status(200)
-			.send({ ...user, password: password });
+			.send(user);
 	} catch (e) {
 		return res.status(400).send({ status: 400, message: e.message });
 	}

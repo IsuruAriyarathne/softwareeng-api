@@ -1,8 +1,7 @@
 const UserController = require('../../../controlller/user.controller');  // 1 done StationController > UserController
-const { createUser } = require('../../helpers/factory') // 2
+const { createUser, createStation } = require('../../helpers/factory') // 2
 const Models = require('../../../model');
 const { writeToDB, destroyFromDB } = require('../../helpers/dbHelper');
-const { createStation } = require('../../../controlller/station.controller');
 const {sendMail} = require('../../../services/emailSender');
 let server;
 let station;
@@ -15,6 +14,7 @@ describe('user controller', () => { // 3 done
 	});
 
 	afterAll(async() => {
+		await destroyFromDB(Models.Station,station,'stationID'); 
 	    server.close()
 	});
 
@@ -33,7 +33,6 @@ describe('user controller', () => { // 3 done
 		
 		afterAll(async() => {
 			await destroyFromDB(Models.User,user,'officerID') // 7 done
-			await destroyFromDB(Models.Station,station,'stationID') // 7 done
 		});
 
 		it('should return users given by ID', async () => {
@@ -60,15 +59,15 @@ describe('user controller', () => { // 3 done
 		});
 	});
 
-	describe('create a user', () => {
-		// beforeAll(())
-		req.body = createUser();
+	// describe('create a user', () => {
+	// 	// beforeAll(())
+	// 	req.body = createUser();
 
-		it('should create a user', async () => {
-			// let sendMail = jest.fn()
-			await UserController.createUser(req, res);  // 1
-			expect(res.status).toHaveBeenCalledWith(200);
-		});
-	});
+	// 	it('should create a user', async () => {
+	// 		// let sendMail = jest.fn()
+	// 		await UserController.createUser(req, res);  // 1
+	// 		expect(res.status).toHaveBeenCalledWith(200);
+	// 	});
+	// });
 	
 });

@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "start": "node server",
-        "test": "jest --detectOpenHandles --watchAll --verbose --coverage"
+        "test": "set NODE_ENV=test && jest --detectOpenHandles --watchAll --verbose --coverage"
 
     },
     "dependencies": {

@@ -121,9 +121,7 @@ exports.createUser =  (station,count = 1) => {
             {
                 name: faker.name.findName(),
                 email: faker.internet.email(),
-                password: faker.internet.password(),
                 role: USER_TYPES[Math.floor(Math.random() * USER_TYPES.length)], 
-                // stationID: faker.random.number()
                 stationID: station.stationID
             }
         )
@@ -161,5 +159,5 @@ exports.createWeaponModel =  (count = 1) => {
         )
     }
     if(count == 1) return weaponModels[0]
-    return weaponModel;
+    return weaponModels;
 }
