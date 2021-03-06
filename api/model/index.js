@@ -14,14 +14,10 @@ const models = {
     RequestAmmunition : require('./requestAmmo.model'),
     RequestWeapon : require('./requestWeapon.model'),
     Station : require('./station.model'),
-<<<<<<< Updated upstream
     User : require('./user.model'),
     WeaponModel: require('./weaponModel.model'),
-    Weapon: require('./weapon.model')
-=======
-    WeaponModel: require('./weaponModel.model'),
+    Weapon: require('./weapon.model'),
     Supplier: require('./supplier.model')
->>>>>>> Stashed changes
 }
 
 module.exports = models;
