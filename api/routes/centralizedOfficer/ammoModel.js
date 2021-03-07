@@ -33,7 +33,7 @@ router.delete('/:ammoModelID',AmmunitionTypeController.deleteAmmoModel )
 /**
  * @description delete weapon models of the ammunitions type 
  */
-router.delete('/:ammoModelID',AmmunitionTypeController.deleteweaponAmmunition )
+router.delete('/:ammoModelID',AmmunitionTypeController.deleteWeaponAmmunition )
 
 
 router.all('*', (req, res) => {

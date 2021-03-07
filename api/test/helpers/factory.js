@@ -161,3 +161,20 @@ exports.createWeaponModel =  (count = 1) => {
     if(count == 1) return weaponModels[0]
     return weaponModels;
 }
+
+
+exports.createWeaponAmmunition =  (weaponModelID,ammoModelID) => {
+	let weaponModels = [];
+	if(!Array.isArray(weaponModelID)){
+		weaponModelID = [weaponModelID]
+	}
+    for(let i =0; i < weaponModelID.length; i++){
+        weaponModels.push(
+            {
+                ammoModelID: ammoModelID, 
+                weaponModelID: weaponModelID[i]
+            }
+        )
+    }
+    return weaponModels;
+}

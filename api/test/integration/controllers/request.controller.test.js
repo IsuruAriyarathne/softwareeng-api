@@ -9,6 +9,7 @@ const {
 } = require('../../helpers/factory');
 const Models = require('../../../model');
 const { writeToDB, destroyFromDB } = require('../../helpers/dbHelper');
+const {mockErrorMethod} = require('../../helpers/exceptionThrow')
 
 let server;
 let station;
@@ -114,21 +115,7 @@ describe('request controller', () => {
 
 	describe('error handling', () => {
 		beforeAll(() => {
-			Models.Request.create = () => {
-				throw new Error();
-			};
-			Models.Request.findAll = () => {
-				throw new Error();
-			};
-			Models.Request.findOne = () => {
-				throw new Error();
-			};
-			Models.Request.update = () => {
-				throw new Error();
-			};
-			Models.Request.destroy = () => {
-				throw new Error();
-			};
+			mockErrorMethod(Models.Request)
 		});
 		afterAll(() => {
 			jest.clearAllMocks();

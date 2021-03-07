@@ -36,7 +36,6 @@ describe('weapon controller', () => { // 3 done
 			req.params = { weaponID: weapon.weaponID };
 
 			const weap = await WeaponController.getWeapon(req, res);
-            console.log(weap)
 			expect(res.status).toHaveBeenCalledWith(200);
 			// expect(res.send).toHaveBeenCalledWith(weapon);
 		});		
