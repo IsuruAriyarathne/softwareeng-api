@@ -113,7 +113,7 @@ INSERT INTO `WeaponStation` (`weaponID`, `stationID`, `assigned`, `assignedDate`
 (5, 5, 1, '2021-01-04');
 
 
----can insert upyyo this
+
 INSERT INTO `AmmunitionBatch` (`ammoModelID`, `count`, `orderID`, `remain`) VALUES
 (1, 10, 1, 0),
 (2, 10, 1, 10),
@@ -145,7 +145,7 @@ INSERT INTO `AmmunitionStation` (`ammoModelID`, `count`, `orderID`, `stationID`,
 
 
 
-
+--- Insert upto this
 INSERT INTO `MaintainanceRecord` (`id`, `weaponID`, `description`, `date`, `amount`) VALUES
 (1, 1, 'Used to shoot', '2021-01-14', 5000),
 (2, 2, 'After good condition', '2021-01-14', 5000),
