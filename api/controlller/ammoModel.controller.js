@@ -35,6 +35,7 @@ exports.createAmmoModel = async (req, res) => {
 	let ammoModel = req.body;
 	try {
 		ammoModel = await AmmunitionType.create(req.body);
+		ammoModel = ammoModel.dataValues
 		return res.status(200).send(ammoModel);
 	} catch (e) {
 		return res.status(400).send(e.message);

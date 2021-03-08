@@ -8,6 +8,7 @@ const WeaponModel = require('../model/weaponModel.model');
 var { converter } = require('../utils/objectConverter');
 const { Op } = require('sequelize');
 const { groupRecoveryArr } = require('../utils/groupBy');
+
 exports.getRecoveriesStation = async (req, res) => {
 	let recoveries = [];
 	let ids = [];

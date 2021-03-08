@@ -1,21 +1,26 @@
-const UserController = require('../../../controlller/user.controller');  // 1 done StationController > UserController
-const { createUser, createStation } = require('../../helpers/factory') // 2
+const UserController = require('../../../controlller/user.controller'); // 1 done StationController > UserController
+const { createUser, createStation } = require('../../helpers/factory'); // 2
 const Models = require('../../../model');
 const { writeToDB, destroyFromDB } = require('../../helpers/dbHelper');
-const {sendMail} = require('../../../services/emailSender');
+const mailer = require('../../../services/emailSender');
+const { mockErrorMethod } = require('../../helpers/exceptionThrow');
+
 let server;
 let station;
 
-describe('user controller', () => { // 3 done
-	
+describe('user controller', () => {
 	beforeAll(async () => {
 		server = require('../../../server');
-		station = await writeToDB(Models.Station,createStation())
+		station = await writeToDB(Models.Station, createStation());
+		mailer.sendMail = () => {
+			return true;
+		};
 	});
 
-	afterAll(async() => {
-		await destroyFromDB(Models.Station,station,'stationID'); 
-	    server.close()
+	afterAll(async () => {
+		await destroyFromDB(Models.Station, station, 'stationID');
+		jest.clearAllMocks();
+		server.close();
 	});
 
 	let req = {};
@@ -24,15 +29,45 @@ describe('user controller', () => { // 3 done
 		send: jest.fn(() => res),
 		status: jest.fn(() => res),
 	};
+
 	let user;
-	describe('get and delete users', () => {  // 5 done
-		
-		beforeEach(async() => {
-			user = await writeToDB(Models.User,createUser(station))  // 6 half done
-		})
-		
-		afterAll(async() => {
-			await destroyFromDB(Models.User,user,'officerID') // 7 done
+	let station;
+
+	describe('create a user', () => {
+		beforeAll(() => {
+			user = createUser(station);
+		});
+		afterAll(async () => {
+			await destroyFromDB(Models.User, user, 'officerID');
+		});
+
+		it('should create a user', async () => {
+			req.body = user;
+			req.body.stationName = station.stationName;
+
+			await UserController.createUser(req, res);
+			expect(res.status).toHaveBeenCalledWith(200);
+
+			user.officerID = res.send.mock.calls[0][0].officerID;
+			expect.objectContaining({
+				officerID: expect.any(Number),
+				name: req.body.name,
+				email: req.body.email,
+				role: req.body.role,
+				stationID: req.body.stationID,
+			});
+		});
+	});
+
+	describe('get and delete users', () => {
+		beforeAll(async () => {
+			station = await writeToDB(Models.Station, createStation());
+			user = await writeToDB(Models.User, createUser(station));
+		});
+
+		afterAll(async () => {
+			await destroyFromDB(Models.User, user, 'officerID');
+			await destroyFromDB(Models.Station, user, 'stationID');
 		});
 
 		it('should return users given by ID', async () => {
@@ -42,11 +77,63 @@ describe('user controller', () => { // 3 done
 
 			expect(res.status).toHaveBeenCalledWith(200);
 			expect(res.send).toHaveBeenCalledWith(user);
-		});		
+		});
 
 		it('should return all users', async () => {
-			await UserController.getUsers(req, res);  // 1
+			await UserController.getUsers(req, res);
+
 			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.send).toHaveBeenCalledWith(
+				expect.objectContaining({
+					officerID: expect.any(Number),
+					name: expect.any(String),
+					email: expect.any(String),
+					role: expect.any(String),
+					stationID: expect.any(Number),
+				})
+			);
+		});
+
+		it('should update a user', async () => {
+			req.params = { userId: user.officerID };
+			req.body = { ...createUser(), officerID: user.officerID, stationName: station.stationName };
+
+			await UserController.updateUser(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.send).toHaveBeenCalledWith(
+				expect.objectContaining({
+					officerID: expect.any(Number),
+					name: expect.any(String),
+					email: expect.any(String),
+					role: expect.any(String),
+					stationID: expect.any(Number),
+					stationName: expect.any(String),
+					location: expect.any(String),
+					type: expect.any(String),
+					contactNo: expect.any(String),
+				})
+			);
+		});
+
+		it('should change a users password when passwords match', async () => {
+			req.params = { userId: user.officerID };
+			req.body = { newPassword: 'abc', confirmNewPassword: 'abc' };
+
+			await UserController.changePassword(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.send).toHaveBeenCalledWith('Password succesfully changed');
+		});
+
+		it('should send an error when new passwords dont match', async () => {
+			req.params = { userId: user.officerID };
+			req.body = { newPassword: 'abc', confirmNewPassword: 'abcd' };
+
+			await UserController.changePassword(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+			expect(res.send).toHaveBeenCalledWith('Passwords dont match');
 		});
 
 		it('should delete a user', async () => {
@@ -59,15 +146,60 @@ describe('user controller', () => { // 3 done
 		});
 	});
 
-	// describe('create a user', () => {
-	// 	// beforeAll(())
-	// 	req.body = createUser();
+	describe('error handling', () => {
+		beforeAll(() => {
+			mockErrorMethod(Models.User);
+		});
+		afterAll(() => {
+			jest.clearAllMocks();
+		});
 
-	// 	it('should create a user', async () => {
-	// 		// let sendMail = jest.fn()
-	// 		await UserController.createUser(req, res);  // 1
-	// 		expect(res.status).toHaveBeenCalledWith(200);
-	// 	});
-	// });
-	
+		it('should return an error message on sequelize errors for get user', async () => {
+			req.body = {};
+
+			await UserController.getUser(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
+
+		it('should return 400 state on get all users for errors', async () => {
+			req.body = {};
+
+			await UserController.getUsers(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
+
+		it('should return 400 state on create for errors', async () => {
+			req.body = {};
+
+			await UserController.createUser(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
+
+		it('should return 400 state on update for errors', async () => {
+			req.body = {};
+
+			await UserController.updateUser(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
+
+		it('should return 400 state on delete user details for errors', async () => {
+			req.body = {};
+
+			await UserController.deleteUser(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
+
+		it('should return 400 state on change password of user for errors', async () => {
+			req.body = { newPassword: 'abc', confirmNewPassword: 'abc' };
+
+			await UserController.changePassword(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
+	});
 });

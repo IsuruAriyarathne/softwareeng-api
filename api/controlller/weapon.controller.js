@@ -5,6 +5,7 @@ const Order = require('../model/order.model');
 const Station = require('../model/station.model');
 var { converter } = require('../utils/objectConverter');
 const sequelize = require('../config/db');
+
 exports.getWeaponStation = async (req, res) => {
 	let weapons = [];
 	try {
@@ -48,7 +49,9 @@ exports.updateWeaponStation = async (req, res) => {
 				where: { weaponID: req.params.weaponID, stationID: req.body.stationID, assigned: 1 },
 				include: { model: Weapon },
 			});
-			weapon = converter(weapon.dataValues);
+			if (weapon.hasOwnProperty('dataValues')) {
+				weapon = weapon.dataValues;
+			}
 		} else {
 			return res.status(401).send(weapon);
 		}
@@ -127,18 +130,14 @@ exports.updateWeapon = async (req, res) => {
 	}
 };
 
-
 /**
- * @returns success or error message 
+ * @returns success or error message
  */
 exports.deleteWeapon = async (req, res) => {
 	try {
 		await Weapon.destroy({ where: { weaponID: req.params.weaponID } });
 		return res.status(200).send('Succesfully weapon deleted');
 	} catch (e) {
-		if(e.message.toLowerCase().includes('foreign key constraint')){
-			return res.status(400).send('Weapon cannot be deleted ,it has many records in database')
-		}
 		return res.status(400).send(e.message);
 	}
 };

@@ -10,8 +10,8 @@ INSERT INTO `User` (`officerID`, `name`, `password`, `role`, `stationID`, `email
 (1, 'Isuru Ariyarathne', '$2b$10$qS0.cZAsliQKV1Mg6g1og.xu/48hzeuFA0VzLc9AhS6cEqR1US4Ze', 'admin', 1, 'isuru.18@cse.mrt.ac.lk'),
 (2, 'Poorna Gunathilaka', '$2b$10$rLCmfTwNSQtlzaPIgyIjQOOj/VwKZZBU6rb9yePb4Up69axlYU4n2', 'officer', 2, 'poorna2152@gmail.com'),
 (3, 'Geeth Kavinda', '$2b$10$G7jfIaGAwDVNCDAn81dJX.5bQW6UpOigL8XIXYv/VqtoKdPNzo6G2', 'cenofficer', 3, 'kavindag.18@cse.mrt.ac.lk'),
-(6, 'Imaji', '$2b$10$QfntglRNHWCpEvbpLTW/7efA4h5LNn.75QRizNdOPH0LiM2wiXP3K', 'admin', 4, 'maji.pietersz@gmail.com'),
-(7, 'nirasha', '$2b$10$p53L5zFnuBo54oz6R8CoI.m7JkrC8efrA0P2QL6AQNepqJznD37Qu', 'cenofficer', 5, 'wt.nirasha@gmail.com');
+(4, 'Imaji', '$2b$10$QfntglRNHWCpEvbpLTW/7efA4h5LNn.75QRizNdOPH0LiM2wiXP3K', 'admin', 4, 'maji.pietersz@gmail.com'),
+(5, 'nirasha', '$2b$10$p53L5zFnuBo54oz6R8CoI.m7JkrC8efrA0P2QL6AQNepqJznD37Qu', 'cenofficer', 5, 'wt.nirasha@gmail.com');
 
 
 
@@ -36,53 +36,96 @@ INSERT INTO `Supplier` (`supplierID`, `name`, `contactNumber`, `address`, `descr
 (1, 'DRDON', '9012243628', 'Indiana', 'Good'),
 (2, 'sup1', '568', 'Matara', NULL),
 (3, 'sup3', '12568', 'Kandy', 'Good'),
-(8, 'Sup', '012', 'Panama', 'Good'),
-(9, 'Supl', '012', 'Panama', 'Good');
+(4, 'Sup', '012', 'Panama', 'Good'),
+(5, 'Supl', '012', 'Panama', 'Good');
 
 
 INSERT INTO `SupplyAmmunition` (`ammoModelID`, `supplierID`) VALUES
 (1, 1),
-(2, 1);
+(2, 1),
+(3, 2),
+(3, 3),
+(4, 3),
+(5, 4),
+(4, 5);
 
 
 INSERT INTO `SupplyWeapon` (`weaponModelID`, `supplierID`) VALUES
 (1, 1),
 (2, 1),
-(1, 3);
+(3, 2),
+(5, 3),
+(4, 4),
+(2, 5),
+(3, 5);
 
 
 INSERT INTO `Order` (`orderID`, `supplierID`, `date`, `totalCost`, `state`, `description`) VALUES
 (1, 1, '2020-10-02', 100, 'Complete', 'Good'),
 (2, 2, '2021-01-02', 45000, 'Complete', 'Good'),
-(5, 2, '2021-01-02', 45000, 'Complete', NULL),
-(6, 2, '2021-01-02', 45000, 'Complete', NULL),
-(7, 2, '2021-01-02', 45000, 'Complete', NULL);
+(3, 3, '2021-01-02', 45000, 'Complete', NULL),
+(4, 4, '2021-01-02', 45000, 'Complete', NULL),
+(5, 5, '2021-01-02', 45000, 'Complete', NULL);
 
 
 
 INSERT INTO `AmmunitionOrder` (`ammoModelID`, `orderID`, `description`, `state`, `count`, `cost`) VALUES
 (1, 1, 'Good condition', 'Complete', 96, 1000),
-(1, 5, NULL, 'Complete', 10, 1000),
-(1, 6, NULL, 'Complete', 10, 1000),
-(1, 7, NULL, 'Complete', 10, 1000),
-(2, 1, NULL, 'Pending', 45, NULL);
+(2, 1, "Today", 'Complete', 10, 1000),
+(3, 2, "Today", 'Complete', 10, 1000),
+(1, 2, "Today", 'Complete', 10, 1000),
+(4, 3, "Today", 'Pending', 45, 1000),
+(5, 4, "Today", 'Pending', 45, 1000),
+(4, 4, "Today", 'Pending', 45, 2000);
 
 
 INSERT INTO `WeaponOrder` (`weaponModelID`, `orderID`, `description`, `state`, `count`, `cost`) VALUES
-(1, 1, NULL, 'Complete', 78, NULL),
-(2, 1, NULL, NULL, NULL, NULL),
-(2, 5, NULL, 'Complete', 40, 2345),
-(2, 6, NULL, 'Complete', 2, 2345),
-(2, 7, NULL, 'Complete', 40, 2345);
+(1, 1, "Today", 'Complete', 78, 123),
+(2, 2, "Today", 'Complete', 40, 2345),
+(3, 2, "Today", 'Complete', 40, 2345),
+(4, 3, "Today", 'Complete', 40, 2345),
+(1, 5, "Today", 'Complete', 2, 2345),
+(2, 5, "Today", 'Complete', 40, 2345);
+
+INSERT INTO `Weapon` (`weaponID`, `weaponModelID`, `orderID`, `state`) VALUES
+(1, 1, 1, 'Available'),
+(2, 1, 1, 'Available'),
+(3, 1, 1, 'Unavailable'),
+(4, 1, 1, 'Available'),
+(5, 1, 1, 'Unavailable');
+
+INSERT INTO `WeaponAmmunition` (`weaponModelID`, `ammoModelID`) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 3),
+(5, 4);
 
 
+INSERT INTO `WeaponStation` (`weaponID`, `stationID`, `assigned`, `assignedDate`) VALUES
+(1, 1, 0, '2021-01-04'),
+(1, 2, 0, '2021-01-23'),
+(1, 3, 1, '2021-01-24'),
+(2, 2, 1, '2021-01-05'),
+(3, 4, 1, '2021-01-04'),
+(4, 1, 1, '2021-01-04'),
+(5, 5, 1, '2021-01-04');
 
 
+---can insert upyyo this
 INSERT INTO `AmmunitionBatch` (`ammoModelID`, `count`, `orderID`, `remain`) VALUES
 (1, 10, 1, 0),
-(1, 10, 6, 10),
-(2, 25, 1, 10),
-(2, 40, 6, 40);
+(2, 10, 1, 10),
+(3, 10, 1, 8),
+(1, 10, 2, 10),
+(2, 25, 2, 10),
+(3, 40, 3, 40),
+(4, 40, 3, 40),
+(4, 40, 4, 40),
+(5, 40, 4, 40),
+(5, 40, 5, 40),
+(1, 40, 5, 40);
 
 
 
@@ -90,8 +133,15 @@ INSERT INTO `AmmunitionBatch` (`ammoModelID`, `count`, `orderID`, `remain`) VALU
 
 INSERT INTO `AmmunitionStation` (`ammoModelID`, `count`, `orderID`, `stationID`, `allocatedDate`, `remaining`) VALUES
 (1, 8, 1, 1, '2021-01-08', 8),
-(1, 10, 1, 2, '2021-01-08', 2),
-(1, 8, 1, 4, '2021-01-08', 8);
+(2, 8, 1, 2, '2021-01-08', 8),
+(2, 2, 1, 3, '2021-01-08', 2),
+(2, 10, 2, 2, '2021-01-08', 2),
+(3, 10, 3, 3, '2021-01-08', 2),
+(4, 10, 3, 4, '2021-01-08', 2),
+(4, 10, 4, 2, '2021-01-08', 2),
+(5, 10, 4, 5, '2021-01-08', 2),
+(5, 10, 5, 5, '2021-01-08', 2),
+(1, 10, 5, 2, '2021-01-08', 2);
 
 
 
@@ -190,45 +240,6 @@ INSERT INTO `RequestWeapon` (`requestID`, `weaponModelID`, `amount`) VALUES
 
 
 
-INSERT INTO `Weapon` (`weaponID`, `weaponModelID`, `orderID`, `state`) VALUES
-(1, 1, 1, 'Available'),
-(2, 1, 1, 'Available'),
-(3, 1, 1, 'Unavailable'),
-(4, 1, 1, 'Available'),
-(5, 1, 1, 'Unavailable');
-
-INSERT INTO `WeaponAmmunition` (`weaponModelID`, `ammoModelID`) VALUES
-(2, 1),
-(1, 2),
-(11, 2),
-(14, 2),
-(4, 3),
-(3, 4);
 
 
-
-
-
-
--- --------------------------------------------------------
-
---
--- Table structure for table `WeaponStation`
---
-
-CREATE TABLE `WeaponStation` (
-  `weaponID` int(11) NOT NULL,
-  `stationID` int(11) NOT NULL,
-  `assigned` tinyint(1) DEFAULT NULL,
-  `assignedDate` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-
-INSERT INTO `WeaponStation` (`weaponID`, `stationID`, `assigned`, `assignedDate`) VALUES
-(1, 1, 0, '2021-01-04'),
-(1, 1, 0, '2021-01-23'),
-(1, 2, 1, '2021-01-24'),
-(8, 2, 1, '2021-01-05'),
-(12, 1, 0, '2021-01-04');
 

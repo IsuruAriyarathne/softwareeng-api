@@ -57,26 +57,32 @@ exports.getOrder = async (req, res) => {
 exports.createOrder = async (req, res) => {
 	let order = req.body;
 	let result = {};
-	result.ammoOrder = [];
-    result.weaponOrder = [];
+	let ammoOrder = []
+	let weaponOrder = []
     let t  = await sequelize.transaction();
 	try {
 		order = await Order.create(req.body,{transaction:t});
 		result = order.dataValues;
+		
 		if (req.body.hasOwnProperty('AmmoOrder')) {
 			    req.body.AmmoOrder = req.body.AmmoOrder.map((item) => {
 				return { ...item, orderID: result.orderID };
 			});
-			result.AmmoOrder = await AmmunitionOrder.bulkCreate(req.body.AmmoOrder,{transaction:t});
+			ammoOrder = await AmmunitionOrder.bulkCreate(req.body.AmmoOrder,{transaction:t});
+			ammoOrder = ammoOrder.map(item => converter(item.dataValues))
 		}
 
 		if (req.body.hasOwnProperty('WeaponOrder')) {
 			    req.body.WeaponOrder = req.body.WeaponOrder.map((item) => {
 				return { ...item, orderID: result.orderID };
 			});
-			result.WeaponOrder = await WeaponOrder.bulkCreate(req.body.WeaponOrder,{transaction:t});
+			weaponOrder = await WeaponOrder.bulkCreate(req.body.WeaponOrder,{transaction:t});
+			weaponOrder = weaponOrder.map(item => converter(item.dataValues))
+
 		}
         await t.commit();
+		result.AmmoOrder = ammoOrder;
+		result.WeaponOrder = weaponOrder;
 		return res.status(200).send(result);
 	} catch (e) {
         await t.rollback();

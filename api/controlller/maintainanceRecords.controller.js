@@ -71,6 +71,9 @@ exports.updateMaintainanceRecord = async (req, res) => {
 		maintainanceRecord = await MaintainanceRecord.findOne({
 			where: { id: req.params.id },
 		});
+		if(maintainanceRecord.hasOwnProperty('dataValues')){
+			maintainanceRecord = maintainanceRecord.dataValues
+		}
 		return res.status(200).send(maintainanceRecord);
 	} catch (e) {
 		return res.status(400).send(e.message);

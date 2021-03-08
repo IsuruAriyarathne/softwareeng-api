@@ -626,15 +626,15 @@ ALTER TABLE `RequestWeapon`
 -- Constraints for table `SupplyAmmunition`
 --
 ALTER TABLE `SupplyAmmunition`
-  ADD CONSTRAINT `SupplyAmmunition_ibfk_1` FOREIGN KEY (`ammoModelID`) REFERENCES `AmmunitionType` (`ammomodelid`),
-  ADD CONSTRAINT `SupplyAmmunition_ibfk_2` FOREIGN KEY (`supplierID`) REFERENCES `Supplier` (`supplierid`);
+  ADD CONSTRAINT `SupplyAmmunition_ibfk_1` FOREIGN KEY (`ammoModelID`) REFERENCES `AmmunitionType` (`ammomodelid`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  ADD CONSTRAINT `SupplyAmmunition_ibfk_2` FOREIGN KEY (`supplierID`) REFERENCES `Supplier` (`supplierid`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `SupplyWeapon`
 --
 ALTER TABLE `SupplyWeapon`
-  ADD CONSTRAINT `SupplyWeapon_ibfk_1` FOREIGN KEY (`weaponModelID`) REFERENCES `WeaponModel` (`weaponmodelid`),
-  ADD CONSTRAINT `SupplyWeapon_ibfk_2` FOREIGN KEY (`supplierID`) REFERENCES `Supplier` (`supplierid`);
+  ADD CONSTRAINT `SupplyWeapon_ibfk_1` FOREIGN KEY (`weaponModelID`) REFERENCES `WeaponModel` (`weaponmodelid`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  ADD CONSTRAINT `SupplyWeapon_ibfk_2` FOREIGN KEY (`supplierID`) REFERENCES `Supplier` (`supplierid`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `User`

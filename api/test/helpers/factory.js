@@ -15,6 +15,20 @@ exports.createStation = (count = 1) => {
 	return stations;
 };
 
+exports.createCompany = (count = 1) => {
+	let company = [];
+	for (let i = 0; i < count; i++) {
+		company.push({
+			name: faker.company.companyName(),
+			address: faker.address.city(),
+			description: faker.lorem.words(10),
+			contactNumber: faker.random.number(9999999999).toString(),
+		});
+	}
+	if (count == 1) return company[0];
+	return company;
+};
+
 exports.createAmmoModel = (count = 1) => {
 	let ammoModels = [];
 	for (let i = 0; i < count; i++) {
@@ -86,7 +100,7 @@ exports.createRequestWeapon = (weaponModel, requestID = -1) => {
 exports.createRequest = (station, weaponModel = [], ammoModel = []) => {
 	let request = {};
 	request = {
-		date: "2021-01-12",
+		date: '2021-01-12',
 		comments: faker.address.city(),
 		state: STATION_TYPES[Math.floor(Math.random() * STATION_TYPES.length)],
 		stationID: station.stationID,
@@ -99,82 +113,125 @@ exports.createRequest = (station, weaponModel = [], ammoModel = []) => {
 };
 
 exports.createAmmunitionBatch = (count = 1) => {
-    let ammunitionBatch = [];
-    for(let i =0; i < count; i++){
-        ammunitionBatch.push(
-            {
-                orderID: faker.random.number(1000),
-                count: faker.random.number(100),
-                remain: faker.random.number(100),
-            }
-        )
-    }
-    if(count == 1) return ammunitionBatch[0]
-     
-    return ammunitionBatch;
-}
-
-exports.createUser =  (station,count = 1) => {
-    let users = [];
-    for(let i =0; i < count; i++){
-        users.push(
-            {
-                name: faker.name.findName(),
-                email: faker.internet.email(),
-                role: USER_TYPES[Math.floor(Math.random() * USER_TYPES.length)], 
-                stationID: station.stationID
-            }
-        )
-    }
-    // console.log('This is the fake user' , users) 
-    if(count == 1) return users[0]
-    return user;
-
-}
-
-exports.createWeapon =  (count = 1) => {
-    let weapons = [];
-    for(let i =0; i < count; i++){
-        weapons.push(
-            {
-                weaponModelID: 1,
-                orderID: 1,
-                state: faker.lorem.words(3)
-            }
-        )
-    } 
-    if(count == 1) return weapons[0]
-    return weapon;
-
-}
-
-exports.createWeaponModel =  (count = 1) => {
-    let weaponModels = [];
-    for(let i =0; i < count; i++){
-        weaponModels.push(
-            {
-                name: faker.name.findName(), 
-                description: faker.lorem.words(5)
-            }
-        )
-    }
-    if(count == 1) return weaponModels[0]
-    return weaponModels;
-}
-
-
-exports.createWeaponAmmunition =  (weaponModelID,ammoModelID) => {
-	let weaponModels = [];
-	if(!Array.isArray(weaponModelID)){
-		weaponModelID = [weaponModelID]
+	let ammunitionBatch = [];
+	for (let i = 1; i <= count; i++) {
+		ammunitionBatch.push({
+			ammoModelID: i,
+			orderID: i+2,
+			count: 100,
+			remain: 90,
+		});
 	}
-    for(let i =0; i < weaponModelID.length; i++){
-        weaponModels.push(
-            {
-                ammoModelID: ammoModelID, 
-                weaponModelID: weaponModelID[i]
-            }
-        )
-    }
-    return weaponModels;
+	if (count == 1) return ammunitionBatch[0];
+
+	return ammunitionBatch;
+};
+
+exports.createUser = (station = {}, count = 1) => {
+	let users = [];
+	for (let i = 1; i <= count; i++) {
+		users.push({
+			name: faker.name.findName(),
+			email: faker.internet.email(),
+			role: USER_TYPES[Math.floor(Math.random() * USER_TYPES.length)],
+			stationID: station.hasOwnProperty('stationID') ? station.stationID : i,
+		});
+	}
+	if (count == 1) return users[0];
+	return user;
+};
+
+exports.createWeapon = (count = 1) => {
+	let weapons = [];
+	for (let i = 1; i <= count; i++) {
+		weapons.push({
+			weaponModelID: i,
+			orderID: i,
+			state: faker.lorem.words(3),
+		});
+	}
+	if (count == 1) return weapons[0];
+	return weapon;
+};
+
+exports.createWeaponModel = (count = 1) => {
+	let weaponModels = [];
+	for (let i = 0; i < count; i++) {
+		weaponModels.push({
+			name: faker.name.findName(),
+			description: faker.lorem.words(5),
+		});
+	}
+	if (count == 1) return weaponModels[0];
+	return weaponModels;
+};
+
+exports.createWeaponAmmunition = (weaponModelID, ammoModelID) => {
+	let weaponModels = [];
+	if (!Array.isArray(weaponModelID)) {
+		weaponModelID = [weaponModelID];
+	}
+	for (let i = 0; i < weaponModelID.length; i++) {
+		weaponModels.push({
+			ammoModelID: ammoModelID,
+			weaponModelID: weaponModelID[i],
+		});
+	}
+	return weaponModels;
+};
+
+exports.createWeaponOrder = (count = 1) => {
+	let weaponOrders = [];
+	for (let i = 1; i <= count; i++) {
+		weaponOrders.push({
+			weaponModelID: i,
+			count: faker.random.number(),
+			cost: faker.random.number(),
+			state: 'Pending',
+			description: faker.lorem.words(5),
+		});
+	}
+	return weaponOrders;
+};
+
+exports.createAmmoOrder = (count = 1) => {
+	let ammoOrders = [];
+	for (let i = 1; i <= count; i++) {
+		ammoOrders.push({
+			ammoModelID: i,
+			count: faker.random.number(),
+			cost: faker.random.number(),
+			state: 'Pending',
+			description: faker.lorem.words(5),
+		});
+	}
+	return ammoOrders;
+};
+
+exports.createOrder = (count = 1) => {
+	let orders = [];
+	for (let i = 1; i <= count; i++) {
+		orders.push({
+			supplierID: i,
+			date: '2021-01-12',
+			totalCost: faker.random.number(),
+			state: 'Pending',
+			description: faker.lorem.words(5),
+		});
+	}
+	return orders;
+};
+
+exports.createMaintainanceRecords = (count = 1) => {
+	let records = [];
+	for (let i = 1; i <= count; i++) {
+		records.push({
+			weaponID: i,
+			date: '2021-01-12',
+			amount: faker.random.number(),
+			description: faker.lorem.words(5),
+		});
+	}
+	if (count == 1) return records[0];
+	return records;
 }

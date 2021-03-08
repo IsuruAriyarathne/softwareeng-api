@@ -134,7 +134,7 @@ describe('ammoModel controller', () => {
 		it('should create a ammoModel', async () => {
 			req.body = ammoModel;
 			await ammoModelController.createAmmoModel(req, res);
-
+			ammoModel.ammoModelID = res.send.mock.calls[5][0].ammoModelID
 			expect(res.status).toHaveBeenCalledWith(200);
 
 			expect(res.send).toHaveBeenCalledWith(

@@ -30,9 +30,9 @@ exports.getAmmunitionStation = async (req, res) => {
 exports.updateAmmunitionStation = async (req, res) => {
 	let ammunition = {};
 	try {
-		if (req.body.hasOwnProperty('count')) {
+		if (req.body.hasOwnProperty('remaining')) {
 			ammunition = await AmmunitionStation.update(
-				{ count: req.body.count },
+				{ remaining: req.body.remaining },
 
 				{
 					where: {
@@ -50,6 +50,11 @@ exports.updateAmmunitionStation = async (req, res) => {
 					orderID: req.body.orderID,
 				},
 			});
+
+			if (ammunition.hasOwnProperty('dataValues')) {
+				ammunition = ammunition.dataValues;
+			}
+
 			return res.status(200).send(ammunition);
 		} else {
 			return res.status(401).send('Unauthorized');
@@ -104,10 +109,15 @@ exports.createAmmunitionBatch = async (req, res) => {
 
 exports.updateAmmunitionBatch = async (req, res) => {
 	let stations = [];
+	let reqCount = 0;
 	let t = await sequelize.transaction();
 	try {
 		if (req.body.hasOwnProperty('Station')) {
-			stations = await AmmunitionStation.bulkCreate(req.body.Station, { updateOnDuplicate: ['count'], transaction: t });
+			stations = await AmmunitionStation.bulkCreate(req.body.Station, {
+				updateOnDuplicate: ['count'],
+				transaction: t,
+			});
+			reqCount = req.body.Station.reduce((prev, current) => prev + current.count, 0);
 		}
 		let assigned = await AmmunitionStation.findAll({
 			attributes: [[sequelize.fn('sum', sequelize.col('count')), 'total']],
@@ -116,21 +126,25 @@ exports.updateAmmunitionBatch = async (req, res) => {
 		let ammunitionBatch = await AmmunitionBatch.findOne({
 			where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID },
 		});
-		let remain = ammunitionBatch.dataValues.count - assigned[0].dataValues.total;
-		console.log(remain);
-		if(remain < 0){
-			console.log("In");
-			throw "remain less than 0";
+
+		let remain = ammunitionBatch.dataValues.count - (assigned[0].dataValues.total + reqCount);
+		if (remain < 0) {
+			throw 'remain less than 0';
 		}
 		ammunitionBatch = await AmmunitionBatch.update(
-			{ ...req.body, remain:remain },
-			{ where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID }, returning: true, transaction:t }
+			{ ...req.body, remain: remain },
+			{
+				where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID },
+				returning: true,
+				transaction: t,
+			}
 		);
 		ammunitionBatch = await AmmunitionBatch.findOne({
 			where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID },
 		});
 		await t.commit();
 		ammunitionBatch = ammunitionBatch.dataValues;
+		stations = stations.map((item) => item.dataValues);
 		ammunitionBatch.Station = stations;
 		return res.status(200).send(ammunitionBatch);
 	} catch (e) {
@@ -140,16 +154,13 @@ exports.updateAmmunitionBatch = async (req, res) => {
 };
 
 /**
- * @returns success or error message 
+ * @returns success or error message
  */
 exports.deleteAmmunitionBatch = async (req, res) => {
 	try {
-		await AmmunitionBatch.destroy({ where: { ammoModelID: req.params.ammoModelID, orderID:req.params.orderID } });
+		await AmmunitionBatch.destroy({ where: { ammoModelID: req.params.ammoModelID, orderID: req.params.orderID } });
 		return res.status(200).send('Succesfully ammunition batch deleted');
 	} catch (e) {
-		if(e.message.toLowerCase().includes('foreign key constraint')){
-			return res.status(400).send('User cannot be deleted ,it has many records in database')
-		}
 		return res.status(400).send(e.message);
 	}
 };

@@ -3,40 +3,37 @@ const { converter } = require('../utils/objectConverter');
 
 /**
  * @typedef {Object} station
- *@returns {Array}: {stationID, stationName, contactNo, location, type}  
+ *@returns {Array}: {stationID, stationName, contactNo, location, type}
  */
 exports.getStations = async (req, res) => {
 	let stations = [];
 	try {
 		stations = await Station.findAll();
-		stations = stations.map(item => converter(item.dataValues))
+		stations = stations.map((item) => converter(item.dataValues));
 		return res.status(200).send(stations);
 	} catch (e) {
 		return res.status(400).send(e.message);
 	}
 };
 
-
 /**
- *@returns {Object}: {stationID, stationName, contactNo, location, type}  
+ *@returns {Object}: {stationID, stationName, contactNo, location, type}
  */
 exports.getStation = async (req, res) => {
 	let station = {};
 	try {
 		station = await Station.findOne({ where: { stationID: req.params.stationId } });
-		if (station) {
+		if (station.hasOwnProperty('dataValues')) {
 			station = station.dataValues;
-			return res.status(200).send(station);
-		} else {
-			return res.status(404).send( station );
 		}
+		return res.status(200).send(station);
 	} catch (e) {
-		return res.status(400).send(e.message );
+		return res.status(400).send(e.message);
 	}
 };
 
 /**
- *@returns {Object}: {stationID, stationName, contactNo, location, type}  
+ *@returns {Object}: {stationID, stationName, contactNo, location, type}
  */
 exports.createStation = async (req, res) => {
 	let station = req.body;
@@ -49,7 +46,7 @@ exports.createStation = async (req, res) => {
 };
 
 /**
- *@returns {Array}: {stationID, stationName, contactNo, location, type}  
+ *@returns {Array}: {stationID, stationName, contactNo, location, type}
  */
 exports.updateStation = async (req, res) => {
 	let station = {};
@@ -59,12 +56,12 @@ exports.updateStation = async (req, res) => {
 			{ where: { stationID: req.params.stationId }, returning: true }
 		);
 		station = await Station.findOne({ where: { stationID: req.params.stationId } });
-		if(station){
-			station = station.dataValues
+		if (station) {
+			station = station.dataValues;
 		}
 		return res.status(200).send(station);
 	} catch (e) {
-		return res.status(400).send( e.message);
+		return res.status(400).send(e.message);
 	}
 };
 
@@ -73,11 +70,6 @@ exports.deleteStation = async (req, res) => {
 		await Station.destroy({ where: { stationID: req.params.stationId } });
 		return res.status(200).send('Succesfully station deleted');
 	} catch (e) {
-		if(e.message.toLowerCase().includes('foreign key constraint')){
-			return res.status(400).send('Station cannot be deleted ,it has many records in database')
-		}
-		return res.status(400).send( e.message );
+		return res.status(400).send(e.message);
 	}
 };
-
-

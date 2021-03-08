@@ -26,11 +26,11 @@ exports.getUser = async (req, res) => {
 	let user = {};
 	try {
 		user = await User.findOne({ attributes:{exclude:'password'}, where: { officerID: req.params.userId } });
-		if (user) {
-			return res.status(200).send(user);
-		} else {
-			return res.status(404).send("User not found");
-		}
+		if (user.hasOwnProperty('dataValues')) {
+			user = user.dataValues
+		} 
+		return res.status(200).send(user);
+
 	} catch (e) {
 		return res.status(400).send(e.message );
 	}
@@ -43,7 +43,6 @@ exports.getUser = async (req, res) => {
  */
 exports.createUser = async (req, res) => {
 	let user = req.body;
-	console.log(user)
 	try {
 		let password = generator.generate({
 			length: 10,
@@ -91,7 +90,6 @@ exports.updateUser = async (req, res) => {
 exports.changePassword = async (req,res) =>{
 	let password = req.body.newPassword;
 	let confirmPassword = req.body.confirmNewPassword;
-	console.log(req.body);
 	if(password != confirmPassword){
 		return res.status(400).send("Passwords dont match")
 	}
@@ -115,9 +113,6 @@ exports.deleteUser = async (req, res) => {
 		await User.destroy({ where: { officerID: req.params.userId } });
 		return res.status(200).send('Succesfully user deleted');
 	} catch (e) {
-		if(e.message.toLowerCase().includes('foreign key constraint')){
-			return res.status(400).send('User cannot be deleted ,it has many records in database')
-		}
 		return res.status(400).send(e.message);
 	}
 };

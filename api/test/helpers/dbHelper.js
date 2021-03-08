@@ -13,8 +13,13 @@ exports.writeToDB = async (model,payload) => {
 }
 
 exports.destroyFromDB = async (model,payload,idName) => {
-    let where = {}
-    let ids = Array.isArray(payload) ? payload.map(item => item[idName]): [payload[idName]]
-    where[idName] = ids
-    await model.destroy({where});
+    let idsObj = {}
+    if(!Array.isArray(idName)){
+        idName = [idName]
+    }
+    idName.forEach(id => {
+        idsObj[id] = Array.isArray(payload) ? payload.map(item => item[id]): [payload[id]] 
+    })
+
+    await model.destroy({where:idsObj});
 }

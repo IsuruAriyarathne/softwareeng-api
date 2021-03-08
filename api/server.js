@@ -2,7 +2,7 @@ var app = require('./app');
 var debug = require('debug')('api:server');
 var http = require('http');
 const sequelize = require('./config/db');
-var port = normalizePort(process.env.PORT || '9000');
+var port = normalizePort(process.env.PORT || '4000');
 app.set('port', port);
 
 /**
