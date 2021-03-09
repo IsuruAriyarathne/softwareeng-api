@@ -11,7 +11,7 @@ router.get('/:stationID', RecoveryController.getRecoveriesStation);
 /**
  * @description get the ammunition type and weapon model amounts of recovery
  */
-router.get('/:stationID/:recoveryID', RecoveryController.getRecoveryStation);
+router.get('/:recoveryID', RecoveryController.getRecovery);
 
 /**
  * @description update the ammunition type and weapon model amounts of recovery and basic info

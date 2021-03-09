@@ -63,7 +63,6 @@ exports.createOrder = async (req, res) => {
 	try {
 		order = await Order.create(req.body,{transaction:t});
 		result = order.dataValues;
-		
 		if (req.body.hasOwnProperty('AmmoOrder')) {
 			    req.body.AmmoOrder = req.body.AmmoOrder.map((item) => {
 				return { ...item, orderID: result.orderID };
@@ -123,7 +122,6 @@ exports.updateOrder = async (req, res) => {
 		order = order.dataValues;
 		order.AmmoOrder = ammos;
 		order.WeaponOrder = weapons;
-		console.log(order);
 
 		return res.status(200).send(order);
 	} catch (e) {
@@ -169,9 +167,6 @@ exports.deleteOrder = async (req, res) => {
 		await Order.destroy({ where: { orderID:req.params.orderID } });
 		return res.status(200).send('Succesfully order deleted');
 	} catch (e) {
-		if(e.message.toLowerCase().includes('foreign key constraint')){
-			return res.status(400).send('Order cannot be deleted ,it has many records in database')
-		}
 		return res.status(400).send(e.message);
 	}
 };
@@ -184,9 +179,6 @@ exports.deleteOrderWeapon = async (req, res) => {
 		await WeaponOrder.destroy({ where: { orderID:req.params.orderID ,weaponModelID:req.params.weaponModelID, state:{[Op.ne]:'complete'} } });
 		return res.status(200).send('Succesfully order weapon deleted');
 	} catch (e) {
-		if(e.message.toLowerCase().includes('foreign key constraint')){
-			return res.status(400).send('Order Weapon cannot be deleted ,it has many records in database')
-		}
 		return res.status(400).send(e.message);
 	}
 };
@@ -198,14 +190,8 @@ exports.deleteOrderAmmunition = async (req, res) => {
 	try {
 		await AmmunitionOrder.destroy({ where: { orderID:req.params.orderID, ammoModelID:req.params.ammoModelID, state:{[Op.ne]:'complete'} } });
 		obj = await AmmunitionOrder.findOne({where:{orderID:req.params.orderID, ammoModelID:req.params.ammoModelID}})
-		if(obj){
-			return res.status(400).send('Order completion');
-		}
 		return res.status(200).send('Succesfully order ammunition deleted');
 	} catch (e) {
-		if(e.message.toLowerCase().includes('foreign key constraint')){
-			return res.status(400).send('Order ammunition cannot be deleted ,it has many records in database')
-		}
 		return res.status(400).send(e.message);
 	}
 };

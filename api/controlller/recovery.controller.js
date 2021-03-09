@@ -6,65 +6,21 @@ const Recovery = require('../model/recovery.model');
 const Station = require('../model/station.model');
 const WeaponModel = require('../model/weaponModel.model');
 var { converter } = require('../utils/objectConverter');
-const { Op } = require('sequelize');
-const { groupRecoveryArr } = require('../utils/groupBy');
 
 exports.getRecoveriesStation = async (req, res) => {
 	let recoveries = [];
-	let ids = [];
-	let recoveredAmmo = [];
-	let recoveredWeapons = [];
 	try {
 		recoveries = await Recovery.findAll({
 			where: { stationID: req.params.stationID },
 		});
 		recoveries = recoveries.map((item) => converter(item.dataValues));
 		console.log(recoveries);
-		ids = recoveries.map((item) => item.recoveryID);
-		recoveredAmmo = await RecoveredAmmunition.findAll({
-			where: { recoveryID: { [Op.in]: ids } },
-			include: { model: AmmunitionType },
-		});
-		recoveredWeapons = await RecoveredWeapon.findAll({
-			where: { recoveryID: { [Op.in]: ids } },
-			include: { model: WeaponModel },
-		});
-		recoveredAmmo = recoveredAmmo.map((item) => converter(item.dataValues));
-		recoveredWeapons = recoveredWeapons.map((item) => converter(item.dataValues));
-		console.log(recoveredWeapons);
-		console.log(recoveredAmmo);
-		recoveries = groupRecoveryArr(recoveries, recoveredAmmo, recoveredWeapons);
 		return res.status(200).send(recoveries);
 	} catch (e) {
 		return res.status(400).send(e.message);
 	}
 };
 
-exports.getRecoveryStation = async (req, res) => {
-	let recovery = {};
-	let recoveredAmmo = [];
-	let recoveredWeapons = [];
-	try {
-		recoveredAmmo = await RecoveredAmmunition.findAll({
-			where: { recoveryID: req.params.recoveryID },
-			include: { model: AmmunitionType },
-		});
-
-		recoveredWeapons = await RecoveredWeapon.findAll({
-			where: { recoveryID: req.params.recoveryID },
-			include: { model: WeaponModel },
-		});
-
-		recoveredAmmo = recoveredAmmo.map((item) => converter(item.dataValues));
-		recoveredWeapons = recoveredWeapons.map((item) => converter(item.dataValues));
-
-		recovery.RecoveredAmmunitions = recoveredAmmo;
-		recovery.RecoveredWeapons = recoveredWeapons;
-		return res.status(200).send(recovery);
-	} catch (e) {
-		return res.status(400).send(e.message);
-	}
-};
 
 //check
 exports.getRecoveries = async (req, res) => {
@@ -163,7 +119,7 @@ exports.createRecovery = async (req, res) => {
 				req.body.RecoveredAmmunitions = req.body.RecoveredAmmunitions.map((item) => {
 					return { ...item, recoveryID: recovery.recoveryID };
 				});
-				recoveredAmmunition = await RecoveredAmmunition.bulkCreate(req.body.RecoveredAmmunitios, {
+				recoveredAmmunition = await RecoveredAmmunition.bulkCreate(req.body.RecoveredAmmunitions, {
 					transaction: t,
 				});
 			}
@@ -194,9 +150,6 @@ exports.deleteRecovery = async (req, res) => {
 		await Recovery.destroy({ where: { recoveryID: req.params.recoveryID } });
 		return res.status(200).send('Recovery succesfully deleted');
 	} catch (e) {
-		if (e.message.toLowerCase().includes('foreign key constraint')) {
-			return res.status(400).send('Recovery cannot be deleted ,it has many records in database');
-		}
 		return res.status(400).send(e.message);
 	}
 };
@@ -208,9 +161,6 @@ exports.deleteRecoveryWeapon = async (req, res) => {
 		await RecoveredWeapon.destroy({ where: { recoveryID: req.params.recoveryID,weaponModelID: req.params.weaponModelID } });
 		return res.status(200).send('Recovery Weapon succesfully deleted');
 	} catch (e) {
-		if (e.message.toLowerCase().includes('foreign key constraint')) {
-			return res.status(400).send('Recovery Weapon cannot be deleted ,it has many records in database');
-		}
 		return res.status(400).send(e.message);
 	}
 };
@@ -222,9 +172,6 @@ exports.deleteRecoveryAmmunition = async (req, res) => {
 		await RecoveredAmmunition.destroy({ where: { recoveryID: req.params.recoveryID, ammoModelID: req.params.ammoModelID } });
 		return res.status(200).send('Recovery Ammunition succesfully deleted');
 	} catch (e) {
-		if (e.message.toLowerCase().includes('foreign key constraint')) {
-			return res.status(400).send('Recovery Ammunition cannot be deleted ,it has many records in database');
-		}
 		return res.status(400).send(e.message);
 	}
 };

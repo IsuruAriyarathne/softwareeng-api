@@ -117,7 +117,7 @@ exports.createAmmunitionBatch = (count = 1) => {
 	for (let i = 1; i <= count; i++) {
 		ammunitionBatch.push({
 			ammoModelID: i,
-			orderID: i+2,
+			orderID: i + 2,
 			count: 100,
 			remain: 90,
 		});
@@ -180,7 +180,7 @@ exports.createWeaponAmmunition = (weaponModelID, ammoModelID) => {
 	return weaponModels;
 };
 
-exports.createWeaponOrder = (count = 1) => {
+exports.createWeaponOrder = (count = 1, orderID = 0) => {
 	let weaponOrders = [];
 	for (let i = 1; i <= count; i++) {
 		weaponOrders.push({
@@ -191,10 +191,15 @@ exports.createWeaponOrder = (count = 1) => {
 			description: faker.lorem.words(5),
 		});
 	}
+	if (orderID != 0) {
+		weaponOrders = weaponOrders.map((item) => {
+			return { ...item, orderID: orderID };
+		});
+	}
 	return weaponOrders;
 };
 
-exports.createAmmoOrder = (count = 1) => {
+exports.createAmmoOrder = (count = 1, orderID = 0) => {
 	let ammoOrders = [];
 	for (let i = 1; i <= count; i++) {
 		ammoOrders.push({
@@ -205,10 +210,15 @@ exports.createAmmoOrder = (count = 1) => {
 			description: faker.lorem.words(5),
 		});
 	}
+	if (orderID != 0) {
+		ammoOrders = ammoOrders.map((item) => {
+			return { ...item, orderID: orderID };
+		});
+	}
 	return ammoOrders;
 };
 
-exports.createOrder = (count = 1) => {
+exports.createOrder = (count = 1, orderID = 0) => {
 	let orders = [];
 	for (let i = 1; i <= count; i++) {
 		orders.push({
@@ -219,6 +229,17 @@ exports.createOrder = (count = 1) => {
 			description: faker.lorem.words(5),
 		});
 	}
+	if (orderID != 0) {
+		orders = orders.map((item) => {
+			return {
+				...item,
+				orderID: orderID,
+				AmmoOrder: this.createAmmoOrder(1, orderID),
+				WeaponOrder: this.createWeaponOrder(1, orderID),
+			};
+		});
+	}
+	if (count == 1) return orders[0];
 	return orders;
 };
 
@@ -234,4 +255,43 @@ exports.createMaintainanceRecords = (count = 1) => {
 	}
 	if (count == 1) return records[0];
 	return records;
-}
+};
+
+exports.createRecovery = (recoveryID = 0) => {
+	let recovery = {};
+	recovery = {
+		recoveryDate: '2020-02-28',
+		description: faker.lorem.words(5),
+		stationID: 1,
+	};
+	if (recoveryID != 0) {
+		recovery.recoveryID = recoveryID;
+		recovery.RecoveredAmmunitions = this.createRecoveredAmmo(recoveryID);
+		recovery.RecoveredWeapons = this.createRecoveredWeapon(recoveryID);
+	}
+	return recovery;
+};
+
+exports.createRecoveredWeapon = (recoveryID = 0) => {
+	let weapons = [];
+	weapons.push({
+		weaponModelID: 1,
+		amount: faker.random.number(10),
+	});
+	if (recoveryID != 0) {
+		weapons[0].recoveryID = recoveryID;
+	}
+	return weapons;
+};
+
+exports.createRecoveredAmmo = (recoveryID) => {
+	let ammo = [];
+	ammo.push({
+		ammoModelID: 1,
+		amount: faker.random.number(100),
+	});
+	if (recoveryID != 0) {
+		ammo[0].recoveryID = recoveryID;
+	}
+	return ammo;
+};

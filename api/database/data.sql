@@ -144,6 +144,38 @@ INSERT INTO `AmmunitionStation` (`ammoModelID`, `count`, `orderID`, `stationID`,
 (1, 10, 5, 2, '2021-01-08', 2);
 
 
+INSERT INTO `Recovery` (`recoveryID`, `recoveryDate`, `description`, `stationID`) VALUES
+(1, '2020-10-13', 'Good', 2),
+(2, '2020-10-12', 'Done', 1),
+(3, '2020-11-12', 'Done Now', 1),
+(4, '2021-01-02', 'From thieves', 4),
+(5, '2020-02-25', 'from thieves', 3);
+
+
+INSERT INTO `RecoveredAmmunition` (`recoveryID`, `ammoModelID`, `amount`) VALUES
+(1, 1, 21),
+(1, 2, 21),
+(2, 2, 20),
+(2, 3, 20),
+(3, 3, 30),
+(3, 4, 30),
+(4, 4, 11),
+(4, 5, 12),
+(5, 5, 12),
+(5, 1, 12);
+
+INSERT INTO `RecoveredWeapon` (`recoveryID`, `weaponModelID`, `amount`) VALUES
+(1, 1, 10),
+(1, 2, 10),
+(2, 2, 100),
+(2, 3, 100),
+(3, 3, 20),
+(3, 4, 20),
+(4, 4, 10),
+(4, 5, 13),
+(5, 1, 14),
+(5, 5, 14);
+
 
 --- Insert upto this
 INSERT INTO `MaintainanceRecord` (`id`, `weaponID`, `description`, `date`, `amount`) VALUES
@@ -158,33 +190,7 @@ INSERT INTO `MaintainanceRecord` (`id`, `weaponID`, `description`, `date`, `amou
 
 
 
-INSERT INTO `RecoveredAmmunition` (`recoveryID`, `ammoModelID`, `amount`) VALUES
-(1, 1, 21),
-(2, 1, 20),
-(3, 1, 30),
-(4, 1, 11),
-(4, 2, 12),
-(7, 2, 9);
 
-INSERT INTO `RecoveredWeapon` (`recoveryID`, `weaponModelID`, `amount`) VALUES
-(1, 1, 10),
-(2, 1, NULL),
-(3, 1, NULL),
-(4, 1, 10),
-(4, 2, 13),
-(7, 2, 14);
-
-
-INSERT INTO `Recovery` (`recoveryID`, `recoveryDate`, `description`, `stationID`) VALUES
-(1, '2020-10-13', 'Good', 2),
-(2, '2020-10-12', 'Done', 1),
-(3, '2020-11-12', 'Done Now', 1),
-(4, '2021-01-02', 'From thieves', 4),
-(6, '2020-02-25', 'from thieves', NULL),
-(7, '2020-10-12', 'Done', 1),
-(8, '2020-02-23', 'from ISI banned organization', NULL),
-(9, '2020-10-23', 'From ISI banned organization', 2),
-(11, '2021-01-21', 'From saharan', 2);
 
 INSERT INTO `Request` (`requestID`, `date`, `comments`, `stationID`, `state`) VALUES
 (1, '2021-01-12', '\"Need urgently\"', 1, 'Pending'),

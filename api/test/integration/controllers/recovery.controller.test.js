@@ -1,8 +1,8 @@
 const RecoveryController = require('../../../controlller/recovery.controller'); // 1 done StationController > UserController
-const { createWeapon } = require('../../helpers/factory'); // 2
+const { createRecovery, createRecoveredAmmo, createRecoveredWeapon } = require('../../helpers/factory'); // 2
 const Models = require('../../../model');
 const { writeToDB, destroyFromDB } = require('../../helpers/dbHelper');
-const {mockErrorMethod} = require('../../helpers/exceptionThrow')
+const { mockErrorMethod } = require('../../helpers/exceptionThrow');
 
 let server;
 
@@ -21,74 +21,120 @@ describe('Recovery controller', () => {
 		send: jest.fn(() => res),
 		status: jest.fn(() => res),
 	};
-	let weapon;
 
-	describe('create a weapon', () => {
+	let recovery;
+	let recoveredAmmo;
+	let recoveredWeapons;
+	describe('create a recovery', () => {
 		beforeAll(() => {
-			weapon = createWeapon();
+			recovery = createRecovery();
+			recoveredAmmo = createRecoveredAmmo();
+			recoveredWeapons = createRecoveredWeapon();
 		});
 
 		afterAll(async () => {
-			await destroyFromDB(Models.Weapon, weapon, 'weaponID');
+			await destroyFromDB(Models.RecoveredAmmunition, recoveredAmmo, ['recoveryID', 'ammoModelID']);
+			await destroyFromDB(Models.RecoveredWeapon, recoveredWeapons, ['recoveryID', 'weaponModelID']);
+			await destroyFromDB(Models.Recovery, recovery, 'recoveryID');
 		});
 
-		it('should create a weapon', async () => {
-			req.body = weapon;
+		it('should create a recovery', async () => {
+			recovery.RecoveredAmmunitions = recoveredAmmo;
+			recovery.RecoveredWeapons = recoveredWeapons;
+			req.body = recovery;
 
-			await RecoveryController.createWeapon(req, res);
+			await RecoveryController.createRecovery(req, res);
 
-			weapon.weaponID = res.send.mock.calls[0][0].weaponID;
+			recovery.recoveryID = res.send.mock.calls[0][0].recoveryID;
+			recoveredAmmo[0].recoveryID = res.send.mock.calls[0][0].recoveryID;
+			recoveredWeapons[0].recoveryID = res.send.mock.calls[0][0].recoveryID;
 
 			expect(res.status).toHaveBeenCalledWith(200);
 
 			expect(res.send).toHaveBeenCalledWith(
 				expect.objectContaining({
-					weaponID: expect.any(Number),
-					weaponModelID: weapon.weaponModelID,
-					orderID: weapon.orderID,
-					state: weapon.state,
+					recoveryID: expect.any(Number),
+					stationID: 1,
+					recoveryDate: recovery.recoveryDate,
+					description: recovery.description,
+					RecoveredAmmunitions: expect.any(Array),
+					RecoveredWeapons: expect.any(Array),
 				})
 			);
 		});
 
-		it('should delete a weapon', async () => {
-			req.params = { weaponID: weapon.weaponID };
+        it('should not be able to delete the recovery since it has weapons and ammunitions', async () => {
+			req.params = { recoveryID: recovery.recoveryID };
 
-			await RecoveryController.deleteWeapon(req, res);
+			await RecoveryController.deleteRecovery(req, res);
 
-			expect(res.status).toHaveBeenCalledWith(200);
-
-			expect(res.send).toHaveBeenCalledWith('Succesfully weapon deleted');
+			expect(res.status).toHaveBeenCalledWith(400);
 		});
 	});
 
-	describe('get and delete weapons', () => {
+	describe('get and delete recoverys', () => {
 		beforeAll(async () => {
-			weapon = await writeToDB(Models.Weapon, createWeapon());
-			console.log(weapon);
+			recovery = await writeToDB(Models.Recovery, createRecovery());
 		});
 
 		afterAll(async () => {
-			await destroyFromDB(Models.WeaponStation, { weaponID: weapon.weaponID, stationID: 1 }, [
-				'weaponID',
-				'stationID',
-			]);
-			await destroyFromDB(Models.Weapon, weapon, 'weaponID');
+			await destroyFromDB(Models.Recovery, recovery, 'recoveryID');
 		});
 
-		it('should return the stations the weapon was assigned to given weaponID ', async () => {
-			req.params = { weaponID: 1 };
+		it('should return the recoveries of a station', async () => {
+			req.params = { stationID: 1 };
 
-			await RecoveryController.getWeapon(req, res);
+			await RecoveryController.getRecoveriesStation(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(200);
 			expect(res.send).toHaveBeenCalledWith(
 				expect.arrayContaining([
 					expect.objectContaining({
-						weaponID: expect.any(Number),
+						recoveryID: expect.any(Number),
+						stationID: 1,
+						recoveryDate: expect.any(String),
+						description: expect.any(String),
+					}),
+				])
+			);
+		});
+
+		it('should return details about a recovery given recoveryID', async () => {
+			req.params = { recoveryID: 1 };
+			await RecoveryController.getRecovery(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.send).toHaveBeenCalledWith(
+				expect.objectContaining({
+					RecoveredAmmunitions: expect.arrayContaining([
+						expect.objectContaining({
+							ammoModelID: expect.any(Number),
+							amount: expect.any(Number),
+							recoveryID: expect.any(Number),
+						}),
+					]),
+					RecoveredWeapons: expect.arrayContaining([
+						expect.objectContaining({
+							weaponModelID: expect.any(Number),
+							amount: expect.any(Number),
+							recoveryID: expect.any(Number),
+						}),
+					]),
+				})
+			);
+		});
+
+		it('should get all recoveries with station details', async () => {
+			await RecoveryController.getRecoveries(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.send).toHaveBeenCalledWith(
+				expect.arrayContaining([
+					expect.objectContaining({
+						recoveryID: expect.any(Number),
+						recoveryDate: expect.any(String),
+						description: expect.any(String),
 						stationID: expect.any(Number),
-						assigned: expect.any(Number),
-						assignedDate: expect.any(String),
 						stationName: expect.any(String),
 						location: expect.any(String),
 						type: expect.any(String),
@@ -98,143 +144,85 @@ describe('Recovery controller', () => {
 			);
 		});
 
-		it('should return all weapons', async () => {
-			await RecoveryController.getWeapons(req, res); // 1
+		it('should update a recovery', async () => {
+			req.params = { recoveryID: recovery.recoveryID };
 
-			expect(res.status).toHaveBeenCalledWith(200);
-			expect(res.send).toHaveBeenCalledWith(
-				expect.arrayContaining([
-					expect.objectContaining({
-						weaponID: expect.any(Number),
-						weaponModelID: expect.any(Number),
-						orderID: expect.any(Number),
-						state: expect.any(String),
-						name: expect.any(String),
-						description: expect.any(String),
-					}),
-				])
-			);
-		});
+			req.body = createRecovery(recovery.recoveryID);
 
-		it('should update a weapon', async () => {
-			req.params = { weaponID: weapon.weaponID };
-			req.body = {
-				...createWeapon(),
-				weaponID: weapon.weaponID,
-				Station: [{ weaponID: weapon.weaponID, stationID: 1, assigned: 1, assignedDate: '2021-02-10' }],
-			};
-			await RecoveryController.updateWeapon(req, res);
+			await RecoveryController.updateRecovery(req, res);
+
 			expect(res.status).toHaveBeenCalledWith(200);
 			expect(res.send).toHaveBeenCalledWith(
 				expect.objectContaining({
-					weaponID: expect.any(Number),
-					weaponModelID: expect.any(Number),
-					orderID: expect.any(Number),
-					state: expect.any(String),
-					Station: expect.arrayContaining([
-						expect.objectContaining({
-							stationID: expect.any(Number),
-							weaponID: expect.any(Number),
-							assigned: 1,
-							assignedDate: expect.any(String),
-						}),
-					]),
+					recoveryID: expect.any(Number),
+					recoveryDate: expect.any(String),
+					description: expect.any(String),
+					stationID: expect.any(Number),
+					RecoveredAmmunitions: expect.any(Array),
+					RecoveredWeapons: expect.any(Array),
 				})
 			);
 		});
 
-		it('should update the state of a weapon assigned to a station', async () => {
-			req.params = { weaponID: weapon.weaponID };
-			req.body = { state: 'Lost', stationID: 1 };
+        it('should delete a recovered Ammunition', async() => {
+            req.params = { recoveryID: recovery.recoveryID, ammoModelID: 1 };
 
-			await RecoveryController.updateWeaponStation(req, res);
-
-			expect(res.status).toHaveBeenCalledWith(200);
-
-			expect(res.send).toHaveBeenCalledWith(
-				expect.objectContaining({
-					weaponID: expect.any(Number),
-					weaponModelID: expect.any(Number),
-					orderID: expect.any(Number),
-					state: expect.any(String),
-					Station: expect.arrayContaining([
-						expect.objectContaining({
-							stationID: expect.any(Number),
-							weaponID: expect.any(Number),
-							assigned: 1,
-							assignedDate: expect.any(String),
-						}),
-					]),
-				})
-			);
-		});
-
-		it('should not be able to delete the weapon since it has been assigned to station', async () => {
-			req.params = { weaponID: weapon.weaponID };
-
-			await RecoveryController.deleteWeapon(req, res);
-
-			expect(res.status).toHaveBeenCalledWith(400);
-		});
-	});
-
-	describe('recovery station methods', () => {
-		it('should get all the recoveries of a station', async () => {
-			req.params = { stationID: 1 };
-
-			await RecoveryController.getWeaponStation(req, res);
+			await RecoveryController.deleteRecoveryAmmunition(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.send).toHaveBeenCalledWith('Recovery Ammunition succesfully deleted')
+        })
 
-			expect(res.send).toHaveBeenCalledWith(expect.any(Array));
-		});
+        it('should delete a recovered weapon', async() => {
+            req.params = { recoveryID: recovery.recoveryID, weaponModelID: 1 };
+
+			await RecoveryController.deleteRecoveryWeapon(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.send).toHaveBeenCalledWith('Recovery Weapon succesfully deleted')
+        })
+        
+        it('should delete a recovery', async() => {
+            req.params = { recoveryID: recovery.recoveryID };
+
+			await RecoveryController.deleteRecovery(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.send).toHaveBeenCalledWith('Recovery succesfully deleted')
+        })
+
 	});
 
 	describe('error handling', () => {
 		beforeAll(() => {
-			mockErrorMethod(Models.WeaponStation);
-			mockErrorMethod(Models.Weapon);
+			mockErrorMethod(Models.RecoveredAmmunition);
+			mockErrorMethod(Models.RecoveredWeapon);
+			mockErrorMethod(Models.Recovery);
 		});
 		afterAll(() => {
 			jest.clearAllMocks();
 		});
 
-		it('should return an error message on sequelize errors for get weapons of a station ', async () => {
+		it('should return an error message on sequelize errors for get recoveries of a station ', async () => {
 			req.body = {};
 
-			await RecoveryController.getWeaponStation(req, res);
+			await RecoveryController.getRecoveriesStation(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(400);
 		});
-		
-		it('should return an error message on sequelize errors for update of state of a weapon of a station ', async () => {
-			req.body = {state:'Lost'};
 
-			await RecoveryController.updateWeaponStation(req, res);
+		it('should return 400 state on get all recoveries for errors', async () => {
+			req.body = {};
+
+			await RecoveryController.getRecoveries(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(400);
 		});
-		
-		it('should return an error message updating other properties without state of a weapon of a station ', async () => {
+
+		it('should return 400 state on get recovery for errors', async () => {
 			req.body = {};
 
-			await RecoveryController.updateWeaponStation(req, res);
-
-			expect(res.status).toHaveBeenCalledWith(401);
-		});
-
-		it('should return 400 state on get all weapons for errors', async () => {
-			req.body = {};
-
-			await RecoveryController.getWeapons(req, res);
-
-			expect(res.status).toHaveBeenCalledWith(400);
-		});
-		
-		it('should return 400 state on get weapon for errors', async () => {
-			req.body = {};
-
-			await RecoveryController.getWeapon(req, res);
+			await RecoveryController.getRecovery(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(400);
 		});
@@ -242,7 +230,7 @@ describe('Recovery controller', () => {
 		it('should return 400 state on create for errors', async () => {
 			req.body = {};
 
-			await RecoveryController.createWeapon(req, res);
+			await RecoveryController.createRecovery(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(400);
 		});
@@ -250,7 +238,23 @@ describe('Recovery controller', () => {
 		it('should return 400 state on update for errors', async () => {
 			req.body = {};
 
-			await RecoveryController.updateWeapon(req, res);
+			await RecoveryController.updateRecovery(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
+
+		it('should return 400 state on delete recovery ammuitions', async () => {
+			req.body = {};
+
+			await RecoveryController.deleteRecoveryAmmunition(req, res);
+
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
+
+		it('should return 400 state on delete recovery weapons', async () => {
+			req.body = {};
+
+			await RecoveryController.deleteRecoveryWeapon(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(400);
 		});

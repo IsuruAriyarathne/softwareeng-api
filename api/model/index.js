@@ -16,6 +16,7 @@ const models = {
     Station : require('./station.model'),
     User : require('./user.model'),
     WeaponModel: require('./weaponModel.model'),
+    WeaponOrder: require('./weaponOrder.model'),
     Weapon: require('./weapon.model'),
     Supplier: require('./supplier.model'),
     SupplyAmmunition: require('./supplyAmmo.model'),

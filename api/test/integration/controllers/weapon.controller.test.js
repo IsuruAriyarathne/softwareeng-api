@@ -64,7 +64,6 @@ describe('Weapon controller', () => {
 	describe('get and delete weapons', () => {
 		beforeAll(async () => {
 			weapon = await writeToDB(Models.Weapon, createWeapon());
-			console.log(weapon);
 		});
 
 		afterAll(async () => {
