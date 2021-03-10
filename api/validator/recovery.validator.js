@@ -12,7 +12,6 @@ function validateRecovery(req,res,next) {
 
 	const { error, value } = schema.validate(req.body);
 	if (error) {
-		next(error)
 		res.status(400).send(error.details[0].message);
 	} else {
 		next();
