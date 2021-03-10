@@ -177,7 +177,6 @@ exports.getReportRecoveredAmmunitions = async () => {
 				},
 			},
 		});
-		// console.log(result);
 		result = result.map((item) => {
 			let obj = item.dataValues;
 			obj.RecoveredAmmunitions = obj.RecoveredAmmunitions.map((entry) => converter(entry.dataValues));

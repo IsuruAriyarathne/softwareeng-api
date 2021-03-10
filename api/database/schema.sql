@@ -619,8 +619,8 @@ ALTER TABLE `RequestAmmunition`
 -- Constraints for table `RequestWeapon`
 --
 ALTER TABLE `RequestWeapon`
-  ADD CONSTRAINT `RequestWeapon_ibfk_1` FOREIGN KEY (`requestID`) REFERENCES `Request` (`requestid`),
-  ADD CONSTRAINT `RequestWeapon_ibfk_2` FOREIGN KEY (`weaponModelID`) REFERENCES `WeaponModel` (`weaponmodelid`);
+  ADD CONSTRAINT `RequestWeapon_ibfk_1` FOREIGN KEY (`requestID`) REFERENCES `Request` (`requestid`) ON DELETE CASCADE ON UPDATE RESTRICT,
+  ADD CONSTRAINT `RequestWeapon_ibfk_2` FOREIGN KEY (`weaponModelID`) REFERENCES `WeaponModel` (`weaponmodelid`) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `SupplyAmmunition`

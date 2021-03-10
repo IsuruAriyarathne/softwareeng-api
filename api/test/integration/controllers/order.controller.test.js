@@ -87,14 +87,14 @@ describe('order controller', () => {
 		});
 
 		
-		it('should complete an order', async() => {
-            req.params = { orderID: order.orderID };
+		// it('should complete an order', async() => {
+        //     req.params = { orderID: order.orderID };
 
-			await OrderController.completeOrder(req, res);
+		// 	await OrderController.completeOrder(req, res);
 
-			expect(res.status).toHaveBeenCalledWith(200);
-			expect(res.send).toHaveBeenCalledWith('Order completed')
-        })
+		// 	expect(res.status).toHaveBeenCalledWith(200);
+		// 	expect(res.send).toHaveBeenCalledWith('Order completed')
+        // })
 
 		it('shouldnt  delete a order since it has weapons and ammos', async() => {
             req.params = { orderID: order.orderID };

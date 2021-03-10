@@ -1,6 +1,6 @@
 const express = require("express");
 const RequestController = require('../../controlller/request.controller');
-const validateRequest = require('../../validator/centralizedOfficer/request.validator');
+const validateRequest = require('../../validator/request.validator');
 
 const router = express.Router();
 

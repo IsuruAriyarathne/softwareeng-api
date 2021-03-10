@@ -1,6 +1,6 @@
 const express = require("express");
 const RequestController = require('../../controlller/request.controller');
-const validateRequest = require('../../validator/officer/request.validator');
+const validateRequest = require('../../validator/request.validator');
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.get('/:stationID', RequestController.getRequestsStation)
 /**
  * @description get the ammunition models and weapon models in the request
  */
-router.get('/:stationID/:requestID',RequestController.getRequestStation);
+router.get('/:stationID/:requestID',RequestController.getRequest);
 
 
 /**

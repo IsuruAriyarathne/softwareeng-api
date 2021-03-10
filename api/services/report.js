@@ -152,6 +152,5 @@ cron.schedule('30 18 30 * *', async () => {
 		sendMail(reportSubject, 'Please find attached herewith',mailList.join());
 	} catch (error) {
 		console.log(error.message);
-		console.log('Error while retreiving data');
 	}
 });

@@ -1,6 +1,6 @@
 const express = require("express");
 const RecoveryController = require('../../controlller/recovery.controller');
-const validateRecovery = require('../../validator/officer/recovery.validator');
+const validateRecovery = require('../../validator/recovery.validator');
 const router = express.Router();
 
 /**

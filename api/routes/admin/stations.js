@@ -1,6 +1,6 @@
 const express = require("express");
 const StationController = require('../../controlller/station.controller'); 
-const validateStation = require('../../validator/admin/station.validator'); 
+const validateStation = require('../../validator/station.validator'); 
 const router = express.Router();
 
 /**

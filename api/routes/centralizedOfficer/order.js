@@ -1,6 +1,6 @@
 const express = require('express');
 const OrderController = require('../../controlller/order.controller')
-const validateOrder = require('../../validator/centralizedOfficer/order.validator');
+const validateOrder = require('../../validator/order.validator');
 const router = express.Router();
 
 /**

@@ -14,7 +14,6 @@ exports.getRecoveriesStation = async (req, res) => {
 			where: { stationID: req.params.stationID },
 		});
 		recoveries = recoveries.map((item) => converter(item.dataValues));
-		console.log(recoveries);
 		return res.status(200).send(recoveries);
 	} catch (e) {
 		return res.status(400).send(e.message);

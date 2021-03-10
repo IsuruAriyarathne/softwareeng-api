@@ -1,6 +1,6 @@
 const express = require("express");
 const AmmunitionTypeController = require('../../controlller/ammoModel.controller')
-const validateAmmoModel = require('../../validator/centralizedOfficer/ammoModel.validator');
+const validateAmmoModel = require('../../validator/ammoModel.validator');
 
 const router = express.Router();
 

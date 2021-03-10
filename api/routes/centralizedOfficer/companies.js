@@ -1,6 +1,6 @@
 const express = require('express');
 const CompanyController = require('../../controlller/company.controller')
-const validateCompanies = require('../../validator/centralizedOfficer/companies.validator');
+const validateCompanies = require('../../validator/companies.validator');
 const router = express.Router();
 
 /**

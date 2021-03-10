@@ -56,58 +56,50 @@ exports.createWeaponModel = (count = 1) => {
 	return weaponModels;
 };
 
-exports.createRequestAmmunition = (ammoModel, requestID = -1) => {
-	let ammoModelIDs = [];
-	if (ammoModel.length > 0) {
-		ammoModelIDs = ammoModel.map((item) => item.ammoModelID);
-	}
+exports.createRequestAmmunition = (count = 1, requestID = -1) => {
 	let requestAmmo = [];
-	for (let i = 0; i < ammoModel.length; i++) {
+	for (let i = 1; i <= count; i++) {
 		requestAmmo.push({
-			name: faker.lorem.words(3),
 			amount: faker.random.number(1000),
-			ammoModelID: ammoModelIDs[i],
+			ammoModelID: i
 		});
 	}
 	if (requestID != -1) {
-		requestAmmo = requestAmmo.map((item) => (item.requestID = requestID));
+		requestAmmo = requestAmmo.map((item) => {return {...item, requestID : requestID}});
 	}
 
 	return requestAmmo;
 };
 
-exports.createRequestWeapon = (weaponModel, requestID = -1) => {
-	let weaponModelIDs = [];
-	if (weaponModel.length > 0) {
-		weaponModelIDs = weaponModel.map((item) => item.weaponModelID);
-	}
+exports.createRequestWeapon = (count =1 , requestID = -1) => {
 	let requestWeapon = [];
 
-	for (let i = 0; i < weaponModel.length; i++) {
+	for (let i = 1; i <= count; i++) {
 		requestWeapon.push({
-			name: faker.lorem.words(3),
 			amount: faker.random.number(1000),
-			ammoModelID: weaponModelIDs[i],
+			weaponModelID: i,
 		});
 	}
 	if (requestID != -1) {
-		requestWeapon = requestWeapon.map((item) => (item.requestID = requestID));
+		requestWeapon = requestWeapon.map((item) => {return{...item, requestID : requestID}});
 	}
 
 	return requestWeapon;
 };
 
-exports.createRequest = (station, weaponModel = [], ammoModel = []) => {
+exports.createRequest = (requestID = 0) => {
 	let request = {};
 	request = {
 		date: '2021-01-12',
 		comments: faker.address.city(),
 		state: STATION_TYPES[Math.floor(Math.random() * STATION_TYPES.length)],
-		stationID: station.stationID,
+		stationID: 1,
 	};
-
-	request.WeaponRequests = this.createRequestAmmunition(ammoModel);
-	request.AmmunitionRequests = this.createRequestWeapon(weaponModel);
+	if(requestID != 0){
+		request.requestID = requestID;
+		request.WeaponRequests = this.createRequestWeapon(1,requestID);
+		request.AmmunitionRequests = this.createRequestAmmunition(1,requestID);
+	}
 
 	return request;
 };

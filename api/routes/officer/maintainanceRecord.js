@@ -1,6 +1,6 @@
 const express = require('express');
 const MaintainanceRecordController = require('../../controlller/maintainanceRecords.controller');
-const validateMaintainanceRecord = require('../../validator/officer/maintainanceRecord.validator');
+const validateMaintainanceRecord = require('../../validator/maintainanceRecord.validator');
 const router = express.Router();
 
 /**

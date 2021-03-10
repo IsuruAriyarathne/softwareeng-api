@@ -1,33 +1,21 @@
 const RequestController = require('../../../controlller/request.controller');
 const {
-	createStation,
-	createWeaponModel,
-	createAmmoModel,
 	createRequest,
 	createRequestAmmunition,
-    createRequestWeapon,
+	createRequestWeapon,
 } = require('../../helpers/factory');
 const Models = require('../../../model');
 const { writeToDB, destroyFromDB } = require('../../helpers/dbHelper');
-const {mockErrorMethod} = require('../../helpers/exceptionThrow')
+const { mockErrorMethod } = require('../../helpers/exceptionThrow');
 
 let server;
-let station;
-let weaponModels;
-let ammoModels;
 
 describe('request controller', () => {
 	beforeAll(async () => {
 		server = require('../../../server');
-		station = await writeToDB(Models.Station, createStation());
-		ammoModels = await writeToDB(Models.AmmunitionType, createAmmoModel(3));
-		weaponModels = await writeToDB(Models.WeaponModel, createWeaponModel(3));
 	});
 
 	afterAll(async () => {
-		await destroyFromDB(Models.Station, station, 'stationID');
-		await destroyFromDB(Models.AmmunitionType, ammoModels, 'ammoModelID');
-		await destroyFromDB(Models.WeaponModel, weaponModels, 'weaponModelID');
 		server.close();
 	});
 
@@ -39,13 +27,43 @@ describe('request controller', () => {
 	};
 
 	let request;
+	let requestWeapon;
+	let requestAmmo;
+	describe('create a request', () => {
+		beforeAll(() => {
+			request = createRequest();
+			requestWeapon = createRequestWeapon();
+			requestAmmo = createRequestAmmunition();
+		});
+
+		afterAll(async () => {
+			await destroyFromDB(Models.Request, request, 'requestID');
+		});
+
+		it('should create a request', async () => {
+			req.body = request;
+			req.body.WeaponRequests = requestWeapon;
+			req.body.AmmunitionRequests = requestAmmo;
+			await RequestController.createRequest(req, res);
+
+			request.requestID = res.send.mock.calls[0][0].requestID;
+			requestWeapon[0].requestID = res.send.mock.calls[0][0].requestID;
+			requestAmmo[0].requestID = res.send.mock.calls[0][0].requestID;
+			expect(res.status).toHaveBeenCalledWith(200);
+
+			expect(res.send).toHaveBeenCalledWith(
+				expect.objectContaining({
+					...request,
+					WeaponRequests: expect.arrayContaining([...requestWeapon]),
+					AmmunitionRequests: expect.arrayContaining([...requestAmmo]),
+				})
+			);
+		});
+	});
 
 	describe('get and delete request given by ID', () => {
 		beforeAll(async () => {
-			request = await writeToDB(
-				Models.Request,
-				createRequest(station, weaponModels.slice(0, -1), ammoModels.slice(0, -1))
-			);
+			request = await writeToDB(Models.Request, createRequest());
 		});
 
 		afterAll(async () => {
@@ -58,22 +76,19 @@ describe('request controller', () => {
 			await RequestController.getRequest(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(200);
-		});
-
-		it('should delete a request', async () => {
-			req.params = { requestID: request.requestID };
-
-			await RequestController.deleteRequest(req, res);
-
-			expect(res.status).toHaveBeenCalledWith(200);
-			expect(res.send).toHaveBeenCalledWith('Succesfully request deleted');
+			expect(res.send).toHaveBeenCalledWith({
+				...request,
+				ammoRequests: expect.any(Array),
+				weaponRequests: expect.any(Array),
+			});
 		});
 
 		it('should update a request', async () => {
 			let newRequest = {
 				...request,
-				AmmunitionRequests: createRequestAmmunition(ammoModels, request.requestID),
-				WeaponRequests: createRequestWeapon(weaponModels, request.requestID),
+				requestID: request.requestID,
+				AmmunitionRequests: createRequestAmmunition(1, request.requestID),
+				WeaponRequests: createRequestWeapon(1, request.requestID),
 			};
 			req.body = newRequest;
 			req.params = { requestID: request.requestID };
@@ -81,53 +96,57 @@ describe('request controller', () => {
 			await RequestController.updateRequest(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.send).toHaveBeenCalledWith(
+				expect.objectContaining({
+					requestID: expect.any(Number),
+					date: expect.any(String),
+					comments: expect.any(String),
+					state: expect.any(String),
+					stationID: expect.any(Number),
+					AmmunitionRequests: expect.any(Array),
+					WeaponRequests: expect.any(Array),
+				})
+			);
+		});
+
+		it('should delete a request', async () => {
+			req.params = { requestID: request.requestID };
+			console.log(req);
+			await RequestController.deleteRequest(req, res);
+			expect(res.status).toHaveBeenCalledWith(200);
+			expect(res.send).toHaveBeenCalledWith('Succesfully request deleted');
 		});
 
 		it('should get requests of the station', async () => {
-			req.params = { stationID: station.stationID };
+			req.params = { stationID: 1 };
 
 			await RequestController.getRequestsStation(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(200);
 		});
-		
-        it('should get all requests of the station', async () => {
 
+		it('should get all requests of the station', async () => {
 			await RequestController.getRequests(req, res);
 
 			expect(res.status).toHaveBeenCalledWith(200);
 		});
 	});
 
-	describe('create request', () => {
-		beforeAll(() => {
-			request = createRequest(station, weaponModels, ammoModels);
-		});
-
-		it('should create a request with both ammoModel and weapon Models', async () => {
-			req.body = request;
-
-			await RequestController.createRequest(req, res);
-
-			expect(res.status).toHaveBeenCalledWith(200);
-		});		
-	});
-
 	describe('error handling', () => {
 		beforeAll(() => {
-			mockErrorMethod(Models.Request)
+			mockErrorMethod(Models.Request);
 		});
 		afterAll(() => {
 			jest.clearAllMocks();
 		});
 
-	it('should return an error message on sequelize errors', async () => {
-		req.body = request;
+		it('should return an error message on sequelize errors', async () => {
+			req.body = request;
 
-		await RequestController.createRequest(req, res);
+			await RequestController.createRequest(req, res);
 
-		expect(res.status).toHaveBeenCalledWith(400);
-	});
+			expect(res.status).toHaveBeenCalledWith(400);
+		});
 		it('should return 400 state on create for errors', async () => {
 			req.body = request;
 

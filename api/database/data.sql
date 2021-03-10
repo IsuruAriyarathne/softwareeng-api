@@ -1,3 +1,5 @@
+USE slfire;
+
 INSERT INTO `Station` (`stationID`, `stationName`, `location`, `type`, `contactNo`) VALUES
 (1, 'Matara', 'Matara, Kosdeniya', 'office', '0312234056'),
 (2, 'Saliyapura', 'Saliyapura', 'inventory', '1234567890'),
@@ -177,15 +179,13 @@ INSERT INTO `RecoveredWeapon` (`recoveryID`, `weaponModelID`, `amount`) VALUES
 (5, 5, 14);
 
 
---- Insert upto this
+
 INSERT INTO `MaintainanceRecord` (`id`, `weaponID`, `description`, `date`, `amount`) VALUES
 (1, 1, 'Used to shoot', '2021-01-14', 5000),
 (2, 2, 'After good condition', '2021-01-14', 5000),
-(3, 1, 'Used to shoot', '2021-01-14', 5000),
-(10, 1, 'Another failure', '2021-01-18', 2500),
-(11, 2, 'keeps breaking', '2021-01-14', 4334),
-(12, 1, 'Aye kaduna', '2021-01-20', 3000),
-(13, 1, 'theus', '2021-01-28', 8900);
+(3, 3, 'Used to shoot', '2021-01-14', 5000),
+(4, 4, 'Used to shoot', '2021-01-14', 5000),
+(5, 5, 'Used to shoot', '2021-01-14', 5000);
 
 
 
@@ -194,51 +194,35 @@ INSERT INTO `MaintainanceRecord` (`id`, `weaponID`, `description`, `date`, `amou
 
 INSERT INTO `Request` (`requestID`, `date`, `comments`, `stationID`, `state`) VALUES
 (1, '2021-01-12', '\"Need urgently\"', 1, 'Pending'),
-(2, '2021-01-13', 'ASAP', 1, 'Pending'),
-(3, '2021-01-14', 'Quick', 1, 'Pending'),
-(4, '2021-01-15', 'Soon', 1, 'Pending'),
-(5, '2021-01-19', 'Soon', 1, 'Pending'),
-(6, '2021-01-17', 'Soon', 1, 'Pending'),
-(7, '2021-01-17', 'Soon', 1, 'Pending'),
-(8, '2021-01-12', '\"Need urgently\"', 1, 'Pending'),
-(9, '2021-02-13', '\"Need urgently\"', 1, 'Pending'),
-(10, '2021-01-12', '\"Need urgently\"', 1, 'Pending'),
-(11, '2021-01-17', '\"Need urgently\"', 2, 'Pending'),
-(12, '2021-01-12', '\"Need urgently\"', 1, 'Pending'),
-(13, '2021-01-12', '\"Need urgently\"', 1, 'Pending'),
-(14, '2021-01-12', '\"Need urgently\"', 1, 'Pending');
+(2, '2021-01-13', 'ASAP', 2, 'Pending'),
+(3, '2021-01-14', 'Quick', 3, 'Pending'),
+(4, '2021-01-15', 'Soon', 4, 'Pending'),
+(5, '2021-01-19', 'Soon', 5, 'Pending');
 
 
 INSERT INTO `RequestAmmunition` (`requestID`, `ammoModelID`, `amount`) VALUES
 (1, 1, 100),
+(1, 2, 100),
+(2, 2, 100),
+(2, 3, 100),
 (3, 3, 10),
-(4, 3, 14),
-(5, 3, 69),
-(6, 3, 68),
-(7, 3, 69),
-(8, 1, 100),
-(9, 1, 100),
-(10, 1, 100),
-(12, 1, 100),
-(13, 1, 100),
-(14, 1, 100);
+(3, 4, 10),
+(4, 4, 14),
+(4, 5, 14),
+(5, 5, 69),
+(5, 1, 69);
 
 INSERT INTO `RequestWeapon` (`requestID`, `weaponModelID`, `amount`) VALUES
 (1, 1, 20),
+(1, 2, 20),
+(2, 2, 20),
 (2, 3, 20),
-(3, 2, 20),
-(4, 2, 26),
-(5, 2, 32),
-(6, 1, 26),
-(6, 2, 32),
-(7, 2, 32),
-(8, 1, 20),
-(9, 1, 20),
-(10, 1, 20),
-(12, 1, 20),
-(13, 1, 20),
-(14, 1, 20);
-
+(3, 3, 20),
+(3, 4, 20),
+(4, 4, 26),
+(4, 5, 26),
+(5, 5, 32),
+(5, 1, 32);
 
 
 
