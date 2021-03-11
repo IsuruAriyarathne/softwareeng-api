@@ -29,8 +29,5 @@ router.post('/', validateMaintainanceRecord, MaintainanceRecordController.create
  */
 router.delete('/:id', MaintainanceRecordController.deleteMaintainanceRecord);
 
-router.all('*', (req, res) => {
-	res.status(404).json({ status: 404, message: 'Not found' });
-});
 
 module.exports = router;

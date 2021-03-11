@@ -15,8 +15,9 @@ sequelize
 	.authenticate()
 	.then(() => {
 		// console.log('Connection established successfully.');
-		server.listen(port);
-		// console.log('Listening in port');
+		if (process.env.NODE_ENV !== 'test') {
+			server.listen(port);
+		}
 		server.on('error', onError);
 		server.on('listening', onListening);
 	})

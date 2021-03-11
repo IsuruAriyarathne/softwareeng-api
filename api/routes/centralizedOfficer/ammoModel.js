@@ -36,8 +36,5 @@ router.delete('/:ammoModelID',AmmunitionTypeController.deleteAmmoModel )
 router.delete('/:ammoModelID',AmmunitionTypeController.deleteWeaponAmmunition )
 
 
-router.all('*', (req, res) => {
-	res.status(404).send( "Not found");
-  });
 
 module.exports = router;

@@ -32,10 +32,5 @@ router.post('/',validateRequest,RequestController.createRequest);
  */
 router.delete('/:requestID',validateRequest,RequestController.deleteRequest);
 
-router.all('*', (req, res) => {
-	res.status(404).json({ status: 404, message: 'Not found' });
-});
-
-// router.delete('/:recoveryID', )
 
 module.exports = router;

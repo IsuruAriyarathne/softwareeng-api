@@ -6,26 +6,20 @@ var authenticate = require('../middleware/authenticate');
 /**
  * @description login
  */
-router.post('/', async (req, res) => {
+router.post('/', async (req, res,next) => {
 	passport.authenticate('local', async (err, user, info) => {
 		try {
 			if (err || !user) {
-				const error = new Error('An error occurred.');
 				return res.status(200).send({ success: false, status: 'Unauthorized!' });
 			}
 
 			var token = authenticate.getToken({ email: user.email, role: user.role});
-			console.log(user);
 			let success = true;
-			if (!token) {
-				success = false;
-				return res.status(200).send("Password incorrect");
-			}
 			res.statusCode = 200;
 			res.setHeader('Content-Type', 'application/json');
 			return res.status(200).send({ success: success, token: token, type: user.role, stationID: user.stationID });
 		} catch (error) {
-			return next(error);
+			return res.status(400).send({ success: false, status: 'Server error!' });
 		}
 	})(req, res);
 });

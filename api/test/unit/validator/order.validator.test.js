@@ -1,12 +1,12 @@
 require('mysql2/node_modules/iconv-lite').encodingExists('cesu8');
-const validateStation = require('../../../validator/station.validator');
-const {createStation} = require('../../helpers/factory')
+const validateOrder = require('../../../validator/order.validator');
+const {createOrder} = require('../../helpers/factory')
 let server;
-let station;
-describe('station validator', () => {
+let order;
+describe('order validator', () => {
 	beforeAll(async() => {
 		server = await require('../../../server');
-        station = createStation();
+        order = createOrder();
 	});
 
 	afterAll(async() => {
@@ -21,9 +21,9 @@ describe('station validator', () => {
 	};
     const next = jest.fn();
 
-	it('should not validate the station',  () => {
-        req.body = station
-		validateStation(req,res,next)
+	it('should validate the order',  () => {
+        req.body = order
+		validateOrder(req,res,next)
 
 		expect(next).toHaveBeenCalledTimes(1)
         expect(res.status).toHaveBeenCalledTimes(0)
@@ -31,10 +31,10 @@ describe('station validator', () => {
 
 	});
 
-	it('should validate the station',  () => {
-        req.body = {...station, type:'abc',contactNo:'1234', stationName:1}
+	it('should not validate the order',  () => {
+        req.body = {...order,date:1234,supplierID:"0"}
 		
-        validateStation(req,res,next)
+        validateOrder(req,res,next)
 
         expect(res.status).toHaveBeenCalledTimes(1)
         expect(res.status).toHaveBeenCalledWith(400)

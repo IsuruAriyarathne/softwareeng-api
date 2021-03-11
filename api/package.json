@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "start": "node server",
-        "test": "jest --detectOpenHandles --watchAll --coverage"
+        "test": "jest --detectOpenHandles --watchAll --coverage --runInBand "
 
     },
     "dependencies": {

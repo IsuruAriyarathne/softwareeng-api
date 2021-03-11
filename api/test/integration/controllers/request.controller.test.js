@@ -111,7 +111,6 @@ describe('request controller', () => {
 
 		it('should delete a request', async () => {
 			req.params = { requestID: request.requestID };
-			console.log(req);
 			await RequestController.deleteRequest(req, res);
 			expect(res.status).toHaveBeenCalledWith(200);
 			expect(res.send).toHaveBeenCalledWith('Succesfully request deleted');

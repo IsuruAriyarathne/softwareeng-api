@@ -1,5 +1,5 @@
 const faker = require('faker');
-const { STATION_TYPES, USER_TYPES } = require('../../utils/constants');
+const { STATION_TYPES, USER_TYPES, WEAPON_STATES } = require('../../utils/constants');
 
 exports.createStation = (count = 1) => {
 	let stations = [];
@@ -139,7 +139,7 @@ exports.createWeapon = (count = 1) => {
 		weapons.push({
 			weaponModelID: i,
 			orderID: i,
-			state: faker.lorem.words(3),
+			state: WEAPON_STATES[Math.floor(Math.random() * WEAPON_STATES.length)],
 		});
 	}
 	if (count == 1) return weapons[0];

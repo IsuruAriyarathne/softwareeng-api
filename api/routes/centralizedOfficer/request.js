@@ -19,10 +19,5 @@ router.get('/:requestID',RequestController.getRequest);
  */
 router.put('/:requestID', validateRequest, RequestController.updateRequest)
 
-router.all('*', (req, res) => {
-	res.status(404).json({ status: 404, message: 'Not found' });
-});
-
-// router.delete('/:recoveryID', )
 
 module.exports = router;

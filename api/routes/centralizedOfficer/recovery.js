@@ -31,10 +31,4 @@ router.post('/', validateRecovery, RecoveryController.createRecovery);
 router.delete('/:recoveryID', RecoveryController.deleteRecovery);
 
 
-router.all('*', (req, res) => {
-	res.status(404).json({ status: 404, message: 'Not found' });
-});
-
-// router.delete('/:recoveryID', )
-
 module.exports = router;

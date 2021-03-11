@@ -43,9 +43,6 @@ router.delete('/weaponModel/:recoveryID/:weaponModelID', RecoveryController.dele
  */
 router.delete('/ammoModel/:recoveryID/:ammoModelID', RecoveryController.deleteRecoveryAmmunition )
 
-router.all('*', (req, res) => {
-	res.status(404).json({ status: 404, message: 'Not found' });
-});
 
 
 module.exports = router;

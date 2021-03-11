@@ -119,7 +119,6 @@ exports.deleteRequest = async (req, res) => {
 		let resi = await Request.destroy({ where: { requestID: req.params.requestID } });
 		return res.status(200).send('Succesfully request deleted');
 	} catch (e) {
-		console.log(e.message);
 		return res.status(400).send(e.message);
 	}
 };

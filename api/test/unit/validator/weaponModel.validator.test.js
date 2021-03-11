@@ -1,12 +1,14 @@
 require('mysql2/node_modules/iconv-lite').encodingExists('cesu8');
-const validateStation = require('../../../validator/station.validator');
-const {createStation} = require('../../helpers/factory')
+const validateWeaponModel = require('../../../validator/weaponModel.validator');
+const {createWeaponModel} = require('../../helpers/factory')
+
 let server;
-let station;
-describe('station validator', () => {
+let weaponModel;
+
+describe('weapon model validator', () => {
 	beforeAll(async() => {
 		server = await require('../../../server');
-        station = createStation();
+        weaponModel = createWeaponModel();
 	});
 
 	afterAll(async() => {
@@ -21,9 +23,9 @@ describe('station validator', () => {
 	};
     const next = jest.fn();
 
-	it('should not validate the station',  () => {
-        req.body = station
-		validateStation(req,res,next)
+	it('should validate a weapon model',  () => {
+        req.body = weaponModel
+		validateWeaponModel(req,res,next)
 
 		expect(next).toHaveBeenCalledTimes(1)
         expect(res.status).toHaveBeenCalledTimes(0)
@@ -31,10 +33,10 @@ describe('station validator', () => {
 
 	});
 
-	it('should validate the station',  () => {
-        req.body = {...station, type:'abc',contactNo:'1234', stationName:1}
+	it('should return an error on validate weapon model',  () => {
+        req.body = {...weaponModel, name:1,weaponModelID:'ab'}
 		
-        validateStation(req,res,next)
+        validateWeaponModel(req,res,next)
 
         expect(res.status).toHaveBeenCalledTimes(1)
         expect(res.status).toHaveBeenCalledWith(400)

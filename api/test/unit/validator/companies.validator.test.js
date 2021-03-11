@@ -1,12 +1,14 @@
 require('mysql2/node_modules/iconv-lite').encodingExists('cesu8');
-const validateStation = require('../../../validator/station.validator');
-const {createStation} = require('../../helpers/factory')
+const validateCompanies = require('../../../validator/companies.validator');
+const {createCompany} = require('../../helpers/factory')
+
 let server;
-let station;
-describe('station validator', () => {
+let company;
+
+describe('company validator', () => {
 	beforeAll(async() => {
 		server = await require('../../../server');
-        station = createStation();
+        company = createCompany();
 	});
 
 	afterAll(async() => {
@@ -21,9 +23,9 @@ describe('station validator', () => {
 	};
     const next = jest.fn();
 
-	it('should not validate the station',  () => {
-        req.body = station
-		validateStation(req,res,next)
+	it('should validate a company',  () => {
+        req.body = company
+		validateCompanies(req,res,next)
 
 		expect(next).toHaveBeenCalledTimes(1)
         expect(res.status).toHaveBeenCalledTimes(0)
@@ -31,10 +33,10 @@ describe('station validator', () => {
 
 	});
 
-	it('should validate the station',  () => {
-        req.body = {...station, type:'abc',contactNo:'1234', stationName:1}
+	it('should return an error on validate company',  () => {
+        req.body = {...company, name:1234,contactNumber:'ab'}
 		
-        validateStation(req,res,next)
+        validateCompanies(req,res,next)
 
         expect(res.status).toHaveBeenCalledTimes(1)
         expect(res.status).toHaveBeenCalledWith(400)
