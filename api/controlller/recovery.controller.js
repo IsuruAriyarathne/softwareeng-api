@@ -20,7 +20,6 @@ exports.getRecoveriesStation = async (req, res) => {
 	}
 };
 
-
 //check
 exports.getRecoveries = async (req, res) => {
 	let recoveries = [];
@@ -64,20 +63,20 @@ exports.updateRecovery = async (req, res) => {
 	let recoveredWeapons = [];
 	let t = await sequelize.transaction();
 	try {
-		if (recovery.hasOwnProperty('RecoveredAmmunitions')) {
-			recoveredAmmunitions = [];
-			recoveredAmmunitions = await RecoveredAmmunition.bulkCreate(recovery.RecoveredAmmunitions, {
-				updateOnDuplicate: ['amount'],
-				transaction: t,
-			});
-		}
-		if (recovery.hasOwnProperty('RecoveredWeapons')) {
-			recoveredWeapons = [];
-			recoveredWeapons = await RecoveredWeapon.bulkCreate(recovery.RecoveredWeapons, {
-				updateOnDuplicate: ['amount'],
-				transaction: t,
-			});
-		}
+		// if (recovery.hasOwnProperty('RecoveredAmmunitions')) {
+		recoveredAmmunitions = [];
+		recoveredAmmunitions = await RecoveredAmmunition.bulkCreate(recovery.RecoveredAmmunitions, {
+			updateOnDuplicate: ['amount'],
+			transaction: t,
+		});
+		// }
+		// if (recovery.hasOwnProperty('RecoveredWeapons')) {
+		recoveredWeapons = [];
+		recoveredWeapons = await RecoveredWeapon.bulkCreate(recovery.RecoveredWeapons, {
+			updateOnDuplicate: ['amount'],
+			transaction: t,
+		});
+		// }
 		recovery = await Recovery.update(
 			{ ...req.body },
 			{ where: { recoveryID: req.params.recoveryID }, returning: true, transaction: t }
@@ -113,24 +112,24 @@ exports.createRecovery = async (req, res) => {
 	try {
 		recovery = await Recovery.create(recovery, { transaction: t });
 		recovery = recovery.dataValues;
-		if (req.body.hasOwnProperty('RecoveredAmmunitions')) {
-			if (req.body.RecoveredAmmunitions.length > 0) {
-				req.body.RecoveredAmmunitions = req.body.RecoveredAmmunitions.map((item) => {
-					return { ...item, recoveryID: recovery.recoveryID };
-				});
-				recoveredAmmunition = await RecoveredAmmunition.bulkCreate(req.body.RecoveredAmmunitions, {
-					transaction: t,
-				});
-			}
-		}
-		if (req.body.hasOwnProperty('RecoveredWeapons')) {
-			if (req.body.RecoveredWeapons.length > 0) {
-				req.body.RecoveredWeapons = req.body.RecoveredWeapons.map((item) => {
-					return { ...item, recoveryID: recovery.recoveryID };
-				});
-				recoveredWeapons = await RecoveredWeapon.bulkCreate(req.body.RecoveredWeapons, { transaction: t });
-			}
-		}
+		// if (req.body.hasOwnProperty('RecoveredAmmunitions')) {
+		// 	if (req.body.RecoveredAmmunitions.length > 0) {
+		req.body.RecoveredAmmunitions = req.body.RecoveredAmmunitions.map((item) => {
+			return { ...item, recoveryID: recovery.recoveryID };
+		});
+		recoveredAmmunition = await RecoveredAmmunition.bulkCreate(req.body.RecoveredAmmunitions, {
+			transaction: t,
+		});
+		// 	}
+		// }
+		// if (req.body.hasOwnProperty('RecoveredWeapons')) {
+		// 	if (req.body.RecoveredWeapons.length > 0) {
+		req.body.RecoveredWeapons = req.body.RecoveredWeapons.map((item) => {
+			return { ...item, recoveryID: recovery.recoveryID };
+		});
+		recoveredWeapons = await RecoveredWeapon.bulkCreate(req.body.RecoveredWeapons, { transaction: t });
+		// 	}
+		// }
 		await t.commit();
 		recovery.RecoveredAmmunitions = recoveredAmmunition;
 		recovery.RecoveredWeapons = recoveredWeapons;
@@ -157,7 +156,9 @@ exports.deleteRecovery = async (req, res) => {
  */
 exports.deleteRecoveryWeapon = async (req, res) => {
 	try {
-		await RecoveredWeapon.destroy({ where: { recoveryID: req.params.recoveryID,weaponModelID: req.params.weaponModelID } });
+		await RecoveredWeapon.destroy({
+			where: { recoveryID: req.params.recoveryID, weaponModelID: req.params.weaponModelID },
+		});
 		return res.status(200).send('Recovery Weapon succesfully deleted');
 	} catch (e) {
 		return res.status(400).send(e.message);
@@ -168,7 +169,9 @@ exports.deleteRecoveryWeapon = async (req, res) => {
  */
 exports.deleteRecoveryAmmunition = async (req, res) => {
 	try {
-		await RecoveredAmmunition.destroy({ where: { recoveryID: req.params.recoveryID, ammoModelID: req.params.ammoModelID } });
+		await RecoveredAmmunition.destroy({
+			where: { recoveryID: req.params.recoveryID, ammoModelID: req.params.ammoModelID },
+		});
 		return res.status(200).send('Recovery Ammunition succesfully deleted');
 	} catch (e) {
 		return res.status(400).send(e.message);

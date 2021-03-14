@@ -34,6 +34,17 @@ describe('Log in function', () => {
 				})
 			);
 		});
+		it('should not login an invalid user', async () => {
+			const res = await request(server).post('/').send({ email: 'abc@gmail.com', password: '1234' });
+			expect(res.status).toBe(200);
+
+			expect(res.body).toEqual(
+				expect.objectContaining({
+					success: false,
+					status: 'Unauthorized!',
+				})
+			);
+		});
 	});
 	describe('error handle', () => {
 		beforeAll(() => {

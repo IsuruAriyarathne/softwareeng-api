@@ -70,10 +70,10 @@ exports.getReportWeapons = async (stations) => {
 			},
 		});
 
-		if (result.length > 0) {
+		// if (result.length > 0) {
 			result = result.map((item) => converter(item.dataValues));
 			result = groupBy(stations, result, 'weapons');
-		}
+		// }
 		weapons = result;
 		return [weapons, false];
 	} catch (e) {
@@ -96,10 +96,10 @@ exports.getReportAmmunitions = async (stations) => {
 				},
 			},
 		});
-		if (result.length > 0) {
+		// if (result.length > 0) {
 			result = result.map((item) => converter(item.dataValues));
 			result = groupBy(stations, result, 'ammunitions');
-		}
+		// }
 		ammunitions = result;
 		return [ammunitions, false];
 	} catch (error) {
@@ -120,10 +120,10 @@ exports.getAvailableWeapons = async (weaponModels) => {
 				state: 'Available',
 			},
 		});
-		if (result.length > 0) {
+		// if (result.length > 0) {
 			result = result.map((item) => converter(item.dataValues));
 			result = groupByWeapon(weaponModels, result);
-		}
+		// }
 
 		stockWeapons = result;
 		return [stockWeapons, false];
@@ -147,10 +147,10 @@ exports.getReportAmmunitionStock = async (ammunitionModels) => {
 				},
 			},
 		});
-		if (result.length > 0) {
+		// if (result.length > 0) {
 			result = result.map((item) => converter(item.dataValues));
 			result = groupByAmmunition(ammunitionModels, result);
-		}
+		// }
 		ammunitionsStock = result;
 		return [ammunitionStock, false];
 	} catch (error) {
@@ -182,6 +182,7 @@ exports.getReportRecoveredAmmunitions = async () => {
 			obj.RecoveredAmmunitions = obj.RecoveredAmmunitions.map((entry) => converter(entry.dataValues));
 			return obj;
 		});
+
 		recoveredAmmunition = result;
 		return [recoveredAmmunition, false];
 	} catch (error) {

@@ -10,8 +10,8 @@ exports.getMaintainanceRecords = async (req, res) => {
 	try {
 		maintainanceRecords = await MaintainanceRecord.findAll({
 			include: { model: Weapon, include: { model: WeaponModel } },
-        });
-        maintainanceRecords = maintainanceRecords.map(item => converter(item.dataValues))
+		});
+		maintainanceRecords = maintainanceRecords.map((item) => converter(item.dataValues));
 		return res.status(200).send(maintainanceRecords);
 	} catch (e) {
 		return res.status(400).send(e.message);
@@ -22,7 +22,7 @@ exports.getStationMaintainanceRecords = async (req, res) => {
 	let maintainanceRecords = [];
 	let weapons = [];
 	try {
-		weapons = await WeaponStation.findAll({ where: { stationID: req.params.stationID , assigned:1} });
+		weapons = await WeaponStation.findAll({ where: { stationID: req.params.stationID, assigned: 1 } });
 		weapons = weapons.map((item) => item.dataValues.weaponID);
 		maintainanceRecords = await MaintainanceRecord.findAll(
 			{ where: { weaponID: { [Op.in]: weapons } } },
@@ -71,9 +71,7 @@ exports.updateMaintainanceRecord = async (req, res) => {
 		maintainanceRecord = await MaintainanceRecord.findOne({
 			where: { id: req.params.id },
 		});
-		if(maintainanceRecord.hasOwnProperty('dataValues')){
-			maintainanceRecord = maintainanceRecord.dataValues
-		}
+		maintainanceRecord = maintainanceRecord.dataValues;
 		return res.status(200).send(maintainanceRecord);
 	} catch (e) {
 		return res.status(400).send(e.message);

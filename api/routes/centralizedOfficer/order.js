@@ -23,7 +23,7 @@ router.post('/', validateOrder, OrderController.createOrder);
 /**
  * @description complete the order create entries in weapon table and ammunition batch table
  */
-router.get('/:orderID/complete', OrderController.completeOrder);
+// router.get('/:orderID/complete', OrderController.completeOrder);
 
 /**
  * @description delete the order

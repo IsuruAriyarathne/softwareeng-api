@@ -51,9 +51,9 @@ exports.updateAmmunitionStation = async (req, res) => {
 				},
 			});
 
-			if (ammunition.hasOwnProperty('dataValues')) {
+			// if (ammunition.hasOwnProperty('dataValues')) {
 				ammunition = ammunition.dataValues;
-			}
+			// }
 
 			return res.status(200).send(ammunition);
 		} else {

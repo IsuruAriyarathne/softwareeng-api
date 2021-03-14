@@ -11,108 +11,118 @@ const sequelize = require('../config/db');
 exports.getRequests = async (req, res) => {
 	let requests = [];
 	try {
-		requests = await Request.findAll({ where: { state: { [Op.ne]: 'Complete' } } , include:{model:Station}});
-		return res.status(200).send( requests);
+		requests = await Request.findAll({ where: { state: { [Op.ne]: 'Complete' } }, include: { model: Station } });
+		return res.status(200).send(requests);
 	} catch (e) {
-		return res.status(400).send( e.message);
+		return res.status(400).send(e.message);
 	}
 };
 
 exports.getRequestsStation = async (req, res) => {
 	let requests = [];
 	try {
-		requests = await Request.findAll({ where: { stationID: req.params.stationID} });
-		requests = requests.map(item => converter(item))
+		requests = await Request.findAll({ where: { stationID: req.params.stationID } });
+		requests = requests.map((item) => converter(item));
 		return res.status(200).send(requests);
 	} catch (e) {
-		return res.status(400).send( e.message);
+		return res.status(400).send(e.message);
 	}
 };
 
 exports.getRequest = async (req, res) => {
-    let request = {};
-    request.ammoRequests = [];
-    request.weaponRequests = [];
+	let request = {};
+	request.ammoRequests = [];
+	request.weaponRequests = [];
 	try {
-        request = await Request.findOne({ where: { requestID: req.params.requestID} });
-		if(request.hasOwnProperty('dataValues')){
-			request = request.dataValues
-		}
-        request.ammoRequests = await RequestAmmunition.findAll({where:{ requestID: req.params.requestID}, include:{model:AmmunitionType}})
-        request.weaponRequests = await RequestWeapon.findAll({where:{ requestID: req.params.requestID}, include:{model:WeaponModel}})
-		return res.status(200).send( request);
+		request = await Request.findOne({ where: { requestID: req.params.requestID } });
+		request = request.dataValues;
+		request.ammoRequests = await RequestAmmunition.findAll({
+			where: { requestID: req.params.requestID },
+			include: { model: AmmunitionType },
+		});
+		request.weaponRequests = await RequestWeapon.findAll({
+			where: { requestID: req.params.requestID },
+			include: { model: WeaponModel },
+		});
+		return res.status(200).send(request);
 	} catch (e) {
-		return res.status(400).send( e.message);
+		return res.status(400).send(e.message);
 	}
 };
 
 exports.createRequest = async (req, res) => {
 	let request = req.body;
 	let result = request;
-    let weaponRequests = [];
+	let weaponRequests = [];
 	let ammoRequests = [];
-	let t = await sequelize.transaction() 
+	let t = await sequelize.transaction();
 	try {
-		result = await Request.create(request,{transaction:t});
+		result = await Request.create(request, { transaction: t });
 		result = result.dataValues;
-		if (request.hasOwnProperty('WeaponRequests')) {
-			if (request.WeaponRequests.length > 0) {
-				request.WeaponRequests = request.WeaponRequests.map(item => {return {...item,requestID:result.requestID}})
-				weaponRequests = await RequestWeapon.bulkCreate(request.WeaponRequests,{transaction:t});
-			}
-		}
-		if (request.hasOwnProperty('AmmunitionRequests')) {
-			if (request.AmmunitionRequests.length > 0) {
-				request.AmmunitionRequests = request.AmmunitionRequests.map(item => {return {...item,requestID:result.requestID}})
-				ammoRequests = await RequestAmmunition.bulkCreate(request.AmmunitionRequests,{transaction:t});
-			}
-		}
-		await t.commit()
-		weaponRequests = weaponRequests.map(item => converter(item.dataValues))
-		ammoRequests = ammoRequests.map(item => converter(item.dataValues))
+		// if (request.hasOwnProperty('WeaponRequests')) {
+		// 	if (request.WeaponRequests.length > 0) {
+		request.WeaponRequests = request.WeaponRequests.map((item) => {
+			return { ...item, requestID: result.requestID };
+		});
+		weaponRequests = await RequestWeapon.bulkCreate(request.WeaponRequests, { transaction: t });
+		// 	}
+		// }
+		// if (request.hasOwnProperty('AmmunitionRequests')) {
+		// 	if (request.AmmunitionRequests.length > 0) {
+		request.AmmunitionRequests = request.AmmunitionRequests.map((item) => {
+			return { ...item, requestID: result.requestID };
+		});
+		ammoRequests = await RequestAmmunition.bulkCreate(request.AmmunitionRequests, { transaction: t });
+		// 	}
+		// }
+		await t.commit();
+		weaponRequests = weaponRequests.map((item) => converter(item.dataValues));
+		ammoRequests = ammoRequests.map((item) => converter(item.dataValues));
 		result.WeaponRequests = weaponRequests;
 		result.AmmunitionRequests = ammoRequests;
-		return res.status(200).send( result);
+		return res.status(200).send(result);
 	} catch (e) {
 		await t.rollback();
-		return res.status(400).send( e.message);
+		return res.status(400).send(e.message);
 	}
 };
 
 exports.updateRequest = async (req, res) => {
-    let request = req.body;
-    let weaponRequests = [];
+	let request = req.body;
+	let weaponRequests = [];
 	let ammoRequests = [];
 	let t = await sequelize.transaction();
 	try {
-		if (request.hasOwnProperty('AmmunitionRequests')) {
-			ammoRequests = await RequestAmmunition.bulkCreate(request.AmmunitionRequests, {
-				updateOnDuplicate: ['amount'], transaction:t
-			});
-		}
-		if (request.hasOwnProperty('WeaponRequests')) {
-			weaponRequests = await RequestWeapon.bulkCreate(request.WeaponRequests, {
-				updateOnDuplicate: ['amount'],transaction:t
-			});
-        }
-        request = await Request.update(
+		// if (request.hasOwnProperty('AmmunitionRequests')) {
+		ammoRequests = await RequestAmmunition.bulkCreate(request.AmmunitionRequests, {
+			updateOnDuplicate: ['amount'],
+			transaction: t,
+		});
+		// }
+		// if (request.hasOwnProperty('WeaponRequests')) {
+		weaponRequests = await RequestWeapon.bulkCreate(request.WeaponRequests, {
+			updateOnDuplicate: ['amount'],
+			transaction: t,
+		});
+		// }
+		request = await Request.update(
 			{ ...req.body },
-			{ where: { requestID: req.params.requestID }, returning: true ,transaction:t}
+			{ where: { requestID: req.params.requestID }, returning: true, transaction: t }
 		);
-		await t.commit()
+		await t.commit();
 		request = await Request.findOne({ where: { requestID: req.params.requestID } });
 		request = request.dataValues;
-        request.AmmunitionRequests = ammoRequests;
-        request.WeaponRequests = weaponRequests;
-		return res.status(200).send( request);
+		request.AmmunitionRequests = ammoRequests;
+		request.WeaponRequests = weaponRequests;
+		return res.status(200).send(request);
 	} catch (e) {
 		await t.rollback();
-		return res.status(400).send( e.message);
+		return res.status(400).send(e.message);
 	}
 };
 
 /**
- * @returns success or error message 
+ * @returns success or error message
  */
 exports.deleteRequest = async (req, res) => {
 	try {

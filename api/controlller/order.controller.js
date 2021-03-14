@@ -63,22 +63,22 @@ exports.createOrder = async (req, res) => {
 	try {
 		order = await Order.create(req.body,{transaction:t});
 		result = order.dataValues;
-		if (req.body.hasOwnProperty('AmmoOrder')) {
+		// if (req.body.hasOwnProperty('AmmoOrder')) {
 			    req.body.AmmoOrder = req.body.AmmoOrder.map((item) => {
 				return { ...item, orderID: result.orderID };
 			});
 			ammoOrder = await AmmunitionOrder.bulkCreate(req.body.AmmoOrder,{transaction:t});
 			ammoOrder = ammoOrder.map(item => converter(item.dataValues))
-		}
+		// }
 
-		if (req.body.hasOwnProperty('WeaponOrder')) {
+		// if (req.body.hasOwnProperty('WeaponOrder')) {
 			    req.body.WeaponOrder = req.body.WeaponOrder.map((item) => {
 				return { ...item, orderID: result.orderID };
 			});
 			weaponOrder = await WeaponOrder.bulkCreate(req.body.WeaponOrder,{transaction:t});
 			weaponOrder = weaponOrder.map(item => converter(item.dataValues))
 
-		}
+		// }
         await t.commit();
 		result.AmmoOrder = ammoOrder;
 		result.WeaponOrder = weaponOrder;
@@ -130,34 +130,34 @@ exports.updateOrder = async (req, res) => {
 	}
 };
 
-exports.completeOrder = async (req, res) => {
-	let ammunitionOrders = [];
-	let weaponOrders = [];
-	let bulkWeapons = [];
-    let t = await sequelize.transaction();
-	try {
-		ammunitionOrders = await AmmunitionOrder.findAll({ where: { orderID: req.params.orderID } });
-		weaponOrders = await WeaponOrder.findAll({ where: { orderID: req.params.orderID } });
-		weaponOrders = weaponOrders.map((item) => converter(item.dataValues));
-		for (let i = 0; i < weaponOrders.length; i++) {
-			let obj = weaponOrders[i];
-			let arr = Array(obj.count).fill({ ...obj, state: 'Available' });
-			bulkWeapons.push(...arr);
-		}
-		ammunitionOrders = ammunitionOrders.map((item) => {
-			item = converter(item.dataValues);
-			item.remain = item.count;
-			return item;
-		});
-		ammunitions = await AmmunitionBatch.bulkCreate(ammunitionOrders, {transaction:t});
-        weapons = await Weapon.bulkCreate(bulkWeapons, {transaction:t});
-        await t.commit();
-		return res.status(200).send('Order completed');
-	} catch (e) {
-        await t.rollback();
-		return res.status(400).send(e.message);
-	}
-};
+// exports.completeOrder = async (req, res) => {
+// 	let ammunitionOrders = [];
+// 	let weaponOrders = [];
+// 	let bulkWeapons = [];
+//     let t = await sequelize.transaction();
+// 	try {
+// 		ammunitionOrders = await AmmunitionOrder.findAll({ where: { orderID: req.params.orderID } });
+// 		weaponOrders = await WeaponOrder.findAll({ where: { orderID: req.params.orderID } });
+// 		weaponOrders = weaponOrders.map((item) => converter(item.dataValues));
+// 		for (let i = 0; i < weaponOrders.length; i++) {
+// 			let obj = weaponOrders[i];
+// 			let arr = Array(obj.count).fill({ ...obj, state: 'Available' });
+// 			bulkWeapons.push(...arr);
+// 		}
+// 		ammunitionOrders = ammunitionOrders.map((item) => {
+// 			item = converter(item.dataValues);
+// 			item.remain = item.count;
+// 			return item;
+// 		});
+// 		ammunitions = await AmmunitionBatch.bulkCreate(ammunitionOrders, {transaction:t});
+//         weapons = await Weapon.bulkCreate(bulkWeapons, {transaction:t});
+//         await t.commit();
+// 		return res.status(200).send('Order completed');
+// 	} catch (e) {
+//         await t.rollback();
+// 		return res.status(400).send(e.message);
+// 	}
+// };
 
 /**
  * @returns success or error message 

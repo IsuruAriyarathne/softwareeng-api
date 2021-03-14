@@ -23,9 +23,7 @@ exports.getStation = async (req, res) => {
 	let station = {};
 	try {
 		station = await Station.findOne({ where: { stationID: req.params.stationId } });
-		if (station.hasOwnProperty('dataValues')) {
-			station = station.dataValues;
-		}
+		station = station.dataValues;
 		return res.status(200).send(station);
 	} catch (e) {
 		return res.status(400).send(e.message);
@@ -56,9 +54,7 @@ exports.updateStation = async (req, res) => {
 			{ where: { stationID: req.params.stationId }, returning: true }
 		);
 		station = await Station.findOne({ where: { stationID: req.params.stationId } });
-		if (station) {
-			station = station.dataValues;
-		}
+		station = station.dataValues;
 		return res.status(200).send(station);
 	} catch (e) {
 		return res.status(400).send(e.message);

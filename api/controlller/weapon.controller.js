@@ -49,9 +49,9 @@ exports.updateWeaponStation = async (req, res) => {
 				where: { weaponID: req.params.weaponID, stationID: req.body.stationID, assigned: 1 },
 				include: { model: Weapon },
 			});
-			if (weapon.hasOwnProperty('dataValues')) {
-				weapon = weapon.dataValues;
-			}
+			// if (weapon.hasOwnProperty('dataValues')) {
+			weapon = weapon.dataValues;
+			// }
 		} else {
 			return res.status(401).send(weapon);
 		}
@@ -109,12 +109,12 @@ exports.updateWeapon = async (req, res) => {
 	let stations = [];
 	let t = await sequelize.transaction();
 	try {
-		if (weapon.hasOwnProperty('Station')) {
-			stations = await WeaponStation.bulkCreate(weapon.Station, {
-				updateOnDuplicate: ['assigned'],
-				transaction: t,
-			});
-		}
+		// if (weapon.hasOwnProperty('Station')) {
+		stations = await WeaponStation.bulkCreate(weapon.Station, {
+			updateOnDuplicate: ['assigned'],
+			transaction: t,
+		});
+		// }
 		weapon = await Weapon.update(
 			{ ...req.body },
 			{ where: { weaponID: req.params.weaponID }, returning: true, transaction: t }

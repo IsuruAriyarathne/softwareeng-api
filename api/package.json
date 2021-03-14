@@ -2,10 +2,15 @@
     "name": "api",
     "version": "0.0.0",
     "private": true,
+    "jest": {
+        "coveragePathIgnorePatterns": [
+            "services",
+            "helpers"
+        ]
+    },
     "scripts": {
         "start": "node server",
         "test": "jest --detectOpenHandles --watchAll --coverage --runInBand "
-
     },
     "dependencies": {
         "@hapi/joi": "^17.1.1",

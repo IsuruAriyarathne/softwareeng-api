@@ -1,7 +1,7 @@
 const OrderController = require('../../../controlller/order.controller');
 const { createOrder, createAmmoOrder, createWeaponOrder } = require('../../helpers/factory');
 const Models = require('../../../model');
-const { writeToDB, destroyFromDB } = require('../../helpers/dbHelper');
+const { writeToDB, destroyFromDB, clearFromOrder } = require('../../helpers/dbHelper');
 const {mockErrorMethod} =require('../../helpers/exceptionThrow')
 let server;
 
@@ -33,11 +33,7 @@ describe('order controller', () => {
 		});
 
 		afterAll(async () => {
-			await destroyFromDB(Models.AmmunitionBatch, {order: order.orderID}, ['orderID'])
-			await destroyFromDB(Models.Weapon, {order: order.orderID}, ['orderID'])
-			await destroyFromDB(Models.AmmunitionOrder, ammoOrder, ['ammoModelID', 'orderID']);
-			await destroyFromDB(Models.WeaponOrder, weaponOrder, ['orderID', 'weaponModelID']);
-			await destroyFromDB(Models.Order, order, 'orderID');
+			await clearFromOrder();
 		});
 
 		it('should create an order', async () => {
@@ -280,13 +276,13 @@ describe('order controller', () => {
 			expect(res.status).toHaveBeenCalledWith(400);
 		});
 
-		it('should return 400 state on complete Order', async () => {
-			req.body = {};
+		// it('should return 400 state on complete Order', async () => {
+		// 	req.body = {};
 
-			await OrderController.completeOrder(req, res);
+		// 	await OrderController.completeOrder(req, res);
 
-			expect(res.status).toHaveBeenCalledWith(400);
-		});
+		// 	expect(res.status).toHaveBeenCalledWith(400);
+		// });
 		
 		it('should return 400 state on delete Order ammuitions', async () => {
 			req.body = {};
