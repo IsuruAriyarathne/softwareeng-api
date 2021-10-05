@@ -9,13 +9,13 @@ const config = {
 			password: process.env.PASSWORD_TEST,
 		},
 	},
-	production: {
+	dev: {
 		db: {
-			user: process.env.USER_PRO,
-			host: process.env.HOST_PRO,
-			port: process.env.DBPORT_PRO,
-			dbName: process.env.DATABASE_PRO,
-			password: process.env.PASSWORD_PRO,
+			user: process.env.USER_DEV,
+			host: process.env.HOST_DEV,
+			port: process.env.DBPORT_DEV,
+			dbName: process.env.DATABASE_DEV,
+			password: process.env.PASSWORD_DEV
 		},
 	},
 	mail: {
